@@ -1,0 +1,39 @@
+.side-menu{
+  height: 100%;
+  background-color: rgba(4, 91, 161, 0.06);
+}
+.tool-bar{
+  font-family: UniSansSemiBold;
+  font-size: 22px;
+  color: #045BA1;
+  margin-top: 10px;
+  margin-right: 140px;
+}
+.logged-user{
+  margin-bottom: 40px;
+}
+.manage{
+  font-family: UniSansRegular;
+  color: #045BA1;
+  width: 50%;
+  margin: 5px 0 5px 15px;
+}
+.settings{
+  cursor: pointer;
+  font-size: 30px;
+  width: unset;
+  height: unset;
+}
+.settings:hover{
+  transition: 1s;
+  transform: rotate(360deg);
+}
+.manage-footer{
+  position: fixed;
+  bottom: 20px;
+}
+.manage-footer button{
+  background-color: #ffd5ea;
+  font-family: UniSansSemiBold;
+  color: #045BA1;
+}

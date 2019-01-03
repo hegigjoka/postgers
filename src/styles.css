@@ -1,0 +1,30 @@
+@font-face {
+  font-family: UniSansRegular;
+  src: url("assets/fonts/UniSansRegular.otf") format("opentype");
+}
+@font-face {
+  font-family: UniSansSemiBold;
+  src: url("assets/fonts/UniSansSemiBold.ttf") format("opentype");
+}
+@font-face {
+  font-family: UniSansSemiBoldItalic;
+  src: url("assets/fonts/UniSansSemiBoldItalic.ttf") format("opentype");
+}
+@font-face {
+  font-family: UniSansBold;
+  src: url("assets/fonts/UniSansBold.ttf") format("opentype");
+}
+@font-face {
+  font-family: UniSansLight;
+  src: url("assets/fonts/UniSansLight.ttf") format("opentype");
+}
+
+html, body { height: 100%; }
+
+hr{
+  background-color: #045BA1;
+}
+
+app-reuests-container{
+  width: 100%;
+}

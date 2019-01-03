@@ -1,0 +1,31 @@
+<div class="container side-menu">
+  <div class="row">
+    <div class="col-12 tool-bar">
+      Manage Account
+      <hr>
+    </div>
+  </div>
+  <div class="row logged-user">
+    <div class="col-3">
+      <ngx-avatar [name]="'Hegi Gjoka'" bgColor="#045BA1" fgColor="white"></ngx-avatar>
+    </div>
+    <div class="col-9">
+      <div>CED office</div>
+      <div>Hegi Gjoka</div>
+    </div>
+  </div>
+  <div class="row">
+    <button class="manage" mat-raised-button routerLink="/employee/1/employees">Employees Panel</button>
+  </div>
+  <div class="row">
+    <button class="manage" mat-raised-button routerLink="/employee/1/requests">Requests Panel</button>
+  </div>
+  <div class="row manage-footer">
+    <div class="col-3">
+      <mat-icon class="settings">settings</mat-icon>
+    </div>
+    <div class="col-9">
+      <button mat-raised-button color="warn">Logout</button>
+    </div>
+  </div>
+</div>

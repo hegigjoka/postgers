@@ -1,0 +1,52 @@
+.top-menu-style{
+  background-color: #045BA1;
+}
+.menu-row{
+  padding: 15px 0 15px 15px;
+}
+.menu-icon{
+  color: white;
+  height: unset;
+  width: unset;
+  font-size: 36px;
+  cursor: pointer;
+}
+.page-name{
+  color: white;
+  margin-left: 15px;
+  font-family: UniSansSemiBold;
+  font-size: 25px;
+}
+.search-bar{
+  border-radius: 8px;
+  border: none;
+  height: 40px;
+  color: #045BA1;
+  padding: 2px 0 6px 45px;
+  font-family: UniSansRegular;
+  font-size: 18px;
+  margin-left: 25px;
+}
+::placeholder{
+  color: #045BA1;
+}
+.avatar{
+  margin-left: 100px;
+}
+.office-n-employee{
+  color: white;
+  margin-left: 15px;
+  font-family: UniSansLight;
+}
+.to-x{
+  transition: 600ms;
+  transform: rotate(360deg);
+}
+.to-menu{
+  transition: 600ms;
+  transform: rotate(-360deg);
+}
+ngx-avatar:hover{
+  transition: 600ms;
+  transform: rotate(360deg);
+}

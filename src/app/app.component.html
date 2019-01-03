@@ -1,0 +1,37 @@
+<mat-drawer-container style="height: 100%" [hasBackdrop]="false">
+  <mat-drawer #menu [mode]="'push'" position="start">
+    <app-side-menu></app-side-menu>
+  </mat-drawer>
+  <mat-drawer #newrequest [mode]="'over'" position="end">
+    <app-side-menu></app-side-menu>
+  </mat-drawer>
+  <mat-drawer-content class="container-fluid">
+    <div class="row top-menu-style">
+      <div class="col-2">
+        <div class="row menu-row">
+          <mat-icon class="menu-icon" [ngClass]="{'to-x': x, 'to-menu': !x}" (click)="iconToggle()">{{icon}}</mat-icon>
+          <div class="page-name">Employee Requests</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="row menu-row">
+          <input class="col-12 search-bar" type="search" [placeholder]="'Search...'">
+        </div>
+      </div>
+      <div class="col-2"></div>
+      <div class="col-2">
+        <div class="row menu-row">
+          <ngx-avatar class="avatar" [name]="'Hegi Gjoka'" [size]="'46'" bgColor="white" fgColor="#045BA1"></ngx-avatar>
+          <div class="office-n-employee">
+            <div>CED</div>
+            <div>Hegi Gjoka</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <router-outlet></router-outlet>
+    </div>
+    <app-signin></app-signin>
+  </mat-drawer-content>
+</mat-drawer-container>
