@@ -1,0 +1,10 @@
+{
+  "/svc": {
+    "target": "http://dev.hrmoduli.unizkm.edu.al",
+    "secure": false,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "changeOrigin": true
+  }
+}

@@ -9,6 +9,11 @@
   margin-top: 10px;
   margin-right: 140px;
 }
+.avatar-img{
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #045BA1;
+}
 .logged-user{
   margin-bottom: 40px;
 }
@@ -35,5 +40,6 @@
 .manage-footer button{
   background-color: #ffd5ea;
   font-family: UniSansSemiBold;
-  color: #045BA1;
+  color: #323232;
+  border: 1px solid #323232;
 }

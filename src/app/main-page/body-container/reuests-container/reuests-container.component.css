@@ -6,6 +6,10 @@
   padding-top: 18px;
   width: 20%;
 }
+.dropdown-menu > a{
+  color: #045BA1;
+  font-family: UniSansRegular;
+}
 .table-striped{
   margin-top: 20px;
   margin-bottom: 20px;
@@ -129,20 +133,20 @@ h4{
   bottom: 240px;
   right: 35px;
 }
+
+/*New Request Banners*/
 .new-mt-banner{
   display: none;
   font-size: 18px;
-  color: #045BA1;
+  color: #323232;
   position: fixed;
   bottom: 250px;
   right: 90px;
 }
-
-/*New Request Banners*/
 .new-mission-banner{
   display: none;
   font-size: 18px;
-  color: #045BA1;
+  color: #323232;
   position: fixed;
   bottom: 200px;
   right: 90px;
@@ -150,7 +154,7 @@ h4{
 .new-holiday-banner{
   display: none;
   font-size: 18px;
-  color: #045BA1;
+  color: #323232;
   position: fixed;
   bottom: 150px;
   right: 90px;
@@ -158,7 +162,7 @@ h4{
 .new-xh-banner{
   display: none;
   font-size: 18px;
-  color: #045BA1;
+  color: #323232;
   position: fixed;
   bottom: 100px;
   right: 90px;

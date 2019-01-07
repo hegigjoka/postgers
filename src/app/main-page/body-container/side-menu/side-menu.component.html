@@ -7,7 +7,8 @@
   </div>
   <div class="row logged-user">
     <div class="col-3">
-      <ngx-avatar [name]="'Hegi Gjoka'" bgColor="#045BA1" fgColor="white"></ngx-avatar>
+      <ngx-avatar *ngIf="!avatarOrPic()" [name]="'Hegi Gjoka'" bgColor="#045BA1" fgColor="white"></ngx-avatar>
+      <img *ngIf="avatarOrPic()" src="{{avatar}}" class="img-fluid avatar-img">
     </div>
     <div class="col-9">
       <div>CED office</div>
@@ -15,17 +16,17 @@
     </div>
   </div>
   <div class="row">
-    <button class="manage" mat-raised-button routerLink="/employee/1/employees">Employees Panel</button>
+    <button class="manage" mat-raised-button routerLink="employees">Employees Panel</button>
   </div>
   <div class="row">
-    <button class="manage" mat-raised-button routerLink="/employee/1/requests">Requests Panel</button>
+    <button class="manage" mat-raised-button routerLink="requests">Requests Panel</button>
   </div>
   <div class="row manage-footer">
     <div class="col-3">
       <mat-icon class="settings">settings</mat-icon>
     </div>
     <div class="col-9">
-      <button mat-raised-button color="warn">Logout</button>
+      <button mat-raised-button color="warn" (click)="logout()">Logout</button>
     </div>
   </div>
 </div>

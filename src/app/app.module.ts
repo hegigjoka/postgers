@@ -12,44 +12,61 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 
 // Google Login Imports
+import {HttpModule} from '@angular/http';
 import {SocialLoginModule, AuthServiceConfig, GoogleLoginProvider} from 'angular-6-social-login';
+import {EmployeeService} from './shared-components/providers/employee.service';
+import {AuthGuardService as AuthGuard} from './shared-components/providers/auth-guard.service';
 
 import { AppComponent } from './app.component';
 import { AvatarModule } from 'ngx-avatar';
 import {RouterModule, Routes} from '@angular/router';
-import { ReuestsContainerComponent } from './body-container/reuests-container/reuests-container.component';
-import { SideMenuComponent } from './body-container/side-menu/side-menu.component';
-import { EmployeePanelComponent } from './body-container/employees/employee-panel/employee-panel.component';
-import { EmployeeRegistrationComponent } from './body-container/employees/employee-registration/employee-registration.component';
-import { SigninComponent } from './signin/signin.component';
+import { ReuestsContainerComponent } from './main-page/body-container/reuests-container/reuests-container.component';
+import { SideMenuComponent } from './main-page/body-container/side-menu/side-menu.component';
+import { EmployeePanelComponent } from './main-page/body-container/employees/employee-panel/employee-panel.component';
+import { EmployeeRegistrationComponent } from './main-page/body-container/employees/employee-registration/employee-registration.component';
+import { MainPageComponent } from './main-page/main-page.component';
+import { SignInComponent } from './sign-in/sign-in.component';
 
+// App Routers
 const EmployeeRoutes: Routes = [
   {
     path: '',
-    redirectTo: '/employee/1/requests',
+    redirectTo: '/sign-in',
     pathMatch: 'full'
   },
   {
-    path: 'employee/1/requests',
-    component: ReuestsContainerComponent
+    path: 'sign-in',
+    component: SignInComponent
   },
   {
-    path: 'employee/1/employees',
-    component: EmployeePanelComponent
+    path: 'employee/:empId',
+    component: MainPageComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'requests',
+        component: ReuestsContainerComponent
+      },
+      {
+        path: 'employees',
+        component: EmployeePanelComponent
+      }
+    ]
   },
   {
     path: '**',
-    redirectTo: 'employee/1/requests',
+    redirectTo: '/sign-in',
     pathMatch: 'full'
   }
 ];
 
+// Google Authentication Service
 export function getAuthServiceConfigs() {
   const config = new AuthServiceConfig(
     [
       {
         id: GoogleLoginProvider.PROVIDER_ID,
-        provider: new GoogleLoginProvider('Your-Google-Client-Id')
+        provider: new GoogleLoginProvider('520043598807-u86mp25v1h525oh2763e7duu9l1lklkd.apps.googleusercontent.com')
       }
     ]
   );
@@ -63,20 +80,29 @@ export function getAuthServiceConfigs() {
     SideMenuComponent,
     EmployeePanelComponent,
     EmployeeRegistrationComponent,
-    SigninComponent
+    MainPageComponent,
+    SignInComponent
   ],
+
   imports: [
     BrowserModule,
+    HttpModule,
     BrowserAnimationsModule, NoopAnimationsModule,
     MatButtonModule, MatCheckboxModule, MatGridListModule,
     MatIconModule, MatSidenavModule, AvatarModule, MatToolbarModule,
     RouterModule.forRoot(EmployeeRoutes),
     SocialLoginModule
   ],
-  providers: [{
-    provide: AuthServiceConfig,
-    useFactory: getAuthServiceConfigs
-  }],
+
+  providers: [
+    EmployeeService,
+    AuthGuard,
+    {
+      provide: AuthServiceConfig,
+      useFactory: getAuthServiceConfigs
+    }
+  ],
+
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
