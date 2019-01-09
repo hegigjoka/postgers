@@ -7,8 +7,8 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {EmployeeModel} from '../../../../shared-components/models/Employee-Models/employee.model';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {EmployeeInsertUpdateModel} from '../../../../shared-components/models/Employee-Models/employee-insert-update.model';
-import {OficeIdList} from '../../../../shared-components/models/Employee-Models/Employee-Table-Model/ofice-id-list';
 import {EmployeeListModel} from '../../../../shared-components/models/Employee-Models/employee-list.model';
+import {OfficeIdFields} from '../../../../shared-components/models/Employee-Models/Employee-Table-Model/office-id-fields';
 
 @Component({
   selector: 'app-employee-registration',
@@ -22,10 +22,10 @@ export class EmployeeRegistrationComponent implements OnInit {
   managers: EmployeeListModel;
 
   directorInput: string;
-  director: EmployeeListModel;
+  directors: EmployeeListModel;
 
   officeInput: string;
-  office: OficeIdList;
+  offices: OfficeIdFields[];
 
   newOrOld: boolean;
   employeeForm: FormGroup;
@@ -56,13 +56,13 @@ export class EmployeeRegistrationComponent implements OnInit {
     }
 
     this.employeeForm = new FormGroup({
-      firstName: new FormControl(null),
-      lastName: new FormControl(null),
-      birthdate: new FormControl(null),
-      managerId: new FormControl(null),
-      directorId: new FormControl(null),
-      email: new FormControl(null),
-      officeNameId: new FormControl(null)
+      firstName: new FormControl(),
+      lastName: new FormControl(),
+      birthdate: new FormControl(),
+      managerId: new FormControl(),
+      directorId: new FormControl(),
+      email: new FormControl(),
+      officeNameId: new FormControl()
     });
   }
 
@@ -75,6 +75,17 @@ export class EmployeeRegistrationComponent implements OnInit {
   getManagerDataList() {
     this.empServe.getEmployeeList(1, 100, this.managerInput).subscribe((datalist: Response) => {
       this.managers = datalist.json().body.data;
+    });
+  }
+  getDirectorDataList() {
+    this.empServe.getEmployeeList(1, 100, this.directorInput).subscribe((datalist: Response) => {
+      this.directors = datalist.json().body.data;
+    });
+  }
+  getOfficeDataList() {
+    this.empServe.getFieldMapEmployee().subscribe((datalist: Response) => {
+      this.offices = datalist.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
+      console.log(this.offices);
     });
   }
 
@@ -114,9 +125,10 @@ export class EmployeeRegistrationComponent implements OnInit {
   // inserting employee
   insertEmployee() {
     this.employeeModel = this.employeeForm.value;
+    console.log(this.employeeModel);
     this.empServe.insertEmployee(this.employeeModel).subscribe((response: Response) => {
-      if (response.json().status.code === 'STATUS_OK') {
-        alert('The new employee was inserted successfully !');
+      if (response.status === 201) {
+        alert('The new employee( ' + response.json().body.data.id + ' ) was inserted successfully !');
         this.loc.back();
       } else {
         alert('Something went wrong because you are an INDIAN PROGRAMMER :P');

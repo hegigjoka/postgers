@@ -12,7 +12,17 @@ export class EmployeeService {
 
   // Headers
   statusAuthHeader = new Headers({'Authorization': localStorage.getItem('EmpAuthToken')});
-  providersAuthHeader = new Headers({'Authorization': 'APPUSER00000005'});
+  providersAuthHeader = new Headers({
+    'Authorization': 'APPUSER00000005',
+    'Accept': 'application/json',
+    'Accept-Language': 'en',
+  });
+  providerAuthHeaderExtra = new Headers({
+    'Authorization': 'APPUSER00000005',
+    'Accept': 'application/json',
+    'Accept-Language': 'en',
+    'Content-Type': 'application/json'
+  });
 
   constructor(private empServe: Http) {}
 
@@ -29,7 +39,7 @@ export class EmployeeService {
 
   // Getting labels provider
   getFieldMapEmployee() {
-    return this.empServe.options(this.employee);
+    return this.empServe.options(this.employee, {headers: this.providersAuthHeader});
   }
 
   // Employee CRUD provider
@@ -43,8 +53,8 @@ export class EmployeeService {
       managerId: emp.managerId,
       directorId: emp.directorId,
       email: emp.email,
-      officeNameId: emp.email
-    }, {headers: this.providersAuthHeader});
+      officeNameId: emp.officeNameId
+    }, {headers: this.providerAuthHeaderExtra});
   }
   // Retrieve single
   getEmployee(empId: string) {
@@ -70,7 +80,7 @@ export class EmployeeService {
       directorId: emp.directorId,
       email: emp.email,
       officeNameId: emp.officeNameId
-    }, {headers: this.providersAuthHeader});
+    }, {headers: this.providerAuthHeaderExtra});
   }
   // Delete
   deleteEmployee(empId: string) {

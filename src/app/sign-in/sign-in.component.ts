@@ -24,11 +24,15 @@ export class SignInComponent implements OnInit {
       (userData) => {
         this.signin.signInWithGoogle(userData.idToken).subscribe(
           (user: Response) => {
+
             this.employeeSession = user.json().body.data;
+
+            localStorage.clear();
             localStorage.setItem('EmpAuthToken', this.employeeSession.authToken);
             localStorage.setItem('EmpFullName', this.employeeSession.fullName);
             localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
             localStorage.setItem('EmpAccess', this.employeeSession.userAccessLevel.toString());
+
             setTimeout(() => {
               this.router.navigate(['hr']);
             }, 1800);

@@ -33,6 +33,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 // App Routers
 const EmployeeRoutes: Routes = [
   {
+    path: '',
+    redirectTo: '/sign-in',
+    pathMatch: 'full'
+  },
+  {
     path: 'sign-in',
     component: SignInComponent
   },
@@ -60,12 +65,12 @@ const EmployeeRoutes: Routes = [
         ]
       }
     ]
-  },
-  {
-    path: '**',
-    redirectTo: '/sign-in',
-    pathMatch: 'full'
   }
+  // {
+  //   path: '**',
+  //   redirectTo: '/sign-in',
+  //   pathMatch: 'full'
+  // }
 ];
 
 // Google Authentication Service

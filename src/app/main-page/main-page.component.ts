@@ -25,9 +25,8 @@ export class MainPageComponent implements OnInit {
   getStatus() {
     this.status.getAppStatus().subscribe((type: Response) => {
       if (type.statusText === 'Unauthorized') {
-        this.status.logoutApp().subscribe(() => {
-          this.router.navigate(['sign-in']);
-        });
+        localStorage.clear();
+        this.router.navigate(['sign-in']);
       }
     });
   }
