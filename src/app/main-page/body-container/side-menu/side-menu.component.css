@@ -9,11 +9,73 @@
   margin-top: 10px;
   margin-right: 140px;
 }
+
+.emp, .req, .logout{
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
+}
+.emp:hover, .req:hover{
+  background-color: #045BA1;
+}
+.emp:hover > .emp-icon, .req:hover > .req-icon{
+  color: white;
+}
+.emp:hover > .emp-desc{
+  font-family: UniSansRegular;
+  color: white;
+}
+.req:hover > .req-desc, .req:hover > .req-type{
+  font-family: UniSansRegular;
+  color: white;
+  display: block;
+}
+.emp-icon, .req-icon, .logout-icon{
+  margin-left: 15px;
+  color: #045BA1;
+  font-size: 30px;
+  width: unset;
+  height: unset;
+  height: unset;
+  cursor: pointer;
+}
+.emp-desc, .req-desc, .logout-desc{
+  font-family: UniSansLight;
+  color: #045BA1;
+  font-size: 18px;
+  margin-top: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.req-type{
+  display: none;
+  color: white;
+  font-family: UniSansRegular;
+  margin-left: 10px;
+  margin-top: 6px;
+  cursor: pointer;
+}
+.logout-icon{
+  transform: rotate(90deg);
+  color: tomato;
+}
+.logout-desc{
+  color: tomato;
+}
+.logout:hover{
+  background-color: tomato;
+}
+.logout:hover > .logout-icon, .logout:hover > .logout-desc{
+  color: white;
+}
+
 .avatar-img{
   height: 50px;
   border-radius: 50%;
   border: 2px solid #045BA1;
 }
+
 .logged-user{
   margin-bottom: 40px;
 }
@@ -23,23 +85,5 @@
   width: 50%;
   margin: 5px 0 5px 15px;
 }
-.settings{
-  cursor: pointer;
-  font-size: 30px;
-  width: unset;
-  height: unset;
-}
-.settings:hover{
-  transition: 1s;
-  transform: rotate(360deg);
-}
-.manage-footer{
-  position: fixed;
-  bottom: 20px;
-}
-.manage-footer button{
-  background-color: #ffd5ea;
-  font-family: UniSansSemiBold;
-  color: #323232;
-  border: 1px solid #323232;
-}
+
+

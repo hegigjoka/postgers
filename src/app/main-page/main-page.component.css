@@ -2,7 +2,11 @@
   background-color: #045BA1;
 }
 .menu-row{
-  padding: 15px 0 15px 15px;
+  padding: 10px 0 10px 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 .menu-icon{
   color: white;

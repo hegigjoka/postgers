@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AuthService, GoogleLoginProvider} from 'angular-6-social-login';
 import {Response} from '@angular/http';
 import {EmployeeService} from '../shared-components/providers/employee.service';
-import {EmployeeSession} from '../shared-components/models/employee-session';
+import {EmployeeSession} from '../shared-components/models/Employee-Models/employee-session';
 import {Router} from '@angular/router';
 
 @Component({
@@ -12,12 +12,14 @@ import {Router} from '@angular/router';
 })
 export class SignInComponent implements OnInit {
   employeeSession: EmployeeSession;
+  signingIn: boolean;
 
   constructor(private socialAuthService: AuthService, private signin: EmployeeService, private router: Router) {}
 
   ngOnInit() {}
 
   public socialSignIn() {
+    this.signingIn = !(this.signingIn);
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
       (userData) => {
         this.signin.signInWithGoogle(userData.idToken).subscribe(
@@ -28,7 +30,7 @@ export class SignInComponent implements OnInit {
             localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
             localStorage.setItem('EmpAccess', this.employeeSession.userAccessLevel.toString());
             setTimeout(() => {
-              this.router.navigate(['employee', this.employeeSession.id]);
+              this.router.navigate(['hr']);
             }, 1800);
           }
         );

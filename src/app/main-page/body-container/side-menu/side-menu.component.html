@@ -15,18 +15,22 @@
       <div>Hegi Gjoka</div>
     </div>
   </div>
-  <div class="row">
-    <button class="manage" mat-raised-button routerLink="employees">Employees Panel</button>
+  <div class="row emp" routerLink="employees">
+    <mat-icon class="emp-icon">group</mat-icon>
+    <div class="emp-desc">Employee</div>
   </div>
-  <div class="row">
-    <button class="manage" mat-raised-button routerLink="requests">Requests Panel</button>
+  <div class="row req">
+    <mat-icon class="req-icon">folder</mat-icon>
+    <div class="req-desc">Requests ></div>
+    <div class="req-type">
+      <div routerLink="requests" [queryParams]="{type: 'all'}">All Requests</div>
+      <div routerLink="requests" [queryParams]="{type: 'my'}">My Requests</div>
+      <div routerLink="requests" [queryParams]="{type: 'myp'}">My Pending Requests</div>
+      <div routerLink="requests" [queryParams]="{type: 'pa'}">Pending Action</div>
+    </div>
   </div>
-  <div class="row manage-footer">
-    <div class="col-3">
-      <mat-icon class="settings">settings</mat-icon>
-    </div>
-    <div class="col-9">
-      <button mat-raised-button color="warn" (click)="logout()">Logout</button>
-    </div>
+  <div class="row logout" (click)="logout()">
+    <mat-icon class="logout-icon">save_alt</mat-icon>
+    <div class="logout-desc">Logout</div>
   </div>
 </div>

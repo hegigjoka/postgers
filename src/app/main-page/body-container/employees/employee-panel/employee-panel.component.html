@@ -1,22 +1,57 @@
-<div class="col-12">
-  <div class="header">Employees</div>
-  <hr>
-</div >
-<div class="col-12">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Employee ID</th>
-        <th>Employee Name</th>
-        <th>Employee Surname</th>
-        <th>Employee Email</th>
-        <th>Employee Office</th>
-        <th>Employee Manager</th>
-        <th>Employee Director</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr></tr>
-    </tbody>
-  </table>
-</div>
+<mat-drawer-container [hasBackdrop]="true">
+  <mat-drawer #employeeMenu [mode]="'over'" position="end">
+    <router-outlet></router-outlet>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="col-12">
+      <div class="header">Employees</div>
+      <hr>
+    </div >
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Employee</th>
+          <th>{{tableFields?.birthdate?.fieldLabel}}</th>
+          <th>{{tableFields?.email?.fieldLabel}}</th>
+          <th>{{tableFields?.officeName?.fieldLabel}}</th>
+          <th>Manager</th>
+          <th>{{tableFields?.managerEmail?.fieldLabel}}</th>
+          <th>Director</th>
+          <th>{{tableFields?.directorEmail?.fieldLabel}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let employee of employees?.list" (click)="openEmployee(employee?.id)">
+          <td>{{employee?.someLabel}}</td>
+          <td>{{employee?.birthdate | multiPurposePipe: 'birthday'}}</td>
+          <td>{{employee?.email}}</td>
+          <td>{{employee?.officeName}}</td>
+          <td>{{employee?.managerFirstName}} {{employee?.managerLastName}}</td>
+          <td>{{employee?.managerEmail}}</td>
+          <td>{{employee?.directorFirstName}} {{employee?.directorLastName}}</td>
+          <td>{{employee?.directorEmail}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-2 paginate">
+      <table border="0">
+        <tr>
+          <td>
+            <button class="btn btn-info prev" (click)="pages(-1, employees?.totalPages)">Prev</button>
+          </td>
+          <td>
+            <h4>{{paginate}}</h4>
+          </td>
+          <td>
+            <button class="btn btn-info next" (click)="pages(1, employees?.totalPages)">Next</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="new-emp" (click)="openEmployee('new-employee')">
+      <mat-icon>person_add</mat-icon>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

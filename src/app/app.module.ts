@@ -10,6 +10,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 // Google Login Imports
 import {HttpModule} from '@angular/http';
@@ -26,20 +27,17 @@ import { EmployeePanelComponent } from './main-page/body-container/employees/emp
 import { EmployeeRegistrationComponent } from './main-page/body-container/employees/employee-registration/employee-registration.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { SignInComponent } from './sign-in/sign-in.component';
+import {MultiPurposePipe} from './shared-components/pipes/multi-purpose.pipe';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 // App Routers
 const EmployeeRoutes: Routes = [
-  {
-    path: '',
-    redirectTo: '/sign-in',
-    pathMatch: 'full'
-  },
   {
     path: 'sign-in',
     component: SignInComponent
   },
   {
-    path: 'employee/:empId',
+    path: 'hr',
     component: MainPageComponent,
     canActivate: [AuthGuard],
     children: [
@@ -49,7 +47,17 @@ const EmployeeRoutes: Routes = [
       },
       {
         path: 'employees',
-        component: EmployeePanelComponent
+        component: EmployeePanelComponent,
+        children: [
+          {
+            path: ':emp',
+            component: EmployeeRegistrationComponent
+          },
+          {
+            path: 'new-employee',
+            component: EmployeeRegistrationComponent
+          }
+        ]
       }
     ]
   },
@@ -81,15 +89,16 @@ export function getAuthServiceConfigs() {
     EmployeePanelComponent,
     EmployeeRegistrationComponent,
     MainPageComponent,
+    MultiPurposePipe,
     SignInComponent
   ],
 
   imports: [
-    BrowserModule,
-    HttpModule,
+    BrowserModule, HttpModule, ReactiveFormsModule,
     BrowserAnimationsModule, NoopAnimationsModule,
     MatButtonModule, MatCheckboxModule, MatGridListModule,
     MatIconModule, MatSidenavModule, AvatarModule, MatToolbarModule,
+    MatProgressSpinnerModule, FormsModule,
     RouterModule.forRoot(EmployeeRoutes),
     SocialLoginModule
   ],

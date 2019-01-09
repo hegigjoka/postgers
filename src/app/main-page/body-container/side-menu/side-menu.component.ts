@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import {EmployeeService} from '../../../shared-components/providers/employee.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -9,7 +10,7 @@ import {Router} from '@angular/router';
 export class SideMenuComponent implements OnInit {
   avatar: string;
 
-  constructor(private router: Router) { }
+  constructor(private empserve: EmployeeService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -21,7 +22,9 @@ export class SideMenuComponent implements OnInit {
     }
   }
   logout() {
-    localStorage.clear();
-    this.router.navigate(['sign-in']);
+    this.empserve.logoutApp().subscribe(() => {
+      localStorage.clear();
+      this.router.navigate(['sign-in']);
+    });
   }
 }

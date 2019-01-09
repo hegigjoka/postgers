@@ -5,8 +5,78 @@
   padding-left: 12px;
   padding-top: 15px;
 }
+
+
+/*css for employee table list*/
+table{
+  margin-top: 28px;
+}
+tbody tr:hover{
+  background-color: #045BA1;
+}
+tr:hover > td{
+  color: white;
+}
 th{
   font-family: UniSansRegular;
   font-size: 18px;
   color: #045BA1;
+  text-align: center;
 }
+td{
+  font-family: UniSansRegular;
+  font-size: 16px;
+  color: #045BA1;
+  text-align: center;
+}
+
+
+/*Pagination Buttons*/
+.paginate table tbody tr:hover{
+  background-color: transparent;
+}
+h4{
+  color: #045BA1;
+  margin-bottom: 0;
+}
+.paginate{
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+.prev{
+  background-color: #045BA1;
+  display: flex;
+  justify-content: flex-start;
+  height: 30px;
+  padding: 0 6px 3px 6px;
+  margin-right: 10px;
+}
+.next{
+  background-color: #045BA1;
+  display: flex;
+  justify-content: flex-end;
+  height: 30px;
+  padding: 0 6px 3px 6px;
+  margin-left: 10px;
+}
+
+/*add new emp button*/
+.new-emp{
+  background-color: #045BA1;
+  color: white;
+  background-color: #045BA1;
+  border-radius: 50%;
+  padding-top: 11px;
+  padding-left: 13px;
+  font-size: 24px;
+  height: 55px;
+  width: 55px;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+}
+.new-emp:hover{
+  box-shadow: 0 5px 10px black;
+}
+

@@ -1,10 +1,9 @@
-export class EmployeeModel {
-  employeeId: string;
+export class EmployeeInsertUpdateModel {
   firstName: string;
   lastName: string;
-  birthDate: string;
+  birthdate: string;
   managerId: string;
   directorId: string;
   email: string;
-  officeName: string;
+  officeNameId: string;
 }

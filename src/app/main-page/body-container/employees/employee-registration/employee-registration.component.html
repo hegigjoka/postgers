@@ -1,3 +1,99 @@
-<p>
-  employee-registration works!
-</p>
+<div class="container bcg-emp-menu">
+  <div class="row emp-menu">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 header">
+          Employee Menu
+          <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 forms">
+
+          <!--Manager and Director Datalist-->
+          <datalist id="managers">
+            <option *ngFor="let manager of managers?.list" [value]="manager?.id">{{manager?.firstName}} {{manager?.lastName}}</option>
+          </datalist>
+          <datalist id="director">
+            <option *ngFor="let direct of director?.list" [value]="direct?.id">{{direct?.firstName}} {{direct?.lastName}}</option>
+          </datalist>
+
+          <!--Editing Employee Form-->
+          <form [formGroup]="employeeForm" *ngIf="!newOrOld">
+            <label for="firstName">{{labels?.firstName?.fieldLabel}}: </label>
+            <input id="firstName" type="text" [value]="employee?.firstName" formControlName="firstName">
+            <br>
+            <label for="lastName">{{labels?.lastName?.fieldLabel}}: </label>
+            <input id="lastName" type="text" [value]="employee?.lastName" formControlName="lastName">
+            <br>
+            <label for="birthDate">{{labels?.birthdate?.fieldLabel}}: </label>
+            <input id="birthDate" type="date" [value]="employee?.birthdate | multiPurposePipe: 'birthday'" formControlName="birthdate">
+            <br>
+            <label for="managerId">Manager: </label>
+            <input id="managerId" list="managers" (keyup)="getManagerDataList()" [(ngModel)]="managerInput" formControlName="managerId">
+            <br>
+            <label for="directorId">Director: </label>
+            <input id="directorId" list="director" (onkeyup)="getManagerDataList()" [(ngModel)]="directorInput" formControlName="directorId">
+            <br>
+            <label for="email">{{labels?.email?.fieldLabel}}: </label>
+            <input id="email" type="email" [value]="employee?.email" formControlName="email">
+            <br>
+            <label for="officeId">Office: </label>
+            <select id="officeId" formControlName="officeNameId">
+              <option [value]="employee?.officeNameId">{{employee?.officeName}}</option>
+            </select>
+            <div class="buttons">
+              <button class="btn" (click)="updateEmployee()">
+                <mat-icon class="btn-icon">update</mat-icon>
+                Update
+              </button>
+              <button class="btn btn-danger" (click)="deleteEmployee()">
+                <mat-icon class="btn-icon">delete</mat-icon>
+                Delete
+              </button>
+              <button class="btn btn-danger" (click)="reset()">
+                <mat-icon class="btn-icon">cancel_presentation</mat-icon>
+                Reset
+              </button>
+            </div>
+          </form>
+
+          <!--Inserting Employee Form-->
+          <form [formGroup]="employeeForm" *ngIf="newOrOld">
+            <label for="firstName1">{{labels?.firstName?.fieldLabel}}: </label>
+            <input id="firstName1" type="text" formControlName="firstName">
+            <br>
+            <label for="lastName1">{{labels?.lastName?.fieldLabel}}: </label>
+            <input id="lastName1" type="text" formControlName="lastName">
+            <br>
+            <label for="birthDate1">{{labels?.birthdate?.fieldLabel}}: </label>
+            <input id="birthDate1" type="date" formControlName="birthdate">
+            <br>
+            <label for="managerId1">Manager: </label>
+            <select id="managerId1" formControlName="managerId">
+              <option>Select Manager</option>
+            </select>
+            <br>
+            <label for="directorId1">Director: </label>
+            <select id="directorId1" formControlName="directorId">
+              <option>Select Director</option>
+            </select>
+            <br>
+            <label for="email1">{{labels?.email?.fieldLabel}}: </label>
+            <input id="email1" type="email" formControlName="email">
+            <br>
+            <label for="officeId1">Office: </label>
+            <select id="officeId1" formControlName="officeNameId">
+              <option>Select Office</option>
+            </select>
+            <button class="btn" (click)="insertEmployee()">
+              <mat-icon class="btn-icon">person_add</mat-icon>
+              Insert
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material';
+import {EmployeeService} from '../shared-components/providers/employee.service';
+import {Response} from '@angular/http';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-main-page',
@@ -13,10 +16,21 @@ export class MainPageComponent implements OnInit {
   iconToggler: boolean;
   avatar: string;
 
-  constructor() {}
+  constructor(private status: EmployeeService, private router: Router) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getStatus();
+  }
 
+  getStatus() {
+    this.status.getAppStatus().subscribe((type: Response) => {
+      if (type.statusText === 'Unauthorized') {
+        this.status.logoutApp().subscribe(() => {
+          this.router.navigate(['sign-in']);
+        });
+      }
+    });
+  }
   iconToggle() {
     this.x = !(this.x);
     this.iconToggler = !(this.iconToggler);

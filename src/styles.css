@@ -31,3 +31,6 @@ app-reuests-container{
 app-employee-panel{
   width: 100%;
 }
+mat-drawer-content{
+  height: 100%;
+}

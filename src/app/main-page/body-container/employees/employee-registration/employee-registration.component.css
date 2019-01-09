@@ -1,0 +1,73 @@
+.bcg-emp-menu{
+  background-color: white;
+  height: 100%;
+  width: 400px;
+  border-left: 1px solid #045BA1;
+}
+.emp-menu{
+  background-color: rgba(4, 91, 161, 0.06);
+  height: 100%;
+}
+.header{
+  font-family: UniSansSemiBold;
+  font-size: 20px;
+  color: #045BA1;
+  padding-top: 14px;
+  height: 100px;
+}
+.forms{
+  margin-top: 0;
+}
+hr{
+  background-color: #045BA1;
+}
+label{
+  font-family: UniSansSemiBold;
+  color: #045BA1;
+  margin-top: 5px;
+  margin-bottom: 18px;
+  height: 40px;
+  width: 30%;
+}
+input, select{
+  background-color: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid #045BA1;
+  color: #045BA1;
+  font-family: UniSansRegular;
+  padding-left: 10px;
+  width: 70%;
+  height: 40px;
+  margin-bottom: 18px;
+  float: right;
+}
+input[type='date']::-webkit-inner-spin-button{
+  display: none;
+}
+.buttons{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+button{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #045BA1;
+  color: white;
+  padding-top: 4px;
+  margin-top: 20px;
+  margin-right: 15px;
+  width: 110px;
+}
+.btn-danger{
+  background-color: #c82333;
+}
+.btn-icon{
+  width: unset;
+  height: unset;
+  font-size: 22px;
+  margin-right: 5px;
+}
