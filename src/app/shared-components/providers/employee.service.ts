@@ -10,8 +10,9 @@ export class EmployeeService {
   status = 'svc/hr/auth/status?appId=HR_MODULES__APP';
   logout = 'svc/hr/auth/logout';
   employee = 'svc/hr/employee';
-
+  // ---------------------------------------------------------------------------------------------------------------------------------------
   // Headers
+  // ---------------------------------------------------------------------------------------------------------------------------------------
   providersAuthHeader = new Headers({
     'Authorization': 'APPUSER00000005',
     'Accept': 'application/json',
@@ -23,10 +24,11 @@ export class EmployeeService {
     'Accept-Language': 'en',
     'Content-Type': 'application/json'
   });
-
+  // ---------------------------------------------------------------------------------------------------------------------------------------
   constructor(private empServe: Http) {}
-
+  // ---------------------------------------------------------------------------------------------------------------------------------------
   // Signing-in Providers
+  // ---------------------------------------------------------------------------------------------------------------------------------------
   getAppStatus(token: string) {
     const statusAuthHeader = new Headers({
       'Authorization': token
@@ -47,9 +49,9 @@ export class EmployeeService {
   getFieldMapEmployee() {
     return this.empServe.options(this.employee, {headers: this.providersAuthHeader});
   }
-
+  // ---------------------------------------------------------------------------------------------------------------------------------------
   // Employee CRUD provider
-  // --------------------------------------------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------------------------------------------------------------
   // Create
   insertEmployee(emp: EmployeeInsertUpdateModel) {
     return this.empServe.post(this.employee + '/new', {
@@ -68,13 +70,12 @@ export class EmployeeService {
   }
   // Retrieve list
   getEmployeeList(paginate: number, pagesize?: number, firstName?: string) {
-    const paramBean  = {
-      pageNo: paginate,
-      pageSize: pagesize,
-      firstName: firstName
-    };
+    // const paramBean  = {
+    //   pageNo: paginate,
+    //   pageSize: pagesize,
+    //   firstName: firstName
+    // };
     // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
-    // kinezeri
     if (firstName === undefined) {
       return this.empServe.get(
         this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + '}',
@@ -102,4 +103,5 @@ export class EmployeeService {
   deleteEmployee(empId: string) {
     return this.empServe.delete(this.employee + '/' + empId, {headers: this.providersAuthHeader});
   }
+  // ---------------------------------------------------------------------------------------------------------------------------------------
 }

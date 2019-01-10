@@ -72,21 +72,21 @@ export class EmployeeRegistrationComponent implements OnInit {
     });
   }
 
-  // get manager datalist
+  // get manager dataList
   getManagerDataList() {
     this.empServe.getEmployeeList(1, 100, this.managerInput).subscribe((datalist) => {
       this.managers = datalist.json().body.data;
     });
   }
 
-  // get director datalist
+  // get director dataList
   getDirectorDataList() {
     this.empServe.getEmployeeList(1, 100, this.directorInput).subscribe((datalist) => {
       this.directors = datalist.json().body.data;
     });
   }
 
-  // get office datalist
+  // get office dataList
   getOfficeDataList() {
     this.empServe.getFieldMapEmployee().subscribe((datalist) => {
       this.offices = datalist.json().body.data.fieldMap.officeNameId.fieldDataPool.list;

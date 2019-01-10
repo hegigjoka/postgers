@@ -14,10 +14,33 @@ export class SignInComponent implements OnInit {
   employeeSession: EmployeeSession;
   signingIn: boolean;
 
-  constructor(private socialAuthService: AuthService, private signin: EmployeeService, private router: Router) {}
+  constructor(
+    private getStatus: EmployeeService,
+    private socialAuthService: AuthService,
+    private signin: EmployeeService,
+    private router: Router
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getStatuss();
+  }
 
+  // verify if it's authenticated
+  getStatuss() {
+    this.getStatus.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
+      () => {
+        this.router.navigate(['hr']);
+      },
+      () => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpAvatarImg');
+        localStorage.removeItem('EmpAccess');
+        this.router.navigate(['sign-in']);
+      });
+  }
+
+  // sign-in with google
   public socialSignIn() {
     // toggle signing-in spinner
     this.signingIn = !(this.signingIn);
