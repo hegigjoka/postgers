@@ -15,20 +15,24 @@
       <div>Hegi Gjoka</div>
     </div>
   </div>
-  <div class="row emp" routerLink="employees">
+  <div class="row emp" (click)="openEmp()">
     <mat-icon class="emp-icon">group</mat-icon>
     <div class="emp-desc">Employee</div>
   </div>
-  <div class="row req">
+  <div class="row req" (click)="openReq()">
     <mat-icon class="req-icon">folder</mat-icon>
-    <div class="req-desc">Requests ></div>
-    <div class="req-type">
-      <div routerLink="requests" [queryParams]="{type: 'all'}">All Requests</div>
-      <div routerLink="requests" [queryParams]="{type: 'my'}">My Requests</div>
-      <div routerLink="requests" [queryParams]="{type: 'myp'}">My Pending Requests</div>
-      <div routerLink="requests" [queryParams]="{type: 'pa'}">Pending Action</div>
-    </div>
+    <div class="req-desc">Requests</div>
   </div>
+  <!--<div class="row req">-->
+    <!--<mat-icon class="req-icon">folder</mat-icon>-->
+    <!--<div class="req-desc">Requests</div>-->
+    <!--<div class="req-type">-->
+      <!--<div routerLink="requests" [queryParams]="{type: 'all'}">All Requests</div>-->
+      <!--<div routerLink="requests" [queryParams]="{type: 'my'}">My Requests</div>-->
+      <!--<div routerLink="requests" [queryParams]="{type: 'myp'}">My Pending Requests</div>-->
+      <!--<div routerLink="requests" [queryParams]="{type: 'pa'}">Pending Action</div>-->
+    <!--</div>-->
+  <!--</div>-->
   <div class="row logout" (click)="logout()">
     <mat-icon class="logout-icon">save_alt</mat-icon>
     <div class="logout-desc">Logout</div>

@@ -23,11 +23,11 @@
   color: white;
 }
 .emp:hover > .emp-desc{
-  font-family: UniSansRegular;
+  font-family: "Roboto Light";
   color: white;
 }
 .req:hover > .req-desc, .req:hover > .req-type{
-  font-family: UniSansRegular;
+  font-family: "Roboto Light";
   color: white;
   display: block;
 }
@@ -41,7 +41,7 @@
   cursor: pointer;
 }
 .emp-desc, .req-desc, .logout-desc{
-  font-family: UniSansLight;
+  font-family: "Roboto Thin";
   color: #045BA1;
   font-size: 18px;
   margin-top: 4px;
@@ -51,8 +51,8 @@
 .req-type{
   display: none;
   color: white;
-  font-family: UniSansRegular;
-  margin-left: 10px;
+  font-family: "Roboto Light";
+  margin-left: 15px;
   margin-top: 6px;
   cursor: pointer;
 }
@@ -61,6 +61,7 @@
   color: #cd0022;
 }
 .logout-desc{
+  font-family: "Roboto Thin";
   color: #cd0022;
 }
 .logout:hover{
@@ -68,6 +69,9 @@
 }
 .logout:hover > .logout-icon, .logout:hover > .logout-desc{
   color: white;
+}
+.logout:hover > .logout-desc{
+  font-family: "Roboto Light";
 }
 
 .avatar-img{

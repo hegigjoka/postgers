@@ -122,14 +122,21 @@ export class EmployeeRegistrationComponent implements OnInit {
         this.loc.back();
       } else {
         alert(this.empId + ' has dependencies, so you can not delete it !');
-        this.loc.back();
       }
     });
   }
 
   // reset employee
   reset() {
-    console.log(this.employeeForm.value);
+    this.employee.firstName = '';
+    this.employee.lastName = '';
+    this.employee.birthdate = '';
+    this.employee.managerFirstName = '';
+    this.employee.managerLastName = '';
+    this.employee.directorFirstName = '';
+    this.employee.directorLastName = '';
+    this.employee.email = '';
+    this.employee.officeName = '';
   }
 
   // inserting employee

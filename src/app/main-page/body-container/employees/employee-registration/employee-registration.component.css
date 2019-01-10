@@ -5,43 +5,46 @@
   border-left: 1px solid #045BA1;
 }
 .emp-menu{
-  background-color: rgba(4, 91, 161, 0.06);
+  background-color: #045BA1;
   height: 100%;
 }
 .header{
-  font-family: UniSansSemiBold;
+  font-family: "Roboto Medium";
   font-size: 20px;
-  color: #045BA1;
+  color: white;
   padding-top: 14px;
   height: 100px;
+}
+hr{
+  background-color: white;
 }
 .forms{
   margin-top: 0;
 }
-hr{
-  background-color: #045BA1;
-}
 label{
-  font-family: UniSansSemiBold;
-  color: #045BA1;
+  font-family: "Roboto Light";
+  color: white;
   margin-top: 5px;
   margin-bottom: 18px;
   height: 40px;
   width: 30%;
 }
-input, select{
+input{
   background-color: transparent;
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 2px solid #045BA1;
-  color: #045BA1;
-  font-family: UniSansRegular;
+  border-bottom: 2px solid white;
+  color: white;
+  font-family: "Roboto Light";
   padding-left: 10px;
   width: 70%;
   height: 40px;
   margin-bottom: 18px;
   float: right;
+}
+input.ng-touched{
+  border-radius: 8px;
 }
 input[type='date']::-webkit-inner-spin-button{
   display: none;
@@ -55,15 +58,32 @@ button{
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: #045BA1;
-  color: white;
+  background-color: white;
+  color: #045BA1;
+  height: 40px;
   padding-top: 4px;
   margin-top: 20px;
   margin-right: 15px;
   width: 110px;
 }
+button:hover{
+  box-shadow: 0 2px 8px black;
+}
+button:active{
+  background-color: #045BA1;
+  color: white;
+}
 .btn-danger{
-  background-color: #c82333;
+  color: #c82333;
+  border: none;
+}
+.btn-danger:hover{
+  background-color: white;
+  border: none;
+}
+.btn-danger:active{
+  background-color: #cd0022;
+  color: white;
 }
 .btn-icon{
   width: unset;

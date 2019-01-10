@@ -42,12 +42,12 @@
             <br>
 
             <label for="managerId">Manager: </label>
-            <input id="managerId" list="managers" (keyup)="getManagerDataList()" [(ngModel)]="managerInput" formControlName="managerId">
+            <input id="managerId" list="managers" (keyup)="getManagerDataList()" [(ngModel)]="managerInput" value="{{employee.managerFirstName}} {{employee.managerLastName}}" formControlName="managerId">
 
             <br>
 
             <label for="directorId">Director: </label>
-            <input id="directorId" list="directors" (keyup)="getDirectorDataList()" [(ngModel)]="directorInput" formControlName="directorId">
+            <input id="directorId" list="directors" (keyup)="getDirectorDataList()" [(ngModel)]="directorInput" value="{{employee.directorFirstName}} {{employee.directorLastName}}" formControlName="directorId">
 
             <br>
 
@@ -78,25 +78,25 @@
           <!--Inserting Employee Form-->
           <form [formGroup]="employeeForm" *ngIf="newOrOld">
             <label for="firstName1">{{labels?.firstName?.fieldLabel}}: </label>
-            <input id="firstName1" type="text" formControlName="firstName">
+            <input id="firstName1" type="text" formControlName="firstName" required>
             <br>
             <label for="lastName1">{{labels?.lastName?.fieldLabel}}: </label>
-            <input id="lastName1" type="text" formControlName="lastName">
+            <input id="lastName1" type="text" formControlName="lastName" required>
             <br>
             <label for="birthDate1">{{labels?.birthdate?.fieldLabel}}: </label>
-            <input id="birthDate1" type="date" formControlName="birthdate">
+            <input id="birthDate1" type="date" formControlName="birthdate" required>
             <br>
             <label for="managerId1">Manager: </label>
-            <input id="managerId1" list="managers" (keyup)="getManagerDataList()" [(ngModel)]="managerInput" formControlName="managerId">
+            <input id="managerId1" list="managers" (keyup)="getManagerDataList()" [(ngModel)]="managerInput" formControlName="managerId" required>
             <br>
             <label for="directorId1">Director: </label>
-            <input id="directorId1" list="directors" (keyup)="getDirectorDataList()" [(ngModel)]="directorInput" formControlName="directorId">
+            <input id="directorId1" list="directors" (keyup)="getDirectorDataList()" [(ngModel)]="directorInput" formControlName="directorId" required>
             <br>
             <label for="email1">{{labels?.email?.fieldLabel}}: </label>
-            <input id="email1" type="email" formControlName="email">
+            <input id="email1" type="email" formControlName="email" required>
             <br>
             <label for="officeId1">Office: </label>
-            <input id="officeId1" list="offices" (keyup)="getOfficeDataList()" [(ngModel)]="officeInput" formControlName="officeNameId">
+            <input id="officeId1" list="offices" (keyup)="getOfficeDataList()" [(ngModel)]="officeInput" formControlName="officeNameId" required>
             <button class="btn" (click)="insertEmployee()">
               <mat-icon class="btn-icon">person_add</mat-icon>
               Insert

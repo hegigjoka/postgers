@@ -11,30 +11,34 @@
 table{
   margin-top: 28px;
 }
-tbody tr:hover{
+thead > tr{
   background-color: #045BA1;
+  color: white;
 }
-tr:hover > td{
+.tuple:hover{
+  background-color: #045BA1;
+  cursor: pointer;
+}
+.tuple:hover > td{
   color: white;
 }
 th{
   font-family: "Roboto Medium";
   font-size: 18px;
-  color: #323232;
-  text-align: center;
+  padding-left: 40px;
+  /*text-align: center;*/
+  /*border-right: 1px solid white;*/
 }
 td{
   font-family: "Roboto Light";
   font-size: 16px;
-  color: #045BA1;
-  padding-left: 55px;
+  color: #323232;
 }
-
+.tuple > td{
+  padding-left: 40px;
+}
 
 /*Pagination Buttons*/
-.paginate table tbody tr:hover{
-  background-color: transparent;
-}
 h4{
   color: #045BA1;
   margin-bottom: 0;
@@ -65,6 +69,7 @@ h4{
 .new-emp{
   background-color: #045BA1;
   color: white;
+  cursor: pointer;
   background-color: #045BA1;
   border-radius: 50%;
   padding-top: 11px;

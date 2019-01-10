@@ -1,4 +1,4 @@
-<mat-drawer-container [hasBackdrop]="true">
+<mat-drawer-container [hasBackdrop]="true" (backdropClick)="backing()">
   <mat-drawer #employeeMenu [mode]="'over'" position="end">
     <router-outlet></router-outlet>
   </mat-drawer>
@@ -22,7 +22,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let employee of employees?.list" (click)="openEmployee(employee?.id)">
+        <tr class="tuple" *ngFor="let employee of employees?.list" (click)="openEmployee(employee?.id)">
           <td>{{employee?.someLabel}}</td>
           <td>{{employee?.birthdate | multiPurposePipe: 'birthday'}}</td>
           <td>{{employee?.email}}</td>

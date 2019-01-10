@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {EmployeeService} from '../../../shared-components/providers/employee.service';
 
 @Component({
@@ -10,7 +10,7 @@ import {EmployeeService} from '../../../shared-components/providers/employee.ser
 export class SideMenuComponent implements OnInit {
   avatar: string;
 
-  constructor(private empserve: EmployeeService, private router: Router) { }
+  constructor(private empserve: EmployeeService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
   }
@@ -20,6 +20,12 @@ export class SideMenuComponent implements OnInit {
       this.avatar = localStorage.getItem('EmpAvatarImg');
       return true;
     }
+  }
+  openEmp() {
+    this.router.navigate(['employees'], {relativeTo: this.route});
+  }
+  openReq() {
+    this.router.navigate(['requests'], {relativeTo: this.route});
   }
   logout() {
     this.empserve.logoutApp(localStorage.getItem('EmpAuthToken')).subscribe(

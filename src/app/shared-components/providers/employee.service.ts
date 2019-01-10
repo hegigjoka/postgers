@@ -74,13 +74,16 @@ export class EmployeeService {
       firstName: firstName
     };
     // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
-    // kinezeri sorry
+    // kinezeri
     if (firstName === undefined) {
-      firstName = '';
+      return this.empServe.get(
+        this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + '}',
+        {headers: this.providersAuthHeader});
+    } else {
+      return this.empServe.get(
+        this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName:"' + firstName + '"}',
+        {headers: this.providersAuthHeader});
     }
-    return this.empServe.get(
-      this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName:"' + firstName + '"}',
-      {headers: this.providersAuthHeader});
   }
   // Update
   updateEmployee(empId: string, emp: EmployeeInsertUpdateModel) {

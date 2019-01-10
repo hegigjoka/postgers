@@ -4,6 +4,7 @@ import {EmployeeTableFieldGroup} from '../../../../shared-components/models/Empl
 import {EmployeeListModel} from '../../../../shared-components/models/Employee-Models/employee-list.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSidenav} from '@angular/material';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-employee-panel',
@@ -21,7 +22,8 @@ export class EmployeePanelComponent implements OnInit {
   constructor(
     private empserve: EmployeeService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loc: Location
   ) { }
 
   // on init component
@@ -29,6 +31,11 @@ export class EmployeePanelComponent implements OnInit {
     // this.getStatus();
     this.getEmployeeOptions();
     this.getEmployees();
+  }
+
+  // removing employee id from url
+  backing() {
+    this.loc.back();
   }
 
   // get employee list
