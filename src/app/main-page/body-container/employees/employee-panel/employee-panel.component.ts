@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Response} from '@angular/http';
 import {EmployeeService} from '../../../../shared-components/providers/employee.service';
 import {EmployeeTableFieldGroup} from '../../../../shared-components/models/Employee-Models/Employee-Table-Model/employee-table-field-group';
 import {EmployeeListModel} from '../../../../shared-components/models/Employee-Models/employee-list.model';
@@ -34,14 +33,14 @@ export class EmployeePanelComponent implements OnInit {
 
   // get employee list
   getEmployees() {
-    this.empserve.getEmployeeList(this.paginate).subscribe((empList: Response) => {
+    this.empserve.getEmployeeList(this.paginate, 10).subscribe((empList) => {
       this.employees = empList.json().body.data;
     });
   }
 
   // get employee table fields
   getEmployeeOptions() {
-    this.empserve.getFieldMapEmployee().subscribe((fields: Response) => {
+    this.empserve.getFieldMapEmployee().subscribe((fields) => {
       this.tableFields = fields.json().body.data.fieldMap;
     });
   }

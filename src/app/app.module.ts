@@ -4,13 +4,14 @@ import { NgModule } from '@angular/core';
 // Material Imports
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatIconModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatProgressSpinnerModule
+} from '@angular/material';
 
 // Google Login Imports
 import {HttpModule} from '@angular/http';
@@ -18,6 +19,7 @@ import {SocialLoginModule, AuthServiceConfig, GoogleLoginProvider} from 'angular
 import {EmployeeService} from './shared-components/providers/employee.service';
 import {AuthGuardService as AuthGuard} from './shared-components/providers/auth-guard.service';
 
+// Components
 import { AppComponent } from './app.component';
 import { AvatarModule } from 'ngx-avatar';
 import {RouterModule, Routes} from '@angular/router';
@@ -32,11 +34,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 // App Routers
 const EmployeeRoutes: Routes = [
-  {
-    path: '',
-    redirectTo: '/sign-in',
-    pathMatch: 'full'
-  },
   {
     path: 'sign-in',
     component: SignInComponent
@@ -101,12 +98,16 @@ export function getAuthServiceConfigs() {
   imports: [
     BrowserModule, HttpModule, ReactiveFormsModule,
     BrowserAnimationsModule, NoopAnimationsModule,
-    MatButtonModule, MatCheckboxModule, MatGridListModule,
-    MatIconModule, MatSidenavModule, AvatarModule, MatToolbarModule,
+    MatButtonModule, MatCheckboxModule, MatIconModule,
+    MatSidenavModule, AvatarModule, MatToolbarModule,
     MatProgressSpinnerModule, FormsModule,
     RouterModule.forRoot(EmployeeRoutes),
     SocialLoginModule
   ],
+
+  // exports: [
+  //   MatProgressSpinnerModule
+  // ],
 
   providers: [
     EmployeeService,

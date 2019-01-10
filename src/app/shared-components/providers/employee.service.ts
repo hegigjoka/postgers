@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers} from '@angular/http';
 import {EmployeeInsertUpdateModel} from '../models/Employee-Models/employee-insert-update.model';
+// import {HttpParams} from '@angular/common/http';
 
 @Injectable()
 export class EmployeeService {
@@ -11,11 +12,10 @@ export class EmployeeService {
   employee = 'svc/hr/employee';
 
   // Headers
-  statusAuthHeader = new Headers({'Authorization': localStorage.getItem('EmpAuthToken')});
   providersAuthHeader = new Headers({
     'Authorization': 'APPUSER00000005',
     'Accept': 'application/json',
-    'Accept-Language': 'en',
+    'Accept-Language': 'en'
   });
   providerAuthHeaderExtra = new Headers({
     'Authorization': 'APPUSER00000005',
@@ -27,14 +27,20 @@ export class EmployeeService {
   constructor(private empServe: Http) {}
 
   // Signing-in Providers
-  getAppStatus() {
-    return this.empServe.get(this.status, {headers: this.statusAuthHeader});
+  getAppStatus(token: string) {
+    const statusAuthHeader = new Headers({
+      'Authorization': token
+    });
+    return this.empServe.get(this.status, {headers: statusAuthHeader});
   }
   signInWithGoogle(token: string) {
     return this.empServe.post(this.signIn, {googleTokenId: token});
   }
-  logoutApp() {
-    return this.empServe.delete(this.logout, {headers: this.statusAuthHeader});
+  logoutApp(token: string) {
+    const statusAuthHeader = new Headers({
+      'Authorization': token
+    });
+    return this.empServe.delete(this.logout, {headers: statusAuthHeader});
   }
 
   // Getting labels provider
@@ -62,12 +68,19 @@ export class EmployeeService {
   }
   // Retrieve list
   getEmployeeList(paginate: number, pagesize?: number, firstName?: string) {
-    const filters  = {
+    const paramBean  = {
       pageNo: paginate,
-      pageSize: pagesize ? pagesize : '12',
-      firstName: firstName ? firstName : ''
+      pageSize: pagesize,
+      firstName: firstName
     };
-    return this.empServe.get(this.employee, {params: {filters: filters}, headers: this.providersAuthHeader});
+    // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
+    // kinezeri sorry
+    if (firstName === undefined) {
+      firstName = '';
+    }
+    return this.empServe.get(
+      this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName:"' + firstName + '"}',
+      {headers: this.providersAuthHeader});
   }
   // Update
   updateEmployee(empId: string, emp: EmployeeInsertUpdateModel) {

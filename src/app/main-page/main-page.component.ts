@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material';
 import {EmployeeService} from '../shared-components/providers/employee.service';
-import {Response} from '@angular/http';
 import {Router} from '@angular/router';
 
 @Component({
@@ -23,13 +22,18 @@ export class MainPageComponent implements OnInit {
   }
 
   getStatus() {
-    this.status.getAppStatus().subscribe((type: Response) => {
-      if (type.statusText === 'Unauthorized') {
-        localStorage.clear();
+    this.status.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
+      () => {},
+      (error) => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpAvatarImg');
+        localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
       }
-    });
+    );
   }
+
   iconToggle() {
     this.x = !(this.x);
     this.iconToggler = !(this.iconToggler);

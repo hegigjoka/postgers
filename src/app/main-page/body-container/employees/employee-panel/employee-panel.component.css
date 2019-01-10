@@ -1,5 +1,5 @@
 .header{
-  font-family: UniSansRegular;
+  font-family: "Roboto Black";
   font-size: 30px;
   color: #045BA1;
   padding-left: 12px;
@@ -18,16 +18,16 @@ tr:hover > td{
   color: white;
 }
 th{
-  font-family: UniSansRegular;
+  font-family: "Roboto Medium";
   font-size: 18px;
-  color: #045BA1;
+  color: #323232;
   text-align: center;
 }
 td{
-  font-family: UniSansRegular;
+  font-family: "Roboto Light";
   font-size: 16px;
   color: #045BA1;
-  text-align: center;
+  padding-left: 55px;
 }
 
 

@@ -14,7 +14,9 @@
   </div>
   <div class="row" *ngIf="signingIn">
     <div class="col-12">
-      <mat-spinner></mat-spinner>
+      <mat-progress-spinner
+        mode="indeterminate">
+      </mat-progress-spinner>
     </div>
   </div>
 </div>

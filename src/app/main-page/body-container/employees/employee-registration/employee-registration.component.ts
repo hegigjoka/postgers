@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {EmployeeTableFieldGroup} from '../../../../shared-components/models/Employee-Models/Employee-Table-Model/employee-table-field-group';
-import {Response} from '@angular/http';
 import {Location} from '@angular/common';
 import {EmployeeService} from '../../../../shared-components/providers/employee.service';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -68,22 +67,28 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // get employee table fields
   getEmployeeOptions() {
-    this.empServe.getFieldMapEmployee().subscribe((fields: Response) => {
+    this.empServe.getFieldMapEmployee().subscribe((fields) => {
       this.labels = fields.json().body.data.fieldMap;
     });
   }
+
+  // get manager datalist
   getManagerDataList() {
-    this.empServe.getEmployeeList(1, 100, this.managerInput).subscribe((datalist: Response) => {
+    this.empServe.getEmployeeList(1, 100, this.managerInput).subscribe((datalist) => {
       this.managers = datalist.json().body.data;
     });
   }
+
+  // get director datalist
   getDirectorDataList() {
-    this.empServe.getEmployeeList(1, 100, this.directorInput).subscribe((datalist: Response) => {
+    this.empServe.getEmployeeList(1, 100, this.directorInput).subscribe((datalist) => {
       this.directors = datalist.json().body.data;
     });
   }
+
+  // get office datalist
   getOfficeDataList() {
-    this.empServe.getFieldMapEmployee().subscribe((datalist: Response) => {
+    this.empServe.getFieldMapEmployee().subscribe((datalist) => {
       this.offices = datalist.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
       console.log(this.offices);
     });
@@ -91,7 +96,7 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // get employee
   getEmployee() {
-    this.empServe.getEmployee(this.empId).subscribe((singleEmployee: Response) => {
+    this.empServe.getEmployee(this.empId).subscribe((singleEmployee) => {
       this.employee = singleEmployee.json().body.data;
     });
   }
@@ -99,25 +104,30 @@ export class EmployeeRegistrationComponent implements OnInit {
   // updating and deleting employee
   updateEmployee() {
     this.employeeModel = this.employeeForm.value;
-    this.empServe.updateEmployee(this.empId, this.employeeModel).subscribe((response: Response) => {
+    this.empServe.updateEmployee(this.empId, this.employeeModel).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
         alert(this.empId + ' was updated successfully !');
         this.loc.back();
       } else {
-        alert('Something went wrong because you are an INDIAN PROGRAMMER :P');
+        alert('It is necessary to update all fields !');
       }
     });
   }
+
+  // delete employee
   deleteEmployee() {
-    this.empServe.deleteEmployee(this.empId).subscribe((response: Response) => {
+    this.empServe.deleteEmployee(this.empId).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
         alert(this.empId + ' was deleted successfully !');
         this.loc.back();
       } else {
-        alert('Something went wrong because you are an INDIAN PROGRAMMER :P');
+        alert(this.empId + ' has dependencies, so you can not delete it !');
+        this.loc.back();
       }
     });
   }
+
+  // reset employee
   reset() {
     console.log(this.employeeForm.value);
   }
@@ -126,12 +136,12 @@ export class EmployeeRegistrationComponent implements OnInit {
   insertEmployee() {
     this.employeeModel = this.employeeForm.value;
     console.log(this.employeeModel);
-    this.empServe.insertEmployee(this.employeeModel).subscribe((response: Response) => {
+    this.empServe.insertEmployee(this.employeeModel).subscribe((response) => {
       if (response.status === 201) {
         alert('The new employee( ' + response.json().body.data.id + ' ) was inserted successfully !');
         this.loc.back();
       } else {
-        alert('Something went wrong because you are an INDIAN PROGRAMMER :P');
+        alert('You must fill all fields !');
       }
     });
   }

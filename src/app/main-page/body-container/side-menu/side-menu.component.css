@@ -3,10 +3,10 @@
   background-color: rgba(4, 91, 161, 0.06);
 }
 .tool-bar{
-  font-family: UniSansSemiBold;
+  font-family: "Roboto Medium";
   font-size: 22px;
   color: #045BA1;
-  margin-top: 10px;
+  margin-top: 18px;
   margin-right: 140px;
 }
 
@@ -58,13 +58,13 @@
 }
 .logout-icon{
   transform: rotate(90deg);
-  color: tomato;
+  color: #cd0022;
 }
 .logout-desc{
-  color: tomato;
+  color: #cd0022;
 }
 .logout:hover{
-  background-color: tomato;
+  background-color: #cd0022;
 }
 .logout:hover > .logout-icon, .logout:hover > .logout-desc{
   color: white;
@@ -75,13 +75,16 @@
   border-radius: 50%;
   border: 2px solid #045BA1;
 }
-
+.emp-creds{
+  font-family: "Roboto Light";
+  color: #323232;
+}
 .logged-user{
   margin-bottom: 40px;
 }
 .manage{
-  font-family: UniSansRegular;
-  color: #045BA1;
+  font-family: "Roboto Thin";
+  color: #323232;
   width: 50%;
   margin: 5px 0 5px 15px;
 }

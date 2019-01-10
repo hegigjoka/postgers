@@ -19,23 +19,39 @@ export class SignInComponent implements OnInit {
   ngOnInit() {}
 
   public socialSignIn() {
+    // toggle signing-in spinner
     this.signingIn = !(this.signingIn);
+
+    // get auth token with google sign-in
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
       (userData) => {
+
+        // subscribe to google sign-in service
         this.signin.signInWithGoogle(userData.idToken).subscribe(
           (user: Response) => {
 
+            // get session data
             this.employeeSession = user.json().body.data;
+            // clear previews localStorage
+            localStorage.removeItem('EmpAuthToken');
+            localStorage.removeItem('EmpFullName');
+            localStorage.removeItem('EmpAvatarImg');
+            localStorage.removeItem('EmpAccess');
 
-            localStorage.clear();
-            localStorage.setItem('EmpAuthToken', this.employeeSession.authToken);
-            localStorage.setItem('EmpFullName', this.employeeSession.fullName);
-            localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
-            localStorage.setItem('EmpAccess', this.employeeSession.userAccessLevel.toString());
+            // insert to localStorage new session data
+            setTimeout(() => {
 
+              // new session data
+              localStorage.setItem('EmpAuthToken', this.employeeSession.authToken);
+              localStorage.setItem('EmpFullName', this.employeeSession.fullName);
+              localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
+              localStorage.setItem('EmpAccess', this.employeeSession.userAccessLevel.toString());
+            }, 2000);
+
+            // navigate to desired location
             setTimeout(() => {
               this.router.navigate(['hr']);
-            }, 1800);
+            }, 2000);
           }
         );
       }

@@ -18,18 +18,26 @@
 .page-name{
   color: white;
   margin-left: 15px;
-  font-family: UniSansSemiBold;
-  font-size: 25px;
+  font-family: "Roboto Black";
+  font-size: 22px;
 }
 .search-bar{
   border-radius: 8px;
   border: none;
   height: 40px;
   color: #045BA1;
-  padding: 2px 0 6px 45px;
-  font-family: UniSansRegular;
-  font-size: 18px;
+  padding: 6px 0 6px 45px;
+  font-family: "Roboto Light";
+  font-size: 20px;
   margin-left: 25px;
+}
+.search-icon{
+  color: #045BA1;
+  position: absolute;
+  left: 48px;
+  top: 20px;
+  font-size: 29px;
+  z-index: 1;
 }
 ::placeholder{
   color: #045BA1;
@@ -39,14 +47,15 @@
 }
 .avatar-img{
   margin-left: 100px;
-  height: 50px;
+  height: 48px;
+  width: 48px;
   border-radius: 50%;
   border: 2px solid white;
 }
 .office-n-employee{
   color: white;
   margin-left: 15px;
-  font-family: UniSansLight;
+  font-family: "Roboto Thin";
 }
 .to-x{
   transition: 600ms;

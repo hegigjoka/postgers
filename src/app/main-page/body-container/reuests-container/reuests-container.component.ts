@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Response} from '@angular/http';
 import {EmployeeService} from '../../../shared-components/providers/employee.service';
 
 @Component({
@@ -16,7 +15,7 @@ export class ReuestsContainerComponent implements OnInit {
   constructor(private status: EmployeeService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.getStatus();
+    // this.getStatus();
     this.route.queryParams.subscribe((reqtype: Params) => {
       this.reqType = reqtype['type'];
     });
@@ -34,15 +33,15 @@ export class ReuestsContainerComponent implements OnInit {
 
   getRequests() {}
 
-  getStatus() {
-    this.status.getAppStatus().subscribe((type: Response) => {
-      if (type.statusText === 'Unauthorized') {
-        this.status.logoutApp().subscribe(() => {
-          this.router.navigate(['sign-in']);
-        });
-      }
-    });
-  }
+  // getStatus() {
+  //   this.status.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe((type) => {
+  //     if (type.statusText === 'Unauthorized') {
+  //       this.status.logoutApp(localStorage.getItem('EmpAuthToken')).subscribe(() => {
+  //         this.router.navigate(['sign-in']);
+  //       });
+  //     }
+  //   });
+  // }
 
   changeQueryParam() {
     this.router.navigate(['.'], {relativeTo: this.route, queryParams: {type: this.reqType}});

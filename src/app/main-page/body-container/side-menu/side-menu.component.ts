@@ -22,9 +22,21 @@ export class SideMenuComponent implements OnInit {
     }
   }
   logout() {
-    this.empserve.logoutApp().subscribe(() => {
-      localStorage.clear();
-      this.router.navigate(['sign-in']);
-    });
+    this.empserve.logoutApp(localStorage.getItem('EmpAuthToken')).subscribe(
+      () => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpAvatarImg');
+        localStorage.removeItem('EmpAccess');
+        this.router.navigate(['sign-in']);
+      },
+      () => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpAvatarImg');
+        localStorage.removeItem('EmpAccess');
+        this.router.navigate(['sign-in']);
+      }
+    );
   }
 }
