@@ -1,6 +1,6 @@
 <mat-drawer-container [hasBackdrop]="true" (backdropClick)="backing()">
-  <mat-drawer #employeeMenu [mode]="'over'" position="end">
-    <router-outlet></router-outlet>
+  <mat-drawer #employeeMenu [mode]="'over'" [autoFocus]="false" position="end">
+    <router-outlet (deactivate)="updating()"></router-outlet>
   </mat-drawer>
   <mat-drawer-content>
     <div class="col-12">

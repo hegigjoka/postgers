@@ -43,11 +43,14 @@ input{
   margin-bottom: 18px;
   float: right;
 }
-input.ng-touched{
-  border-radius: 8px;
+input.ng-touched.ng-invalid{
+  border-bottom: 2px solid #cd0022;
 }
-input[type='date']::-webkit-inner-spin-button{
+input[type='date']::-webkit-inner-spin-button, input[type='date']::-webkit-clear-button{
   display: none;
+}
+input::-webkit-calendar-picker-indicator{
+  background-color: transparent;
 }
 .buttons{
   display: flex;
@@ -73,8 +76,11 @@ button:active{
   background-color: #045BA1;
   color: white;
 }
+button:focus{
+  box-shadow: 0 2px 8px black;
+}
 .btn-danger{
-  color: #c82333;
+  color: #cd0022;
   border: none;
 }
 .btn-danger:hover{
@@ -91,3 +97,4 @@ button:active{
   font-size: 22px;
   margin-right: 5px;
 }
+

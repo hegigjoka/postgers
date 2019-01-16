@@ -77,14 +77,19 @@ export class EmployeeService {
     // };
     // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
     if (firstName === undefined) {
-      return this.empServe.get(
-        this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + '}',
-        {headers: this.providersAuthHeader});
-    } else {
-      return this.empServe.get(
+      // return this.empServe.get(
+      //   this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + '}',
+      //   {headers: this.providersAuthHeader});
+      firstName = '';
+    }
+    // else {
+    //   return this.empServe.get(
+    //     this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName:"' + firstName + '"}',
+    //     {headers: this.providersAuthHeader});
+    // }
+    return this.empServe.get(
         this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName:"' + firstName + '"}',
         {headers: this.providersAuthHeader});
-    }
   }
   // Update
   updateEmployee(empId: string, emp: EmployeeInsertUpdateModel) {

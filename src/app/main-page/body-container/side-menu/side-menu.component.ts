@@ -22,10 +22,36 @@ export class SideMenuComponent implements OnInit {
     }
   }
   openEmp() {
-    this.router.navigate(['employees'], {relativeTo: this.route});
+    this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
+        (state) => {
+          if (state.json().status.code === 'STATUS_OK') {
+            this.router.navigate(['employees'], {relativeTo: this.route});
+          }
+        },
+        (error) => {
+          localStorage.removeItem('EmpAuthToken');
+          localStorage.removeItem('EmpFullName');
+          localStorage.removeItem('EmpAvatarImg');
+          localStorage.removeItem('EmpAccess');
+          this.router.navigate(['sign-in']);
+        }
+      );
   }
   openReq() {
-    this.router.navigate(['requests'], {relativeTo: this.route});
+    this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
+      (state) => {
+        if (state.json().status.code === 'STATUS_OK') {
+          this.router.navigate(['requests'], {relativeTo: this.route});
+        }
+      },
+      (error) => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpAvatarImg');
+        localStorage.removeItem('EmpAccess');
+        this.router.navigate(['sign-in']);
+      }
+    );
   }
   logout() {
     this.empserve.logoutApp(localStorage.getItem('EmpAuthToken')).subscribe(

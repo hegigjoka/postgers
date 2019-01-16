@@ -20,7 +20,9 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatProgressSpinnerModule,
-  MatRippleModule
+  MatRippleModule,
+  MatDialogModule,
+  MatSnackBarModule
 } from '@angular/material';
 
 // Google Login Imports
@@ -43,6 +45,7 @@ import { EmployeePanelComponent } from './main-page/body-container/employees/emp
 import { EmployeeRegistrationComponent } from './main-page/body-container/employees/employee-registration/employee-registration.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
 
 // App Routers
 const EmployeeRoutes: Routes = [
@@ -104,7 +107,8 @@ export function getAuthServiceConfigs() {
     EmployeeRegistrationComponent,
     MainPageComponent,
     MultiPurposePipe,
-    SignInComponent
+    SignInComponent,
+    ConfirmDialogComponent
   ],
 
   imports: [
@@ -123,6 +127,8 @@ export function getAuthServiceConfigs() {
     FormsModule,
     SocialLoginModule,
     MatRippleModule,
+    MatDialogModule,
+    MatSnackBarModule,
     RouterModule.forRoot(EmployeeRoutes)
   ],
 
@@ -133,6 +139,12 @@ export function getAuthServiceConfigs() {
       provide: AuthServiceConfig,
       useFactory: getAuthServiceConfigs
     }
+  ],
+
+  entryComponents: [
+    EmployeePanelComponent,
+    EmployeeRegistrationComponent,
+    ConfirmDialogComponent
   ],
 
   bootstrap: [AppComponent]

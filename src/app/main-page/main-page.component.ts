@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material';
 import {EmployeeService} from '../shared-components/providers/employee.service';
 import {Router} from '@angular/router';
@@ -10,6 +10,8 @@ import {Router} from '@angular/router';
 })
 export class MainPageComponent implements OnInit {
   @ViewChild('menu') menu: MatSidenav;
+  @Output() searching: EventEmitter<string> = new EventEmitter();
+  search: string;
   x: boolean;
   icon = 'menu';
   iconToggler: boolean;
@@ -52,5 +54,9 @@ export class MainPageComponent implements OnInit {
       this.avatar = localStorage.getItem('EmpAvatarImg');
       return true;
     }
+  }
+
+  searcingFunc() {
+    this.searching.emit(this.search);
   }
 }

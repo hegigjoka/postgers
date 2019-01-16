@@ -1,3 +1,6 @@
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
 @font-face {
   font-family: UniSansRegular;
   src: url("assets/fonts/UniSansRegular.otf") format("opentype");
@@ -36,4 +39,21 @@ mat-drawer-container{
 }
 mat-drawer-content{
   height: 100%;
+}
+app-confirm-dialog{
+  position: fixed;
+  top: 333px;
+  left: calc(50% - 250px);
+  width: 500px;
+  z-index: 10;
+}
+.success-chip{
+  background-color: #045BA1;
+  font-family: "Roboto Medium";
+  color: white;
+}
+.error-chip{
+  background-color: #cd0022;
+  font-family: "Roboto Medium";
+  color: white;
 }

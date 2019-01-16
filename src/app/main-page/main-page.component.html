@@ -1,8 +1,5 @@
 <mat-drawer-container style="height: 100%" [hasBackdrop]="false">
-  <mat-drawer #menu [mode]="'push'" position="start">
-    <app-side-menu></app-side-menu>
-  </mat-drawer>
-  <mat-drawer #newrequest [mode]="'over'" position="end">
+  <mat-drawer class="side-menu-drawer" #menu [mode]="'push'" position="start">
     <app-side-menu></app-side-menu>
   </mat-drawer>
   <mat-drawer-content class="container-fluid">
@@ -10,13 +7,13 @@
       <div style="padding-right: 0" class="col-2">
         <div class="row menu-row">
           <mat-icon class="menu-icon" [ngClass]="{'to-x': x, 'to-menu': !x}" (click)="iconToggle()">{{icon}}</mat-icon>
-          <div class="page-name">Employee Requests</div>
+          <div class="page-name" id="main">Employee Requests</div>
         </div>
       </div>
       <div class="col-6">
         <div class="row menu-row">
           <mat-icon class="search-icon">search</mat-icon>
-          <input class="col-12 search-bar" type="search" [placeholder]="'Search...'">
+          <input class="col-12 search-bar" type="search" (keyup)="searcingFunc()" [(ngModel)]="search" [placeholder]="'Search...'">
         </div>
       </div>
       <div class="col-2"></div>
@@ -32,6 +29,7 @@
       </div>
     </div>
     <div style="height: 92.5%;" class="row">
+      <!--<router-outlet [firstName]="search"></router-outlet>-->
       <router-outlet></router-outlet>
     </div>
   </mat-drawer-content>

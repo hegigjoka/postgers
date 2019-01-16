@@ -1,19 +1,21 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EmployeeService} from '../../../../shared-components/providers/employee.service';
 import {EmployeeTableFieldGroup} from '../../../../shared-components/models/Employee-Models/Employee-Table-Model/employee-table-field-group';
 import {EmployeeListModel} from '../../../../shared-components/models/Employee-Models/employee-list.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSidenav} from '@angular/material';
 import {Location} from '@angular/common';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-employee-panel',
   templateUrl: './employee-panel.component.html',
   styleUrls: ['./employee-panel.component.css']
 })
-export class EmployeePanelComponent implements OnInit {
+export class EmployeePanelComponent implements OnInit, OnDestroy {
   // variables
   @ViewChild('employeeMenu') empMenu: MatSidenav;
+  private sub: Subscription = new Subscription();
   paginate = 1;
   tableFields: EmployeeTableFieldGroup;
   employees: EmployeeListModel;
@@ -24,25 +26,53 @@ export class EmployeePanelComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private loc: Location
-  ) { }
+  ) {}
 
   // on init component
   ngOnInit() {
-    // this.getStatus();
+    this.getStatus();
     this.getEmployeeOptions();
     this.getEmployees();
   }
 
-  // removing employee id from url
+  // on destroy component
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  // authenticate
+  getStatus() {
+    this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
+      () => {},
+      (error) => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpAvatarImg');
+        localStorage.removeItem('EmpAccess');
+        this.router.navigate(['sign-in']);
+      }
+    );
+  }
+
+  // remove sidenav
   backing() {
-    this.loc.back();
+    this.updating();
+  }
+  updating() {
+    this.empMenu.toggle();
+    this.getEmployees();
+    if (document.location.href.match(/EMPL[0-9]{11}/) || document.location.href.match(/new-employee/)) {
+      this.loc.back();
+    }
   }
 
   // get employee list
   getEmployees() {
-    this.empserve.getEmployeeList(this.paginate, 10).subscribe((empList) => {
-      this.employees = empList.json().body.data;
-    });
+    this.sub.add(
+      this.empserve.getEmployeeList(this.paginate, 10).subscribe((empList) => {
+        this.employees = empList.json().body.data;
+      })
+    );
   }
 
   // get employee table fields
@@ -51,17 +81,6 @@ export class EmployeePanelComponent implements OnInit {
       this.tableFields = fields.json().body.data.fieldMap;
     });
   }
-
-  // authorization mean
-  // getStatus() {
-  //   this.empserve.getAppStatus().subscribe((type: Response) => {
-  //     if (type.statusText === 'Unauthorized') {
-  //       this.empserve.logoutApp().subscribe(() => {
-  //         this.router.navigate(['sign-in']);
-  //       });
-  //     }
-  //   });
-  // }
 
   // get single employee id
   openEmployee(empId: string) {

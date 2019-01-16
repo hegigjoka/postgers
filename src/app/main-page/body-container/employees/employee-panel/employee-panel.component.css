@@ -30,7 +30,7 @@ th{
   /*border-right: 1px solid white;*/
 }
 td{
-  font-family: "Roboto Light";
+  font-family: "Roboto Medium";
   font-size: 16px;
   color: #323232;
 }
@@ -50,21 +50,25 @@ h4{
   margin-left: auto;
 }
 .prev{
+  font-family: "Roboto Light";
   background-color: #045BA1;
+  border: none;
   display: flex;
   border-radius: 4px;
   justify-content: flex-start;
   height: 30px;
-  padding: 0 6px 0 6px;
+  padding: 1px 6px 0 6px;
   margin-right: 10px;
 }
 .next{
+  font-family: "Roboto Light";
   background-color: #045BA1;
+  border: none;
   display: flex;
   border-radius: 4px;
   justify-content: flex-end;
   height: 30px;
-  padding: 0 6px 0 6px;
+  padding: 1px 6px 0 6px;
   margin-left: 10px;
 }
 

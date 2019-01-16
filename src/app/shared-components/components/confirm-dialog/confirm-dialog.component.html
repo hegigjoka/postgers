@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="row conf-dialog">
+    <div class="col-12">
+      <div class="conf-dialog-header">Hi {{hrEmployee}} !</div>
+      <hr style="background-color: white">
+      <div class="conf-dialog-desc">{{text}}</div>
+      <div class="conf-dialog-buttons">
+        <button class="btn btn-danger" mat-button (click)="onNoClick()">{{no}}</button>
+        <button class="btn btn-success" mat-button [mat-dialog-close]="!data.conf" *ngIf="type">{{yes}}</button>
+      </div>
+    </div>
+  </div>
+</div>
