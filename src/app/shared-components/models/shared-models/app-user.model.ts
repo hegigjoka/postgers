@@ -1,4 +1,4 @@
-export class EmployeeSession {
+export class AppUserModel {
   fullName: string;
   lang: string;
   blocked: boolean;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AuthService, GoogleLoginProvider} from 'angular-6-social-login';
 import {Response} from '@angular/http';
 import {EmployeeService} from '../shared-components/providers/employee.service';
-import {EmployeeSession} from '../shared-components/models/Employee-Models/employee-session';
+import {AppUserModel} from '../shared-components/models/shared-models/app-user.model';
 import {Router} from '@angular/router';
 
 @Component({
@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./sign-in.component.css']
 })
 export class SignInComponent implements OnInit {
-  employeeSession: EmployeeSession;
+  employeeSession: AppUserModel;
   signingIn: boolean;
 
   constructor(

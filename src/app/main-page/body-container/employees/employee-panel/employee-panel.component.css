@@ -2,14 +2,14 @@
   font-family: "Roboto Black";
   font-size: 30px;
   color: #045BA1;
-  padding-left: 12px;
+  padding-left: 36px;
   padding-top: 15px;
 }
 
-
 /*css for employee table list*/
 table{
-  margin-top: 28px;
+  margin-top: 38px;
+  border-bottom: 1px solid #045BA1;
 }
 thead > tr{
   background-color: #045BA1;
@@ -26,8 +26,6 @@ th{
   font-family: "Roboto Medium";
   font-size: 18px;
   padding-left: 40px;
-  /*text-align: center;*/
-  /*border-right: 1px solid white;*/
 }
 td{
   font-family: "Roboto Medium";
@@ -43,6 +41,9 @@ h4{
   font-family: "Roboto Medium";
   color: #323232;
   margin-bottom: 0;
+}
+.paginate table{
+  border-bottom: none;
 }
 .paginate{
   display: block;

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers} from '@angular/http';
-import {EmployeeInsertUpdateModel} from '../models/Employee-Models/employee-insert-update.model';
+import {EmployeeModel} from '../models/employee-models/employee.model';
 // import {HttpParams} from '@angular/common/http';
 
 @Injectable()
@@ -53,7 +53,7 @@ export class EmployeeService {
   // Employee CRUD provider
   // ---------------------------------------------------------------------------------------------------------------------------------------
   // Create
-  insertEmployee(emp: EmployeeInsertUpdateModel) {
+  insertEmployee(emp: EmployeeModel) {
     return this.empServe.post(this.employee + '/new', {
       firstName: emp.firstName,
       lastName: emp.lastName,
@@ -92,7 +92,7 @@ export class EmployeeService {
         {headers: this.providersAuthHeader});
   }
   // Update
-  updateEmployee(empId: string, emp: EmployeeInsertUpdateModel) {
+  updateEmployee(empId: string, emp: EmployeeModel) {
     return this.empServe.put(this.employee + '/' + empId, {
       id: empId,
       firstName: emp.firstName,

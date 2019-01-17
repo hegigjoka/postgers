@@ -1,4 +1,4 @@
-export class OfficeIdFields {
+export class OfficeFieldsModel {
   id: string;
   someLabel: string;
 }

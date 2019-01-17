@@ -43,8 +43,10 @@ export class MainPageComponent implements OnInit {
     setTimeout(() => {
       if (this.iconToggler === false) {
         this.icon = 'menu';
+        console.log('side-menu is closed');
       } else {
         this.icon = 'close';
+        console.log('side-menu is opened');
       }
     }, 300);
   }

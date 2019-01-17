@@ -2,15 +2,14 @@
 import {Component, OnInit} from '@angular/core';
 import {
   EmployeeTableFieldGroup
-} from '../../../../shared-components/models/Employee-Models/Employee-Table-Model/employee-table-field-group';
+} from '../../../../shared-components/models/employee-models/employee-table-field-group';
 import {Location} from '@angular/common';
 import {EmployeeService} from '../../../../shared-components/providers/employee.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {EmployeeModel} from '../../../../shared-components/models/Employee-Models/employee.model';
+import {EmployeeModel} from '../../../../shared-components/models/employee-models/employee.model';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {EmployeeInsertUpdateModel} from '../../../../shared-components/models/Employee-Models/employee-insert-update.model';
-import {EmployeeListModel} from '../../../../shared-components/models/Employee-Models/employee-list.model';
-import {OfficeIdFields} from '../../../../shared-components/models/Employee-Models/Employee-Table-Model/office-id-fields';
+import {ListResponseModel} from '../../../../shared-components/models/shared-models/list-response.model';
+import {OfficeFieldsModel} from '../../../../shared-components/models/employee-models/office-fields.model';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {ConfirmDialogComponent} from '../../../../shared-components/components/confirm-dialog/confirm-dialog.component';
 
@@ -27,21 +26,20 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // manager var
   managerInput: string;
-  managers: EmployeeListModel;
+  managers: ListResponseModel<EmployeeModel>;
 
   // director var
   directorInput: string;
-  directors: EmployeeListModel;
+  directors: ListResponseModel<EmployeeModel>;
 
   // office var
-  offices: OfficeIdFields[];
+  offices: OfficeFieldsModel[];
 
   // form var
   empId: string;
   newOrOld: boolean;
   employee: EmployeeModel;
   employeeForm: FormGroup;
-  employeeModel: EmployeeInsertUpdateModel;
   confirmation: boolean;
   // ---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -169,11 +167,11 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // updating and deleting employee
   updateEmployee() {
-    this.employeeModel = this.employeeForm.value;
-    this.empServe.updateEmployee(this.empId, this.employeeModel).subscribe((response) => {
+    this.employee = this.employeeForm.value;
+    this.empServe.updateEmployee(this.empId, this.employee).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
         this.chip.open('Updated successfully !', null, {
-          duration: 3000,
+          duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
           panelClass: ['success-chip']
@@ -181,7 +179,7 @@ export class EmployeeRegistrationComponent implements OnInit {
         this.loc.back();
       } else {
         this.chip.open('Unable to update this employee !', null, {
-          duration: 3000,
+          duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
           panelClass: ['error-chip']
@@ -202,10 +200,16 @@ export class EmployeeRegistrationComponent implements OnInit {
       if (this.confirmation === true) {
         this.empServe.deleteEmployee(this.empId).subscribe((response) => {
           if (response.json().status.code === 'STATUS_OK') {
+            this.chip.open('Deleted successfully !', null, {
+              duration: 5000,
+              verticalPosition: 'bottom',
+              horizontalPosition: 'left',
+              panelClass: ['success-chip']
+            });
             this.loc.back();
           } else {
             this.chip.open('Unable to delete employee, because this employee must have dependencies !', null, {
-              duration: 3000,
+              duration: 5000,
               verticalPosition: 'bottom',
               horizontalPosition: 'left',
               panelClass: ['error-chip']
@@ -242,12 +246,11 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // inserting employee
   insertEmployee() {
-    this.employeeModel = this.employeeForm.value;
-    console.log(this.employeeModel);
-    this.empServe.insertEmployee(this.employeeModel).subscribe((response) => {
+    this.employee = this.employeeForm.value;
+    this.empServe.insertEmployee(this.employee).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
         this.chip.open('Inserted successfully !', null, {
-          duration: 3000,
+          duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
           panelClass: ['success-chip']

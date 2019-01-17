@@ -39,10 +39,10 @@ import {AuthGuardService as AuthGuard} from './shared-components/providers/auth-
 import { AppComponent } from './app.component';
 import { AvatarModule } from 'ngx-avatar';
 import {MultiPurposePipe} from './shared-components/pipes/multi-purpose.pipe';
-import { ReuestsContainerComponent } from './main-page/body-container/reuests-container/reuests-container.component';
+import { ReuestsContainerComponent } from './main-page/body-container/reuests/reuests-container.component';
 import { SideMenuComponent } from './main-page/body-container/side-menu/side-menu.component';
 import { EmployeePanelComponent } from './main-page/body-container/employees/employee-panel/employee-panel.component';
-import { EmployeeRegistrationComponent } from './main-page/body-container/employees/employee-registration/employee-registration.component';
+import { EmployeeRegistrationComponent } from './main-page/body-container/employees/insert-or-update-employee/employee-registration.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';

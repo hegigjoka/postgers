@@ -47,6 +47,10 @@ app-confirm-dialog{
   width: 500px;
   z-index: 10;
 }
+.btn-info:active, .btn-info:focus{
+  background-color: transparent;
+  box-shadow: none;
+}
 .success-chip{
   background-color: #045BA1;
   font-family: "Roboto Medium";

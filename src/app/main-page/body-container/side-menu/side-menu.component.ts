@@ -25,6 +25,7 @@ export class SideMenuComponent implements OnInit {
     this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
         (state) => {
           if (state.json().status.code === 'STATUS_OK') {
+            console.log('open employees panel');
             this.router.navigate(['employees'], {relativeTo: this.route});
           }
         },
@@ -41,6 +42,7 @@ export class SideMenuComponent implements OnInit {
     this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
       (state) => {
         if (state.json().status.code === 'STATUS_OK') {
+          console.log('open requests panel');
           this.router.navigate(['requests'], {relativeTo: this.route});
         }
       },

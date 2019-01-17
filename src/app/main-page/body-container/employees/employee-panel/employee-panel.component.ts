@@ -1,11 +1,14 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EmployeeService} from '../../../../shared-components/providers/employee.service';
-import {EmployeeTableFieldGroup} from '../../../../shared-components/models/Employee-Models/Employee-Table-Model/employee-table-field-group';
-import {EmployeeListModel} from '../../../../shared-components/models/Employee-Models/employee-list.model';
+import {
+  EmployeeTableFieldGroup
+} from '../../../../shared-components/models/employee-models/employee-table-field-group';
+import {ListResponseModel} from '../../../../shared-components/models/shared-models/list-response.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSidenav} from '@angular/material';
 import {Location} from '@angular/common';
 import {Subscription} from 'rxjs';
+import {EmployeeModel} from '../../../../shared-components/models/employee-models/employee.model';
 
 @Component({
   selector: 'app-employee-panel',
@@ -15,10 +18,11 @@ import {Subscription} from 'rxjs';
 export class EmployeePanelComponent implements OnInit, OnDestroy {
   // variables
   @ViewChild('employeeMenu') empMenu: MatSidenav;
+  sideNav: string;
   private sub: Subscription = new Subscription();
   paginate = 1;
   tableFields: EmployeeTableFieldGroup;
-  employees: EmployeeListModel;
+  employees: ListResponseModel<EmployeeModel>;
 
   // constructor
   constructor(
@@ -56,13 +60,17 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
 
   // remove sidenav
   backing() {
-    this.updating();
+    if (this.sideNav === 'open') {
+      this.sideNav = 'close';
+      this.empMenu.toggle();
+      this.loc.back();
+    }
   }
   updating() {
-    this.empMenu.toggle();
     this.getEmployees();
-    if (document.location.href.match(/EMPL[0-9]{11}/) || document.location.href.match(/new-employee/)) {
-      this.loc.back();
+    if (this.sideNav === 'open') {
+      this.sideNav = 'close';
+      this.empMenu.toggle();
     }
   }
 
@@ -84,7 +92,9 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
 
   // get single employee id
   openEmployee(empId: string) {
+    this.sideNav = 'open';
     this.empMenu.toggle();
+    console.log('open side nav for employee(' + empId + ')');
     this.router.navigate([empId], {relativeTo: this.route});
   }
 
