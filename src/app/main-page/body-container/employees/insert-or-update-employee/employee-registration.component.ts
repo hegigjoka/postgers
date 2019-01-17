@@ -9,7 +9,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {EmployeeModel} from '../../../../shared-components/models/employee-models/employee.model';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ListResponseModel} from '../../../../shared-components/models/shared-models/list-response.model';
-import {OfficeFieldsModel} from '../../../../shared-components/models/employee-models/office-fields.model';
+import {AbstractModel} from '../../../../shared-components/models/shared-models/abstract.model';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {ConfirmDialogComponent} from '../../../../shared-components/components/confirm-dialog/confirm-dialog.component';
 
@@ -33,7 +33,9 @@ export class EmployeeRegistrationComponent implements OnInit {
   directors: ListResponseModel<EmployeeModel>;
 
   // office var
-  offices: OfficeFieldsModel[];
+  offices: AbstractModel[];
+
+  emailRegExp: string;
 
   // form var
   empId: string;
@@ -54,6 +56,7 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   ngOnInit() {
     this.getStatus();
+    this.getEmployeeOptions();
     this.employeeForm = new FormGroup({
       id: new FormControl(''),
       labelMap: new FormGroup({}),
@@ -73,7 +76,6 @@ export class EmployeeRegistrationComponent implements OnInit {
       officeNameId: new FormControl('', [Validators.required, this.officeVal]),
       officeName: new FormControl('')
     });
-    this.getEmployeeOptions();
     this.getOfficeDataList();
     this.getUrlParam();
     this.newOrOldForm();
@@ -83,10 +85,13 @@ export class EmployeeRegistrationComponent implements OnInit {
   // authenticate
   getStatus() {
     this.empServe.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
-      () => {},
+      () => {
+        this.router.navigate(['.'], {relativeTo: this.route});
+      },
       (error) => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
         localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
@@ -98,6 +103,7 @@ export class EmployeeRegistrationComponent implements OnInit {
   getEmployeeOptions() {
     this.empServe.getFieldMapEmployee().subscribe((fields) => {
       this.labels = fields.json().body.data.fieldMap;
+      this.emailRegExp = fields.json().body.data.fieldMap.email.constraintList.Pattern.regexp;
     });
   }
 
@@ -138,11 +144,20 @@ export class EmployeeRegistrationComponent implements OnInit {
       this.offices = datalist.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
     });
   }
+  // ---------------------------------------------------------------------------------------------------------------------------------------
 
   // director and manager validators
   managerOrDirectorVal(control: FormControl): {[key: string]: boolean} {
     if (!control.value.match(/EMPL[0-9]{11}/) || control.value.match(/EMPL00000000000/)) {
       return {'notValidEmpId': true};
+    }
+    return null;
+  }
+
+  // email validator
+  emailVal(control: FormControl): {[key: string]: boolean} {
+    if (!control.value.match(this.emailRegExp)) {
+      return {'notValidEmail': true};
     }
     return null;
   }

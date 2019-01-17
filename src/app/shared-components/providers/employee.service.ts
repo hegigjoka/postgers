@@ -16,12 +16,12 @@ export class EmployeeService {
   providersAuthHeader = new Headers({
     'Authorization': 'APPUSER00000005',
     'Accept': 'application/json',
-    'Accept-Language': 'en'
+    'Accept-Language': localStorage.getItem('EmpLang')
   });
   providerAuthHeaderExtra = new Headers({
     'Authorization': 'APPUSER00000005',
     'Accept': 'application/json',
-    'Accept-Language': 'en',
+    'Accept-Language': localStorage.getItem('EmpLang'),
     'Content-Type': 'application/json'
   });
   // ---------------------------------------------------------------------------------------------------------------------------------------
@@ -77,16 +77,8 @@ export class EmployeeService {
     // };
     // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
     if (firstName === undefined) {
-      // return this.empServe.get(
-      //   this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + '}',
-      //   {headers: this.providersAuthHeader});
       firstName = '';
     }
-    // else {
-    //   return this.empServe.get(
-    //     this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName:"' + firstName + '"}',
-    //     {headers: this.providersAuthHeader});
-    // }
     return this.empServe.get(
         this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName:"' + firstName + '"}',
         {headers: this.providersAuthHeader});

@@ -33,6 +33,7 @@ export class SideMenuComponent implements OnInit {
         (error) => {
           localStorage.removeItem('EmpAuthToken');
           localStorage.removeItem('EmpFullName');
+          localStorage.removeItem('EmpLang');
           localStorage.removeItem('EmpAvatarImg');
           localStorage.removeItem('EmpAccess');
           this.router.navigate(['sign-in']);
@@ -53,6 +54,7 @@ export class SideMenuComponent implements OnInit {
       (error) => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
         localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
@@ -64,6 +66,7 @@ export class SideMenuComponent implements OnInit {
       () => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
         localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
@@ -71,6 +74,7 @@ export class SideMenuComponent implements OnInit {
       () => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
         localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);

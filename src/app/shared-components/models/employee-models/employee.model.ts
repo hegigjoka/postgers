@@ -1,4 +1,6 @@
-export class EmployeeModel {
+import {AbstractModel} from '../shared-models/abstract.model';
+
+export class EmployeeModel extends AbstractModel {
   officeName: string;
   managerFirstName: string;
   managerLastName: string;
@@ -13,6 +15,4 @@ export class EmployeeModel {
   directorId: string;
   email: string;
   officeNameId: string;
-  id: string;
-  someLabel: string;
 }

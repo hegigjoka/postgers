@@ -29,6 +29,7 @@ export class MainPageComponent implements OnInit {
       (error) => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
         localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);

@@ -47,10 +47,13 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   // authenticate
   getStatus() {
     this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
-      () => {},
+      () => {
+        this.router.navigate(['.'], {relativeTo: this.route});
+      },
       (error) => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
         localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);

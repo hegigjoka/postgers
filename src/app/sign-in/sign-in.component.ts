@@ -34,6 +34,7 @@ export class SignInComponent implements OnInit {
       () => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
         localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
@@ -58,6 +59,7 @@ export class SignInComponent implements OnInit {
             // clear previews localStorage
             localStorage.removeItem('EmpAuthToken');
             localStorage.removeItem('EmpFullName');
+            localStorage.removeItem('EmpLang');
             localStorage.removeItem('EmpAvatarImg');
             localStorage.removeItem('EmpAccess');
 
@@ -67,6 +69,7 @@ export class SignInComponent implements OnInit {
               // new session data
               localStorage.setItem('EmpAuthToken', this.employeeSession.authToken);
               localStorage.setItem('EmpFullName', this.employeeSession.fullName);
+              localStorage.setItem('EmpLang', this.employeeSession.lang);
               localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
               localStorage.setItem('EmpAccess', this.employeeSession.userAccessLevel.toString());
             }, 2000);
