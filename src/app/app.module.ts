@@ -22,7 +22,8 @@ import {
   MatProgressSpinnerModule,
   MatRippleModule,
   MatDialogModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatTooltipModule
 } from '@angular/material';
 
 // Google Login Imports
@@ -129,6 +130,7 @@ export function getAuthServiceConfigs() {
     MatRippleModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatTooltipModule,
     RouterModule.forRoot(EmployeeRoutes)
   ],
 
