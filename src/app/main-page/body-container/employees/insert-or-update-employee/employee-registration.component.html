@@ -11,15 +11,13 @@
         <div class="col-12 forms">
 
           <!--Manager and Director Datalist-->
-          <datalist id="managers">
-            <option value="XXXX">Don't have manager</option>
-            <option *ngFor="let manager of managers?.list" [value]="manager?.id">{{manager?.firstName}} {{manager?.lastName}}</option>
+          <datalist id="managerss">
+            <option *ngFor="let manager of managers?.list" [value]="manager?.firstName + ' ' + manager?.lastName">{{manager?.id}}</option>
           </datalist>
-          <datalist id="directors">
-            <option value="XXXXX">Don't have director</option>
-            <option *ngFor="let director of directors?.list" [value]="director?.id">{{director?.firstName}} {{director?.lastName}}</option>
+          <datalist id="directorss">
+            <option *ngFor="let director of directors?.list" [value]="director?.firstName + ' ' + director?.lastName">{{director?.id}}</option>
           </datalist>
-          <datalist id="offices">
+          <datalist id="officess">
             <option *ngFor="let office of offices" [value]="office?.id">{{office?.someLabel}}</option>
           </datalist>
 
@@ -35,16 +33,29 @@
             <input id="birthDate" type="date" formControlName="birthdate">
             <br>
             <label for="managerId">Manager: </label>
-            <input id="managerId" list="managers" (keyup)="getManagerDataList()" [(ngModel)]="managerInput" formControlName="managerId">
+            <input id="managerId"
+                   list="managerss"
+                   (change)="setMDOId(managerInput, 'manager')"
+                   (keyup)="getManagerDataList()"
+                   [(ngModel)]="managerInput"
+                   formControlName="managerId">
             <br>
             <label for="directorId">Director: </label>
-            <input id="directorId" list="directors" (keyup)="getDirectorDataList()" [(ngModel)]="directorInput" formControlName="directorId">
+            <input id="directorId"
+                   list="directorss"
+                   (change)="setMDOId(directorInput, 'director')"
+                   (keyup)="getDirectorDataList()"
+                   [(ngModel)]="directorInput"
+                   formControlName="directorId">
             <br>
             <label for="email">{{labels?.email?.fieldLabel}}: </label>
             <input id="email" type="email" formControlName="email">
             <br>
             <label for="officeId">Office: </label>
-            <input id="officeId" list="offices" formControlName="officeNameId">
+            <input id="officeId"
+                   list="officess"
+                   (change)="setMDOId(directorInput, 'office')"
+                   formControlName="officeNameId">
             <div class="buttons" *ngIf="!newOrOld">
               <button class="btn" (click)="updateEmployee()" *ngIf="employeeForm.valid">
                 <mat-icon class="btn-icon">update</mat-icon>

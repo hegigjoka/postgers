@@ -27,13 +27,16 @@ export class EmployeeRegistrationComponent implements OnInit {
   // manager var
   managerInput: string;
   managers: ListResponseModel<EmployeeModel>;
+  managerSelectedId: string;
 
   // director var
   directorInput: string;
   directors: ListResponseModel<EmployeeModel>;
+  directorSelectedId: string;
 
   // office var
   offices: AbstractModel[];
+  officeSelectedId: string;
 
   emailRegExp: string;
 
@@ -64,16 +67,16 @@ export class EmployeeRegistrationComponent implements OnInit {
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       birthdate: new FormControl('', Validators.required),
-      managerId: new FormControl('', [Validators.required, this.managerOrDirectorVal]),
+      managerId: new FormControl('', [Validators.required]),
       managerFirstName: new FormControl(''),
       managerLastName: new FormControl(''),
       managerEmail: new FormControl(''),
-      directorId: new FormControl('', [Validators.required, this.managerOrDirectorVal]),
+      directorId: new FormControl('', [Validators.required]),
       directorFirstName: new FormControl(''),
       directorLastName: new FormControl(''),
       directorEmail: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
-      officeNameId: new FormControl('', [Validators.required, this.officeVal]),
+      officeNameId: new FormControl('', [Validators.required]),
       officeName: new FormControl('')
     });
     this.getOfficeDataList();
@@ -126,7 +129,7 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // get manager dataList
   getManagerDataList() {
-    this.empServe.getEmployeeList(1, 100, this.managerInput).subscribe((datalist) => {
+    this.empServe.getEmployeeList(1, 100).subscribe((datalist) => {
       this.managers = datalist.json().body.data;
     });
   }
@@ -144,7 +147,32 @@ export class EmployeeRegistrationComponent implements OnInit {
       this.offices = datalist.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
     });
   }
-  // ---------------------------------------------------------------------------------------------------------------------------------------
+
+  // set manager, director and office id from datalist
+  setMDOId(someLabel, type: string) {
+    if (someLabel.length > 0) {
+      if (type === 'manager') {
+        this.managers.list.forEach((value) => {
+          if (value.someLabel === someLabel) {
+            this.managerSelectedId = value.id;
+          }
+        });
+      } else if (type === 'director') {
+        this.directors.list.forEach((value) => {
+          if (value.someLabel === someLabel) {
+            this.directorSelectedId = value.id;
+          }
+        });
+      } else {
+        this.offices.forEach((value) => {
+          if (value.someLabel === someLabel) {
+            this.officeSelectedId = value.id;
+          }
+        });
+      }
+    }
+  }
+  // VALIDATORS-----------------------------------------------------------------------------------------------------------------------------
 
   // director and manager validators
   managerOrDirectorVal(control: FormControl): {[key: string]: boolean} {
@@ -169,7 +197,7 @@ export class EmployeeRegistrationComponent implements OnInit {
     }
     return null;
   }
-  // ---------------------------------------------------------------------------------------------------------------------------------------
+  // CRUD-----------------------------------------------------------------------------------------------------------------------------------
 
   // get employee
   getEmployee() {
@@ -177,11 +205,17 @@ export class EmployeeRegistrationComponent implements OnInit {
       this.employee = singleEmployee.json().body.data;
       this.employee.birthdate = this.employee.birthdate.split('T')[0];
       this.employeeForm.setValue(this.employee);
+      this.employeeForm.controls['managerId'].setValue(this.employee.managerFirstName + ' ' + this.employee.managerLastName);
+      this.employeeForm.controls['directorId'].setValue(this.employee.directorFirstName + ' ' + this.employee.directorLastName);
+      this.employeeForm.controls['officeNameId'].setValue(this.employee.officeName);
     });
   }
 
   // updating and deleting employee
   updateEmployee() {
+    this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
+    this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
+    this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
     this.employee = this.employeeForm.value;
     this.empServe.updateEmployee(this.empId, this.employee).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
@@ -257,10 +291,12 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.employee.officeName = '';
     this.employeeForm.setValue(this.employee);
   }
-  // ---------------------------------------------------------------------------------------------------------------------------------------
 
   // inserting employee
   insertEmployee() {
+    this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
+    this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
+    this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
     this.employee = this.employeeForm.value;
     this.empServe.insertEmployee(this.employee).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
@@ -281,4 +317,5 @@ export class EmployeeRegistrationComponent implements OnInit {
       }
     });
   }
+  // ---------------------------------------------------------------------------------------------------------------------------------------
 }
