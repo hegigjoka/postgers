@@ -35,6 +35,7 @@ export class EmployeeRegistrationComponent implements OnInit {
   directorSelectedId: string;
 
   // office var
+  officeInput: string;
   offices: AbstractModel[];
   officeSelectedId: string;
 
@@ -60,6 +61,7 @@ export class EmployeeRegistrationComponent implements OnInit {
   ngOnInit() {
     this.getStatus();
     this.getEmployeeOptions();
+    this.getOfficeDataList();
     this.employeeForm = new FormGroup({
       id: new FormControl(''),
       labelMap: new FormGroup({}),
@@ -79,7 +81,6 @@ export class EmployeeRegistrationComponent implements OnInit {
       officeNameId: new FormControl('', [Validators.required]),
       officeName: new FormControl('')
     });
-    this.getOfficeDataList();
     this.getUrlParam();
     this.newOrOldForm();
   }
@@ -216,6 +217,7 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
     this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
     this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
+
     this.employee = this.employeeForm.value;
     this.empServe.updateEmployee(this.empId, this.employee).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
@@ -297,6 +299,7 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
     this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
     this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
+
     this.employee = this.employeeForm.value;
     this.empServe.insertEmployee(this.employee).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {

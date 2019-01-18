@@ -18,7 +18,7 @@
             <option *ngFor="let director of directors?.list" [value]="director?.firstName + ' ' + director?.lastName">{{director?.id}}</option>
           </datalist>
           <datalist id="officess">
-            <option *ngFor="let office of offices" [value]="office?.id">{{office?.someLabel}}</option>
+            <option *ngFor="let office of offices" [value]="office?.someLabel">{{office?.id}}</option>
           </datalist>
 
           <!--Editing Employee Or Inserting Employee Form-->
@@ -54,7 +54,8 @@
             <label for="officeId">Office: </label>
             <input id="officeId"
                    list="officess"
-                   (change)="setMDOId(directorInput, 'office')"
+                   (change)="setMDOId(officeInput, 'office')"
+                   [(ngModel)]="officeInput"
                    formControlName="officeNameId">
             <div class="buttons" *ngIf="!newOrOld">
               <button class="btn" (click)="updateEmployee()" *ngIf="employeeForm.valid">
