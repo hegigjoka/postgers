@@ -308,21 +308,9 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // inserting employee
   insertEmployee() {
-    if (this.managerSelectedId === undefined) {
-      this.employeeForm.controls['managerId'].setValue(this.employee.managerId);
-    } else if (this.managerSelectedId.length > 0) {
-      this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
-    }
-    if (this.directorSelectedId === undefined)  {
-      this.employeeForm.controls['directorId'].setValue(this.employee.directorId);
-    } else if (this.directorSelectedId.length > 0) {
-      this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
-    }
-    if (this.officeSelectedId === undefined)  {
-      this.employeeForm.controls['officeNameId'].setValue(this.employee.officeNameId);
-    } else if (this.officeSelectedId.length > 0) {
-      this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
-    }
+    this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
+    this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
+    this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
 
     this.employee = this.employeeForm.value;
     this.empServe.insertEmployee(this.employee).subscribe((response) => {
