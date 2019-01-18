@@ -34,6 +34,7 @@
             <br>
             <label for="managerId">Manager: </label>
             <input id="managerId"
+                   type="text"
                    list="managerss"
                    (change)="setMDOId(managerInput, 'manager')"
                    (keyup)="getManagerDataList()"
@@ -42,6 +43,7 @@
             <br>
             <label for="directorId">Director: </label>
             <input id="directorId"
+                   type="text"
                    list="directorss"
                    (change)="setMDOId(directorInput, 'director')"
                    (keyup)="getDirectorDataList()"
@@ -53,6 +55,7 @@
             <br>
             <label for="officeId">Office: </label>
             <input id="officeId"
+                   type="text"
                    list="officess"
                    (change)="setMDOId(officeInput, 'office')"
                    [(ngModel)]="officeInput"

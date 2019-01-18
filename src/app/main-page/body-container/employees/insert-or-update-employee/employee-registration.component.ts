@@ -69,22 +69,22 @@ export class EmployeeRegistrationComponent implements OnInit {
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       birthdate: new FormControl('', Validators.required),
-      managerId: new FormControl('', [Validators.required]),
+      managerId: new FormControl('', Validators.required),
       managerFirstName: new FormControl(''),
       managerLastName: new FormControl(''),
       managerEmail: new FormControl(''),
-      directorId: new FormControl('', [Validators.required]),
+      directorId: new FormControl('', Validators.required),
       directorFirstName: new FormControl(''),
       directorLastName: new FormControl(''),
       directorEmail: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
-      officeNameId: new FormControl('', [Validators.required]),
+      officeNameId: new FormControl('', Validators.required),
       officeName: new FormControl('')
     });
     this.getUrlParam();
     this.newOrOldForm();
   }
-  // ---------------------------------------------------------------------------------------------------------------------------------------
+  // ON_INIT_FUNCTIONS----------------------------------------------------------------------------------------------------------------------
 
   // authenticate
   getStatus() {
@@ -127,6 +127,7 @@ export class EmployeeRegistrationComponent implements OnInit {
       this.newOrOld = true;
     }
   }
+  // DATA_LISTS_POPULATORS------------------------------------------------------------------------------------------------------------------
 
   // get manager dataList
   getManagerDataList() {
@@ -214,9 +215,21 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // updating and deleting employee
   updateEmployee() {
-    this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
-    this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
-    this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
+    if (this.managerSelectedId === undefined) {
+      this.employeeForm.controls['managerId'].setValue(this.employee.managerId);
+    } else if (this.managerSelectedId.length > 0) {
+      this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
+    }
+    if (this.directorSelectedId === undefined)  {
+      this.employeeForm.controls['directorId'].setValue(this.employee.directorId);
+    } else if (this.directorSelectedId.length > 0) {
+      this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
+    }
+    if (this.officeSelectedId === undefined)  {
+      this.employeeForm.controls['officeNameId'].setValue(this.employee.officeNameId);
+    } else if (this.officeSelectedId.length > 0) {
+      this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
+    }
 
     this.employee = this.employeeForm.value;
     this.empServe.updateEmployee(this.empId, this.employee).subscribe((response) => {
@@ -275,30 +288,41 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // reset employee
   reset() {
-    this.employee.id = '';
-    this.employee.someLabel = '';
-    this.employee.firstName = '';
-    this.employee.lastName = '';
-    this.employee.birthdate = '';
-    this.employee.managerId = '';
-    this.employee.managerFirstName = '';
-    this.employee.managerLastName = '';
-    this.employee.managerEmail = '';
-    this.employee.directorId = '';
-    this.employee.directorFirstName = '';
-    this.employee.directorLastName = '';
-    this.employee.directorEmail = '';
-    this.employee.email = '';
-    this.employee.officeNameId = '';
-    this.employee.officeName = '';
-    this.employeeForm.setValue(this.employee);
+    this.employeeForm.controls['id'].setValue('');
+    this.employeeForm.controls['firstName'].setValue('');
+    this.employeeForm.controls['lastName'].setValue('');
+    this.employeeForm.controls['someLabel'].setValue('');
+    this.employeeForm.controls['birthdate'].setValue('');
+    this.employeeForm.controls['email'].setValue('');
+    this.employeeForm.controls['officeNameId'].setValue('');
+    this.employeeForm.controls['officeName'].setValue('');
+    this.employeeForm.controls['managerId'].setValue('');
+    this.employeeForm.controls['managerFirstName'].setValue('');
+    this.employeeForm.controls['managerLastName'].setValue('');
+    this.employeeForm.controls['managerEmail'].setValue('');
+    this.employeeForm.controls['directorId'].setValue('');
+    this.employeeForm.controls['directorFirstName'].setValue('');
+    this.employeeForm.controls['directorLastName'].setValue('');
+    this.employeeForm.controls['directorEmail'].setValue('');
   }
 
   // inserting employee
   insertEmployee() {
-    this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
-    this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
-    this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
+    if (this.managerSelectedId === undefined) {
+      this.employeeForm.controls['managerId'].setValue(this.employee.managerId);
+    } else if (this.managerSelectedId.length > 0) {
+      this.employeeForm.controls['managerId'].setValue(this.managerSelectedId);
+    }
+    if (this.directorSelectedId === undefined)  {
+      this.employeeForm.controls['directorId'].setValue(this.employee.directorId);
+    } else if (this.directorSelectedId.length > 0) {
+      this.employeeForm.controls['directorId'].setValue(this.directorSelectedId);
+    }
+    if (this.officeSelectedId === undefined)  {
+      this.employeeForm.controls['officeNameId'].setValue(this.employee.officeNameId);
+    } else if (this.officeSelectedId.length > 0) {
+      this.employeeForm.controls['officeNameId'].setValue(this.officeSelectedId);
+    }
 
     this.employee = this.employeeForm.value;
     this.empServe.insertEmployee(this.employee).subscribe((response) => {
