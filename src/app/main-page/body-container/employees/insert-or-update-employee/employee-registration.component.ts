@@ -59,7 +59,6 @@ export class EmployeeRegistrationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getStatus();
     this.getEmployeeOptions();
     this.getOfficeDataList();
     this.employeeForm = new FormGroup({
@@ -85,23 +84,6 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.newOrOldForm();
   }
   // ON_INIT_FUNCTIONS----------------------------------------------------------------------------------------------------------------------
-
-  // authenticate
-  getStatus() {
-    this.empServe.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
-      () => {
-        this.router.navigate(['.'], {relativeTo: this.route});
-      },
-      (error) => {
-        localStorage.removeItem('EmpAuthToken');
-        localStorage.removeItem('EmpFullName');
-        localStorage.removeItem('EmpLang');
-        localStorage.removeItem('EmpAvatarImg');
-        localStorage.removeItem('EmpAccess');
-        this.router.navigate(['sign-in']);
-      }
-    );
-  }
 
   // get employee table fields
   getEmployeeOptions() {

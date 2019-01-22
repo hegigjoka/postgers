@@ -50,7 +50,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
 
   // on init component
   ngOnInit() {
-    this.getStatus();
     this.getOfficesDataList();
     this.getEmployees();
   }
@@ -189,23 +188,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   // }
   // ---------------------------------------------------------------------------------------------------------------------------------------
 
-  // authenticate
-  getStatus() {
-    this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
-      () => {
-        this.router.navigate(['.'], {relativeTo: this.route});
-      },
-      (error) => {
-        localStorage.removeItem('EmpAuthToken');
-        localStorage.removeItem('EmpFullName');
-        localStorage.removeItem('EmpLang');
-        localStorage.removeItem('EmpAvatarImg');
-        localStorage.removeItem('EmpAccess');
-        this.router.navigate(['sign-in']);
-      }
-    );
-  }
-
   // get employee datalist
   getEmployees(refresh?: string) {
     if (refresh === 'refresh') {
@@ -251,6 +233,12 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
         this.paginate++;
         this.getEmployees();
       }
+    } else if (move === -10 && this.paginate !== 1) {
+      this.paginate = 1;
+      this.getEmployees();
+    } else if (move === 10 && this.paginate !== totalPages) {
+      this.paginate = totalPages;
+      this.getEmployees();
     }
   }
 }

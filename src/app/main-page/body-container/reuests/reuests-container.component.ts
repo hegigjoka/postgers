@@ -15,7 +15,6 @@ export class ReuestsContainerComponent implements OnInit {
   constructor(private status: EmployeeService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    // this.getStatus();
     this.route.queryParams.subscribe((reqtype: Params) => {
       this.reqType = reqtype['type'];
     });
@@ -32,16 +31,6 @@ export class ReuestsContainerComponent implements OnInit {
   }
 
   getRequests() {}
-
-  // getStatus() {
-  //   this.status.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe((type) => {
-  //     if (type.statusText === 'Unauthorized') {
-  //       this.status.logoutApp(localStorage.getItem('EmpAuthToken')).subscribe(() => {
-  //         this.router.navigate(['sign-in']);
-  //       });
-  //     }
-  //   });
-  // }
 
   changeQueryParam() {
     this.router.navigate(['.'], {relativeTo: this.route, queryParams: {type: this.reqType}});

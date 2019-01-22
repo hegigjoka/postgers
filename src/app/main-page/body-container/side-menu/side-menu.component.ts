@@ -23,43 +23,15 @@ export class SideMenuComponent implements OnInit {
     }
   }
   openEmp() {
-    this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
-        (state) => {
-          if (state.json().status.code === 'STATUS_OK') {
-            console.log('open employees panel');
-            this.router.navigate(['employees'], {relativeTo: this.route});
-          }
-        },
-        (error) => {
-          localStorage.removeItem('EmpAuthToken');
-          localStorage.removeItem('EmpFullName');
-          localStorage.removeItem('EmpLang');
-          localStorage.removeItem('EmpAvatarImg');
-          localStorage.removeItem('EmpAccess');
-          this.router.navigate(['sign-in']);
-        }
-      );
+    console.log('open employees panel');
+    this.router.navigate(['employees'], {relativeTo: this.route});
   }
   openReq() {
     this.requestsType = !(this.requestsType);
   }
   openReqType(type: string) {
-    this.empserve.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
-      (state) => {
-        if (state.json().status.code === 'STATUS_OK') {
-          console.log('open requests panel');
-          this.router.navigate(['requests'], {relativeTo: this.route, queryParams: {type: type}});
-        }
-      },
-      (error) => {
-        localStorage.removeItem('EmpAuthToken');
-        localStorage.removeItem('EmpFullName');
-        localStorage.removeItem('EmpLang');
-        localStorage.removeItem('EmpAvatarImg');
-        localStorage.removeItem('EmpAccess');
-        this.router.navigate(['sign-in']);
-      }
-    );
+    console.log('open requests panel');
+    this.router.navigate(['requests'], {relativeTo: this.route, queryParams: {type: type}});
   }
   logout() {
     this.empserve.logoutApp(localStorage.getItem('EmpAuthToken')).subscribe(

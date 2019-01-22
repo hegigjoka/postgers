@@ -38,13 +38,15 @@
   border-right: none;
   border-bottom: 2px solid #045BA1;
   background-color: transparent;
-  /*text-align: center;*/
   padding: 4px 2px 4px 34px;
   height: 40px;
-  width: 180px;
+  width: 218px;
   font-family: "Roboto Medium";
   color: #045BA1;
   font-size: 16px;
+}
+datalist option::-webkit-scrollbar-thumb{
+  background-color: #045BA1;
 }
 ::placeholder{
   color: #045BA1;
@@ -83,40 +85,37 @@ td{
 }
 
 /*Pagination Buttons*/
-h4{
-  font-family: "Roboto Medium";
-  color: #323232;
-  margin-bottom: 0;
-}
 .paginate table{
+  width: 60%;
   border-bottom: none;
 }
+.paginate td{
+  width: 20%;
+}
 .paginate{
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   margin-right: auto;
   margin-left: auto;
+  color: #045BA1;
+}
+.page-number{
+  color: #045BA1;
+  margin-top: -4px;
+  margin-left: -3px;
+}
+.total-records{
+  font-family: "Roboto Light";
+  margin-top: 30px;
 }
 .prev{
-  font-family: "Roboto Light";
-  background-color: #045BA1;
-  border: none;
-  display: flex;
-  border-radius: 4px;
-  justify-content: flex-start;
-  height: 30px;
-  padding: 1px 6px 0 6px;
-  margin-right: 10px;
+  color: #045BA1;
+  font-size: 35px;
 }
 .next{
-  font-family: "Roboto Light";
-  background-color: #045BA1;
-  border: none;
-  display: flex;
-  border-radius: 4px;
-  justify-content: flex-end;
-  height: 30px;
-  padding: 1px 6px 0 6px;
-  margin-left: 10px;
+  color: #045BA1;
+  font-size: 35px;
 }
 
 /*add new emp button*/

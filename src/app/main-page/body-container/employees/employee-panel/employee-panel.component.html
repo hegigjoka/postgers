@@ -6,15 +6,15 @@
 
     <!--Datalist-->
     <datalist id="officess">
-      <option *ngFor="let office of offices" [value]="office?.someLabel">{{office?.id}}</option>
+      <option *ngFor="let office of offices" [value]="office?.someLabel"></option>
     </datalist>
     <datalist id="managerss">
       <option>Managers</option>
-      <option *ngFor="let manager of managers?.list" [value]="manager?.someLabel">{{manager?.id}}</option>
+      <option *ngFor="let manager of managers?.list" [value]="manager?.someLabel"></option>
     </datalist>
     <datalist id="directorss">
       <option>Directors</option>
-      <option *ngFor="let director of directors?.list" [value]="director?.someLabel">{{director?.id}}</option>
+      <option *ngFor="let director of directors?.list" [value]="director?.someLabel"></option>
     </datalist>
 
     <div class="col-12 header-div">
@@ -84,7 +84,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="tuple" *ngFor="let employee of employees?.list | filters: searchFilter" (click)="openEmployee(employee?.id)">
+        <tr class="tuple" *ngFor="let employee of employees?.list" (click)="openEmployee(employee?.id)">
           <td>{{employee?.someLabel}}</td>
           <td>{{employee?.birthdate | multiPurposePipe: 'birthday'}}</td>
           <td>{{employee?.email}}</td>
@@ -97,22 +97,31 @@
         </tbody>
       </table>
     </div>
-    <div class="col-2 paginate" *ngIf="employees?.totalPages > 1">
+    <div class="col-3 paginate" *ngIf="employees?.totalPages > 1">
 
       <!--Pagination-->
       <table border="0">
         <tr>
           <td>
-            <button class="btn btn-info prev" (click)="pages(-1, employees?.totalPages)">Prev</button>
+            <mat-icon class="prev" (click)="pages(-10, employees?.totalPages)">first_page</mat-icon>
           </td>
           <td>
-            <h4>{{paginate}}</h4>
+            <mat-icon class="prev" (click)="pages(-1, employees?.totalPages)">chevron_left</mat-icon>
           </td>
           <td>
-            <button class="btn btn-info next" (click)="pages(1, employees?.totalPages)">Next</button>
+            <div class="page-number">
+              {{paginate}} of {{employees?.totalPages}}
+            </div>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(1, employees?.totalPages)">chevron_right</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(10, employees?.totalPages)">last_page</mat-icon>
           </td>
         </tr>
       </table>
+      <div class="total-records">records( {{employees?.totalRecords}} )</div>
     </div>
 
     <!--Create employee button-->
