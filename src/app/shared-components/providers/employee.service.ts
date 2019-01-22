@@ -89,8 +89,7 @@ export class EmployeeService {
     // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
 
     // filters
-    let paramBean = '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName="'
-      + firstName + '",officeNameId="' + officeNameId + '",managerId="' + managerId + '",directorId="' + directorId + '"}';
+    let paramBean = '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName="' + firstName + '",officeNameId="' + officeNameId + '",managerId="' + managerId + '",directorId="' + directorId + '"}';
 
     // statements for filter management
     if (firstName === undefined) {
@@ -110,7 +109,7 @@ export class EmployeeService {
     }
     if (directorId === undefined) {
       paramBean = paramBean.split(/,directorId="undefined"/)[0] + paramBean.split(/,directorId="undefined"/)[1];
-    } else if (directorId.length > 0) {
+    } else if (directorId.length === 0) {
       paramBean = paramBean.split(/,directorId=""/)[0] + paramBean.split(/,directorId=""/)[1];
     }
 

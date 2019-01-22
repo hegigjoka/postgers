@@ -4,6 +4,7 @@
   </mat-drawer>
   <mat-drawer-content>
 
+    <!--Datalist-->
     <datalist id="officess">
       <option *ngFor="let office of offices" [value]="office?.someLabel">{{office?.id}}</option>
     </datalist>
@@ -17,7 +18,11 @@
     </datalist>
 
     <div class="col-12 header-div">
-      <div class="header" (click)="getEmployees()">Manage Employees</div>
+
+      <!--Header-->
+      <div class="header" (click)="getEmployees('refresh')">Manage Employees</div>
+
+      <!--Filters-->
       <div>
         <mat-icon class="filter-icons">filter_list</mat-icon>
         <input type="text"
@@ -60,9 +65,11 @@
                class="employee-filter">
         <mat-icon class="clear-filter" (click)="clearFilter(4)" *ngIf="directorFilter.length > 0">cancel</mat-icon>
       </div>
-    </div >
+    </div>
     <hr>
     <div class="col-12">
+
+      <!--Employee Table-->
       <table class="table table-striped">
         <thead>
         <tr>
@@ -91,6 +98,8 @@
       </table>
     </div>
     <div class="col-2 paginate" *ngIf="employees?.totalPages > 1">
+
+      <!--Pagination-->
       <table border="0">
         <tr>
           <td>
@@ -105,6 +114,8 @@
         </tr>
       </table>
     </div>
+
+    <!--Create employee button-->
     <div class="new-emp" (click)="openEmployee('new-employee')">
       <mat-icon>person_add</mat-icon>
     </div>

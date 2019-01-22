@@ -250,7 +250,17 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   }
 
   // get employee datalist
-  getEmployees() {
+  getEmployees(refresh?: string) {
+    if (refresh === 'refresh') {
+      this.someLabelFilter = '';
+      this.officeFilter = '';
+      this.officeId = '';
+      this.managerFilter = '';
+      this.managerId = '';
+      this.directorFilter = '';
+      this.directorId = '';
+      console.log('refresh');
+    }
     this.sub.add(
       this.empserve.getEmployeeList(
         this.paginate,
