@@ -59,7 +59,7 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  searcingFunc() {
+  searchingFunc() {
     this.searching.emit(this.search);
   }
 }

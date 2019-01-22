@@ -40,6 +40,7 @@ import {AuthGuardService as AuthGuard} from './shared-components/providers/auth-
 import { AppComponent } from './app.component';
 import { AvatarModule } from 'ngx-avatar';
 import {MultiPurposePipe} from './shared-components/pipes/multi-purpose.pipe';
+import {FilterSearchPipe} from './shared-components/pipes/filter-search.pipe';
 import { ReuestsContainerComponent } from './main-page/body-container/reuests/reuests-container.component';
 import { SideMenuComponent } from './main-page/body-container/side-menu/side-menu.component';
 import { EmployeePanelComponent } from './main-page/body-container/employees/employee-panel/employee-panel.component';
@@ -110,6 +111,7 @@ export function getAuthServiceConfigs() {
     EmployeeRegistrationComponent,
     MainPageComponent,
     MultiPurposePipe,
+    FilterSearchPipe,
     SignInComponent,
     ConfirmDialogComponent
   ],

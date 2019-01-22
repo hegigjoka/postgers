@@ -69,18 +69,54 @@ export class EmployeeService {
     return this.empServe.get(this.employee + '/' + empId, {headers: this.providersAuthHeader});
   }
   // Retrieve list
-  getEmployeeList(paginate: number, pagesize?: number, firstName?: string) {
+  getEmployeeList(
+    paginate: number,
+    pagesize?: number,
+    firstName?: string,
+    officeNameId?: string,
+    managerId?: string,
+    directorId?: string
+    ) {
     // const paramBean  = {
     //   pageNo: paginate,
     //   pageSize: pagesize,
-    //   firstName: firstName
+    //   firstName: firstName,
+    //   lastName: lastName,
+    //   officeNameId: officeNameId,
+    //   managerId: managerId,
+    //   directorId: directorId
     // };
     // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
+
+    // filters
+    let paramBean = '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName="'
+      + firstName + '",officeNameId="' + officeNameId + '",managerId="' + managerId + '",directorId="' + directorId + '"}';
+
+    // statements for filter management
     if (firstName === undefined) {
-      firstName = '';
+      paramBean = paramBean.split(/,firstName="undefined"/)[0] + paramBean.split(/,firstName="undefined"/)[1];
+    } else if (firstName.length === 0) {
+      paramBean = paramBean.split(/,firstName=""/)[0] + paramBean.split(/,firstName=""/)[1];
     }
+    if (officeNameId === undefined) {
+      paramBean = paramBean.split(/,officeNameId="undefined/)[0] + paramBean.split(/,officeNameId="undefined"/)[1];
+    } else if (officeNameId.length === 0) {
+      paramBean = paramBean.split(/,officeNameId=""/)[0] + paramBean.split(/,officeNameId=""/)[1];
+    }
+    if (managerId === undefined) {
+      paramBean = paramBean.split(/,managerId="undefined"/)[0] + paramBean.split(/,managerId="undefined"/)[1];
+    } else if (managerId.length === 0) {
+      paramBean = paramBean.split(/,managerId=""/)[0] + paramBean.split(/,managerId=""/)[1];
+    }
+    if (directorId === undefined) {
+      paramBean = paramBean.split(/,directorId="undefined"/)[0] + paramBean.split(/,directorId="undefined"/)[1];
+    } else if (directorId.length > 0) {
+      paramBean = paramBean.split(/,directorId=""/)[0] + paramBean.split(/,directorId=""/)[1];
+    }
+
+    // get employee list service
     return this.empServe.get(
-        this.employee + '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName:"' + firstName + '"}',
+        this.employee + paramBean,
         {headers: this.providersAuthHeader});
   }
   // Update

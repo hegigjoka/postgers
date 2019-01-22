@@ -3,10 +3,65 @@
     <router-outlet (deactivate)="updating()"></router-outlet>
   </mat-drawer>
   <mat-drawer-content>
-    <div class="col-12">
-      <div class="header">Manage Employees</div>
-      <hr>
+
+    <datalist id="officess">
+      <option *ngFor="let office of offices" [value]="office?.someLabel">{{office?.id}}</option>
+    </datalist>
+    <datalist id="managerss">
+      <option>Managers</option>
+      <option *ngFor="let manager of managers?.list" [value]="manager?.someLabel">{{manager?.id}}</option>
+    </datalist>
+    <datalist id="directorss">
+      <option>Directors</option>
+      <option *ngFor="let director of directors?.list" [value]="director?.someLabel">{{director?.id}}</option>
+    </datalist>
+
+    <div class="col-12 header-div">
+      <div class="header" (click)="getEmployees()">Manage Employees</div>
+      <div>
+        <mat-icon class="filter-icons">filter_list</mat-icon>
+        <input type="text"
+               (keyup)="setFirstNLast()"
+               [(ngModel)]="someLabelFilter"
+               placeholder="Employees"
+               class="employee-filter">
+        <mat-icon class="clear-filter emp-name" (click)="clearFilter(1)" *ngIf="someLabelFilter.length > 0">cancel</mat-icon>
+      </div>
+      <div>
+        <mat-icon class="filter-icons">filter_list</mat-icon>
+        <input type="text"
+               list="officess"
+               (keyup)="getOfficesDataList()"
+               (change)="setMDOId(officeFilter, 'office')"
+               [(ngModel)]="officeFilter"
+               placeholder="Offices"
+               class="employee-filter">
+        <mat-icon class="clear-filter" (click)="clearFilter(2)" *ngIf="officeFilter.length > 0">cancel</mat-icon>
+      </div>
+      <div>
+        <mat-icon class="filter-icons">filter_list</mat-icon>
+        <input type="text"
+               list="managerss"
+               (keyup)="getManagerDataList()"
+               (change)="setMDOId(managerFilter, 'manager')"
+               [(ngModel)]="managerFilter"
+               placeholder="Managers"
+               class="employee-filter">
+        <mat-icon class="clear-filter" (click)="clearFilter(3)" *ngIf="managerFilter.length > 0">cancel</mat-icon>
+      </div>
+      <div>
+        <mat-icon class="filter-icons">filter_list</mat-icon>
+        <input type="text"
+               list="directorss"
+               (keyup)="getDirectorDataList()"
+               (change)="setMDOId(directorFilter, 'director')"
+               [(ngModel)]="directorFilter"
+               placeholder="Directors"
+               class="employee-filter">
+        <mat-icon class="clear-filter" (click)="clearFilter(4)" *ngIf="directorFilter.length > 0">cancel</mat-icon>
+      </div>
     </div >
+    <hr>
     <div class="col-12">
       <table class="table table-striped">
         <thead>
@@ -22,7 +77,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="tuple" *ngFor="let employee of employees?.list" (click)="openEmployee(employee?.id)">
+        <tr class="tuple" *ngFor="let employee of employees?.list | filters: searchFilter" (click)="openEmployee(employee?.id)">
           <td>{{employee?.someLabel}}</td>
           <td>{{employee?.birthdate | multiPurposePipe: 'birthday'}}</td>
           <td>{{employee?.email}}</td>

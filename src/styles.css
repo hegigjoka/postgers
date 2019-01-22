@@ -47,7 +47,7 @@ app-confirm-dialog{
   width: 500px;
   z-index: 10;
 }
-.btn-info:active, .btn-info:focus{
+.btn-info:active, .btn-info:focus, input:active, input:focus{
   background-color: transparent;
   box-shadow: none;
 }

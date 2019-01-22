@@ -13,7 +13,7 @@
       <div class="col-6">
         <div class="row menu-row">
           <mat-icon class="search-icon">search</mat-icon>
-          <input class="col-12 search-bar" type="search" (keyup)="searcingFunc()" [(ngModel)]="search" [placeholder]="'Search...'">
+          <input class="col-12 search-bar" type="search" [(ngModel)]="search" [placeholder]="'Search...'">
         </div>
       </div>
       <div class="col-2"></div>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div style="height: 92.5%;" class="row">
-      <router-outlet></router-outlet>
+      <router-outlet (activate)="searchingFunc()"></router-outlet>
     </div>
     <div style="width: 100%; height: 2px; background-color: #045BA1"></div>
   </mat-drawer-content>

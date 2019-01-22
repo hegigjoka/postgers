@@ -12,10 +12,10 @@
 
           <!--Manager and Director Datalist-->
           <datalist id="managerss">
-            <option *ngFor="let manager of managers?.list" [value]="manager?.firstName + ' ' + manager?.lastName">{{manager?.id}}</option>
+            <option *ngFor="let manager of managers?.list" [value]="manager?.someLabel">{{manager?.id}}</option>
           </datalist>
           <datalist id="directorss">
-            <option *ngFor="let director of directors?.list" [value]="director?.firstName + ' ' + director?.lastName">{{director?.id}}</option>
+            <option *ngFor="let director of directors?.list" [value]="director?.someLabel">{{director?.id}}</option>
           </datalist>
           <datalist id="officess">
             <option *ngFor="let office of offices" [value]="office?.someLabel">{{office?.id}}</option>

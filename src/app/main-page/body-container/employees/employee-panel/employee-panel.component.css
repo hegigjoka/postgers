@@ -1,3 +1,11 @@
+.header-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.header-div > div{
+  cursor: pointer;
+}
 .header{
   font-family: "Roboto Black";
   font-size: 30px;
@@ -5,7 +13,45 @@
   padding-left: 36px;
   padding-top: 15px;
 }
-
+.filter-icons{
+  color: #045BA1;
+  position: relative;
+  left: 44px;
+  top: 6px;
+}
+.clear-filter{
+  color: #045BA1;
+  position: relative;
+  left: -55px;
+  top: 5px;
+  font-size: 20px;
+}
+.emp-name{
+  left: -44px;
+}
+.employee-filter{
+  margin-left: 15px;
+  margin-top: 20px;
+  margin-right: 15px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid #045BA1;
+  background-color: transparent;
+  /*text-align: center;*/
+  padding: 4px 2px 4px 34px;
+  height: 40px;
+  width: 180px;
+  font-family: "Roboto Medium";
+  color: #045BA1;
+  font-size: 16px;
+}
+::placeholder{
+  color: #045BA1;
+}
+.employee-filter > input{
+  width: 98%;
+}
 /*css for employee table list*/
 table{
   margin-top: 38px;
