@@ -26,7 +26,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   employees: ListResponseModel<EmployeeModel>;
 
   // filter variables
-  // searchFilter: string;
   someLabelFilter = '';
 
   offices: AbstractModel[];
@@ -52,7 +51,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   // on init component
   ngOnInit() {
     this.getStatus();
-    this.getEmployeeOptions();
     this.getOfficesDataList();
     this.getEmployees();
   }
@@ -90,9 +88,11 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
 
   // get offices datalist
   getOfficesDataList() {
-    this.empserve.getFieldMapEmployee().subscribe((datalist) => {
-      this.offices = datalist.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
-      // this.offices.push({id: '', someLabel: 'Offices'});
+    this.empserve.getFieldMapEmployee().subscribe((response) => {
+      this.offices = response.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
+
+      // get employee panel labels(no relation with dataList)
+      this.tableFields = response.json().body.data.fieldMap;
     });
   }
 
@@ -100,24 +100,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   getManagerDataList() {
     this.empserve.getEmployeeList(1, 100, this.managerFilter).subscribe((datalist) => {
       this.managers = datalist.json().body.data;
-      // this.managers.list.push({
-      //   id: '',
-      //   someLabel: 'Managers',
-      //   firstName: '',
-      //   lastName: '',
-      //   birthdate: '',
-      //   email: '',
-      //   officeNameId: '',
-      //   officeName: '',
-      //   managerId: '',
-      //   managerFirstName: '',
-      //   managerLastName: '',
-      //   managerEmail: '',
-      //   directorId: '',
-      //   directorFirstName: '',
-      //   directorLastName: '',
-      //   directorEmail: ''
-      // });
     });
   }
 
@@ -125,24 +107,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   getDirectorDataList() {
     this.empserve.getEmployeeList(1, 100, this.directorFilter).subscribe((datalist) => {
       this.directors = datalist.json().body.data;
-      // this.directors.list.push({
-      //   id: '',
-      //   someLabel: 'Managers',
-      //   firstName: '',
-      //   lastName: '',
-      //   birthdate: '',
-      //   email: '',
-      //   officeNameId: '',
-      //   officeName: '',
-      //   managerId: '',
-      //   managerFirstName: '',
-      //   managerLastName: '',
-      //   managerEmail: '',
-      //   directorId: '',
-      //   directorFirstName: '',
-      //   directorLastName: '',
-      //   directorEmail: ''
-      // });
     });
   }
 
@@ -242,13 +206,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
     );
   }
 
-  // get employee table fields
-  getEmployeeOptions() {
-    this.empserve.getFieldMapEmployee().subscribe((fields) => {
-      this.tableFields = fields.json().body.data.fieldMap;
-    });
-  }
-
   // get employee datalist
   getEmployees(refresh?: string) {
     if (refresh === 'refresh') {
@@ -259,7 +216,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
       this.managerId = '';
       this.directorFilter = '';
       this.directorId = '';
-      console.log('refresh');
     }
     this.sub.add(
       this.empserve.getEmployeeList(
