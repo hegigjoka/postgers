@@ -28,6 +28,7 @@ export class MainPageComponent implements OnInit {
       () => {},
       (error) => {
         localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpId');
         localStorage.removeItem('EmpFullName');
         localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');

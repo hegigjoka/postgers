@@ -31,12 +31,13 @@ export class SideMenuComponent implements OnInit {
   }
   openReqType(type: string) {
     console.log('open requests panel');
-    this.router.navigate(['requests'], {relativeTo: this.route, queryParams: {type: type}});
+    this.router.navigate([localStorage.getItem('EmpId'), 'requests'], {relativeTo: this.route, queryParams: {type: type}});
   }
   logout() {
     this.empserve.logoutApp(localStorage.getItem('EmpAuthToken')).subscribe(
       () => {
         localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpId');
         localStorage.removeItem('EmpFullName');
         localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
@@ -45,6 +46,7 @@ export class SideMenuComponent implements OnInit {
       },
       () => {
         localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpId');
         localStorage.removeItem('EmpFullName');
         localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');

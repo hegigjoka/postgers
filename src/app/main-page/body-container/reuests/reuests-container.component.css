@@ -1,5 +1,5 @@
 .dropdown{
-  font-family: UniSansRegular;
+  font-family: "Roboto Medium";
   font-size: 20px;
   color: #045BA1;
   padding-left: 8px;
@@ -8,42 +8,73 @@
 }
 .dropdown-menu > a{
   color: #045BA1;
-  font-family: UniSansRegular;
+  font-family: "Roboto Light";
 }
 .table-striped{
   margin-top: 20px;
   margin-bottom: 20px;
 }
-th{
-  font-family: UniSansRegular;
-  font-size: 18px;
-  color: #045BA1;
+table{
+  margin-top: 38px;
+  border-bottom: 1px solid #045BA1;
 }
-h4{
-  color: #045BA1;
+thead > tr{
+  background-color: #045BA1;
+  color: white;
+}
+.tuple:hover{
+  background-color: #045BA1;
+  cursor: pointer;
+}
+.tuple:hover > td{
+  color: white;
+}
+th{
+  font-family: "Roboto Medium";
+  font-size: 18px;
+  padding-left: 40px;
+}
+td{
+  font-family: "Roboto Medium";
+  font-size: 16px;
+  color: #323232;
+}
+.tuple > td{
+  padding-left: 40px;
 }
 
 /*Pagination Buttons*/
+.paginate table{
+  width: 60%;
+  border-bottom: none;
+}
+.paginate td{
+  width: 20%;
+}
 .paginate{
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   margin-right: auto;
   margin-left: auto;
+  color: #045BA1;
+}
+.page-number{
+  color: #045BA1;
+  margin-top: -4px;
+  margin-left: -3px;
+}
+.total-records{
+  font-family: "Roboto Light";
+  margin-top: 30px;
 }
 .prev{
-  background-color: #045BA1;
-  display: flex;
-  justify-content: flex-start;
-  height: 30px;
-  padding: 0 6px 3px 6px;
-  margin-right: 10px;
+  color: #045BA1;
+  font-size: 35px;
 }
 .next{
-  background-color: #045BA1;
-  display: flex;
-  justify-content: flex-end;
-  height: 30px;
-  padding: 0 6px 3px 6px;
-  margin-left: 10px;
+  color: #045BA1;
+  font-size: 35px;
 }
 
 /*New Request*/
@@ -55,7 +86,7 @@ h4{
   width: 55px;
 }
 .new-request:hover{
-  height: 255px;
+  height: 305px;
 }
 .new{
   background-color: #045BA1;
@@ -133,8 +164,31 @@ h4{
   bottom: 240px;
   right: 35px;
 }
+.new-sub{
+  display: none;
+  background-color: #323232;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  font-size: 20px;
+  padding-top: 7px;
+  padding-left: 17px;
+  position: fixed;
+  bottom: 290px;
+  right: 35px;
+}
 
 /*New Request Banners*/
+.new-sub-banner{
+  display: none;
+  font-size: 18px;
+  color: #323232;
+  position: fixed;
+  bottom: 300px;
+  right: 90px;
+}
 .new-mt-banner{
   display: none;
   font-size: 18px;
@@ -177,10 +231,11 @@ h4{
 .new-request:hover > .new-xh, .new-request:hover > .new-xh-banner,
 .new-request:hover > .new-holiday, .new-request:hover > .new-holiday-banner,
 .new-request:hover > .new-mission, .new-request:hover > .new-mission-banner,
-.new-request:hover > .new-mt, .new-request:hover > .new-mt-banner{
+.new-request:hover > .new-mt, .new-request:hover > .new-mt-banner,
+.new-request:hover > .new-sub, .new-request:hover > .new-sub-banner{
   display: block;
 }
-.new-xh:hover, .new-holiday:hover, .new-mission:hover, .new-mt:hover{
+.new-xh:hover, .new-holiday:hover, .new-mission:hover, .new-mt:hover, .new-sub:hover{
   transition: 600ms;
   transform: rotate(360deg);
   box-shadow: 0 4px 12px black;

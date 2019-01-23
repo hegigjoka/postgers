@@ -1,8 +1,8 @@
 // imports
 import {Component, OnInit} from '@angular/core';
 import {
-  EmployeeTableFieldGroup
-} from '../../../../shared-components/models/employee-models/employee-table-field-group';
+  EmployeeMetadata
+} from '../../../../shared-components/models/employee-models/employee-metadata';
 import {Location} from '@angular/common';
 import {EmployeeService} from '../../../../shared-components/providers/employee.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -22,7 +22,7 @@ import {ConfirmDialogComponent} from '../../../../shared-components/components/c
 export class EmployeeRegistrationComponent implements OnInit {
 
   // labels var
-  labels: EmployeeTableFieldGroup;
+  labels: EmployeeMetadata;
 
   // manager var
   managerInput: string;

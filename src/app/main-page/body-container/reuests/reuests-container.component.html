@@ -1,57 +1,85 @@
-<div class="col-12">
-  <div class="dropdown">
-    <h2 class="dropdown-toggle" id="requestCategory" data-toggle="dropdown">{{title}}</h2>
-    <div class="dropdown-menu" aria-labelledby="requestCategory">
-      <a class="dropdown-item" (click)="all()">All</a>
-      <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
-      <a class="dropdown-item" (click)="onlyMPR()">My Pending Requests</a>
-      <a class="dropdown-item" (click)="onlyPA()">Pending Action</a>
+<mat-drawer-container [hasBackdrop]="true" (backdropClick)="backing()">
+  <mat-drawer #request position="end">
+    <router-outlet (deactivate)="updating()"></router-outlet>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="col-12">
+      <div class="dropdown">
+        <h2 class="dropdown-toggle" id="requestCategory" data-toggle="dropdown">{{title}}</h2>
+        <div class="dropdown-menu" aria-labelledby="requestCategory">
+          <a class="dropdown-item" (click)="all()">All</a>
+          <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
+          <a class="dropdown-item" (click)="onlyPA()">Pending Action</a>
+        </div>
+      </div>
+      <hr>
     </div>
-  </div>
-  <hr>
-</div>
-<div class="col-12">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Issued Date</th>
-        <th>Request Date</th>
-        <th>Type</th>
-        <th>Employee</th>
-        <th>Motivation</th>
-        <th>Manager</th>
-        <th>Director</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr></tr>
-    </tbody>
-  </table>
-</div>
-<div class="col-2 paginate">
-  <table border="0">
-    <tr>
-      <td>
-        <button class="btn btn-info prev" (click)="pages(-1, 3)">Prev</button>
-      </td>
-      <td>
-        <h4>{{paginate}}</h4>
-      </td>
-      <td>
-        <button class="btn btn-info next" (click)="pages(1, 3)">Next</button>
-      </td>
-    </tr>
-  </table>
-</div>
-<div class="new-request">
-  <div ma class="new-mt">MB</div>
-  <div class="new-mt-banner">Missing Badge</div>
-  <div class="new-mission">M</div>
-  <div class="new-mission-banner">Mission</div>
-  <div class="new-holiday">H</div>
-  <div class="new-holiday-banner">Holidays</div>
-  <div class="new-xh">xH</div>
-  <div class="new-xh-banner">Extra Hours</div>
-  <div class="new">+</div>
-</div>
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>{{fields?.insertDate?.fieldLabel}}</th>
+          <th>{{fields?.requestTypeId?.fieldLabel}}</th>
+          <th>Date</th>
+          <th>Time</th>
+          <!--<th>{{fields?.countHD?.fieldLabel}}</th>-->
+          <th>Employee</th>
+          <th>{{fields?.employeeNotes?.fieldLabel}}</th>
+          <th>{{fields?.status?.fieldLabel}}</th>
+          <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.labelMap?.requestTypeId)">
+          <td>{{request?.insertDate | multiPurposePipe: 'date' | date: 'longDate'}}</td>
+          <td>{{request?.labelMap?.requestTypeId}}</td>
+          <td>{{(request?.startTimestamp.split('T')[0] === request?.stopTimestamp.split('T')[0] ? request?.startTimestamp.split('T')[0] : request?.startTimestamp.split('T')[0]) | date: 'longDate'}}</td>
+          <td>{{request?.startTimestamp | multiPurposePipe: 'time'}}-{{request?.stopTimestamp | multiPurposePipe: 'time'}}</td>
+          <!--<td>{{request?.countHD}}</td>-->
+          <td>{{request?.labelMap?.employeeId}}</td>
+          <td>{{request?.employeeNotes}}</td>
+          <td>{{request?.labelMap?.status}}</td>
+          <td>{{request?.labelMap?.pendingActionFrom}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-3 paginate">
+      <table border="0">
+        <tr>
+          <td>
+            <mat-icon class="prev" (click)="pages(-10, requests?.totalPages)">first_page</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="prev" (click)="pages(-1, requests?.totalPages)">chevron_left</mat-icon>
+          </td>
+          <td>
+            <div class="page-number">
+              {{paginate}} of {{requests?.totalPages}}
+            </div>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(1, requests?.totalPages)">chevron_right</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(10, requests?.totalPages)">last_page</mat-icon>
+          </td>
+        </tr>
+      </table>
+      <div class="total-records">records ({{requests?.totalRecords}})</div>
+    </div>
+    <div class="new-request">
+      <div class="new-sub" (click)="openRequest('new', 'Substituted Holidays')">S</div>
+      <div class="new-sub-banner">Substitute Days</div>
+      <div class="new-mt" (click)="openRequest('new', 'Badge Fail')">MB</div>
+      <div class="new-mt-banner">Missing Badge</div>
+      <div class="new-mission" (click)="openRequest('new', 'Mission')">M</div>
+      <div class="new-mission-banner">Mission</div>
+      <div class="new-holiday" (click)="openRequest('new', 'Holidays and Permission')">H</div>
+      <div class="new-holiday-banner">Holidays</div>
+      <div class="new-xh" (click)="openRequest('new', 'Extra Hours')">xH</div>
+      <div class="new-xh-banner">Extra Hours</div>
+      <div class="new">+</div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

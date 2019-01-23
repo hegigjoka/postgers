@@ -1,7 +1,7 @@
 import {FieldMetadataModel} from '../shared-models/field-metadata.model';
 import {AbstractModel} from '../shared-models/abstract.model';
 
-export class EmployeeTableFieldGroup {
+export class EmployeeMetadata {
   lastName: FieldMetadataModel<AbstractModel>;
   officeName: FieldMetadataModel<AbstractModel>;
   birthdate: FieldMetadataModel<AbstractModel>;

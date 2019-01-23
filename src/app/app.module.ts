@@ -50,6 +50,10 @@ import {
 import { MainPageComponent } from './main-page/main-page.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
+import {RequestsService} from './shared-components/providers/requests.service';
+import {
+  ExtraHoursRequestComponent
+} from './main-page/body-container/reuests/new-requests/extra-hours-request/extra-hours-request.component';
 
 // App Routers
 const EmployeeRoutes: Routes = [
@@ -60,15 +64,26 @@ const EmployeeRoutes: Routes = [
   {
     path: 'hr',
     component: MainPageComponent,
-    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
-        path: 'requests',
-        component: ReuestsContainerComponent
+        path: ':empId/requests',
+        component: ReuestsContainerComponent,
+        children: [
+          {
+            path: 'extra-hours/:reqId',
+            component: ExtraHoursRequestComponent
+          },
+          {
+            path: 'extra-hours/new',
+            component: ExtraHoursRequestComponent
+          }
+        ]
       },
       {
         path: 'employees',
         component: EmployeePanelComponent,
+        canActivateChild: [AuthGuard],
         children: [
           {
             path: ':emp',
@@ -113,7 +128,8 @@ export function getAuthServiceConfigs() {
     MultiPurposePipe,
     FilterSearchPipe,
     SignInComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ExtraHoursRequestComponent
   ],
 
   imports: [
@@ -140,6 +156,7 @@ export function getAuthServiceConfigs() {
 
   providers: [
     EmployeeService,
+    RequestsService,
     AuthGuard,
     {
       provide: AuthServiceConfig,

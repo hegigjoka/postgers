@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {EmployeeService} from '../../../shared-components/providers/employee.service';
+import {ListResponseModel} from '../../../shared-components/models/shared-models/list-response.model';
+import {RequestModel} from '../../../shared-components/models/requests-models/request.model';
+import {RequestsService} from '../../../shared-components/providers/requests.service';
+import {RequestTableMetadata} from '../../../shared-components/models/requests-models/request-table-metadata';
+import {MatSidenav} from '@angular/material';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-reuests-container',
@@ -8,11 +13,18 @@ import {EmployeeService} from '../../../shared-components/providers/employee.ser
   styleUrls: ['./reuests-container.component.css']
 })
 export class ReuestsContainerComponent implements OnInit {
+  // filter variables
   title = 'All Requests';
   reqType: string;
   paginate = 1;
 
-  constructor(private status: EmployeeService, private router: Router, private route: ActivatedRoute) { }
+  // request table variables
+  fields: RequestTableMetadata;
+  requests: ListResponseModel<RequestModel>;
+  @ViewChild('request') reqMenu: MatSidenav;
+  sideNav = 'close';
+
+  constructor(private reqServe: RequestsService, private router: Router, private route: ActivatedRoute, private loc: Location) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((reqtype: Params) => {
@@ -20,17 +32,26 @@ export class ReuestsContainerComponent implements OnInit {
     });
     if (this.reqType === 'all') {
       this.title = 'All Requests';
-    } else if (this.reqType === 'my') {
+    } else if (this.reqType === 'me') {
       this.title = 'My Requests';
-    } else if (this.reqType === 'myp') {
-      this.title = 'My Pending Requests';
     } else {
       this.title = 'Pending Action';
     }
+    this.getOptions();
     this.getRequests();
   }
 
-  getRequests() {}
+  getOptions() {
+    this.reqServe.getTableOptions().subscribe((fields) => {
+      this.fields = fields.json().body.data.fieldMap;
+    });
+  }
+
+  getRequests() {
+    this.reqServe.getRequestsList(this.paginate, 10, this.reqType).subscribe((response) => {
+      this.requests = response.json().body.data;
+    });
+  }
 
   changeQueryParam() {
     this.router.navigate(['.'], {relativeTo: this.route, queryParams: {type: this.reqType}});
@@ -46,27 +67,45 @@ export class ReuestsContainerComponent implements OnInit {
 
   onlyMR() {
     this.title = 'My Requests';
-    this.reqType = 'my';
-    this.getRequests();
-    this.changeQueryParam();
-  }
-
-  onlyMPR() {
-    this.title = 'My Pending Requests';
-    this.reqType = 'myp';
+    this.reqType = 'me';
     this.getRequests();
     this.changeQueryParam();
   }
 
   onlyPA() {
     this.title = 'Pending Action';
-    this.reqType = 'pa';
+    this.reqType = 'pendingMe';
     this.getRequests();
     this.changeQueryParam();
   }
 
+  // remove sidenav
+  backing() {
+    if (this.sideNav === 'open') {
+      this.sideNav = 'close';
+      this.reqMenu.toggle();
+      this.loc.back();
+    }
+  }
+  updating() {
+    this.getRequests();
+    if (this.sideNav === 'open') {
+      this.sideNav = 'close';
+      this.reqMenu.toggle();
+    }
+  }
+
+  // open single request
+  openRequest(reqId: string, reqType: string) {
+    this.sideNav = 'open';
+    this.reqMenu.toggle();
+    reqType = reqType.toLowerCase().replace(' ', '-');
+    console.log('open side nav for ' + reqType + ' request(' + reqId + ')');
+    this.router.navigate([reqType, reqId], {relativeTo: this.route});
+  }
+
   // Previews and Next
-  pages(move: number, totalPages?: number) {
+  pages(move: number, totalPages: number) {
     if (this.paginate > 1 && this.paginate < totalPages) {
       if (move === 1 && this.paginate < totalPages) {
         this.paginate++;
@@ -76,10 +115,20 @@ export class ReuestsContainerComponent implements OnInit {
         this.getRequests();
       }
     } else if (this.paginate === totalPages && move === -1) {
-      this.paginate--;
-      this.getRequests();
+      if (this.paginate > 1) {
+        this.paginate--;
+        this.getRequests();
+      }
     } else if (this.paginate === 1 && move === 1) {
-      this.paginate++;
+      if (this.paginate < totalPages) {
+        this.paginate++;
+        this.getRequests();
+      }
+    } else if (move === -10 && this.paginate !== 1) {
+      this.paginate = 1;
+      this.getRequests();
+    } else if (move === 10 && this.paginate !== totalPages) {
+      this.paginate = totalPages;
       this.getRequests();
     }
   }

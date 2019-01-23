@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
       },
     () => {
       localStorage.removeItem('EmpAuthToken');
+      localStorage.removeItem('EmpId');
       localStorage.removeItem('EmpFullName');
       localStorage.removeItem('EmpLang');
       localStorage.removeItem('EmpAvatarImg');

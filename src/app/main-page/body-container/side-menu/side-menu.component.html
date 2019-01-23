@@ -24,9 +24,8 @@
     <div class="req-desc">Requests</div>
     <div class="req-type" *ngIf="requestsType">
       <div (click)="openReqType('all')">All Requests</div>
-      <div (click)="openReqType('my')">My Requests</div>
-      <div (click)="openReqType('myp')">My Pending Requests</div>
-      <div (click)="openReqType('pa')">Pending Action</div>
+      <div (click)="openReqType('me')">My Requests</div>
+      <div (click)="openReqType('pendingMe')">Pending Action</div>
     </div>
   </div>
   <div class="row logout" (click)="logout()">
