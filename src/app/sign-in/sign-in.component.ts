@@ -74,12 +74,12 @@ export class SignInComponent implements OnInit {
               localStorage.setItem('EmpLang', this.employeeSession.lang);
               localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
               localStorage.setItem('EmpAccess', this.employeeSession.userAccessLevel.toString());
-            }, 2000);
+            }, 1000);
 
             // navigate to desired location
             setTimeout(() => {
               this.router.navigate(['hr']);
-            }, 2000);
+            }, 1000);
           }
         );
       }

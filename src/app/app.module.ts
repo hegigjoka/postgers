@@ -34,26 +34,34 @@ import {
   GoogleLoginProvider
 } from 'angular-6-social-login';
 import {EmployeeService} from './shared-components/providers/employee.service';
+import {RequestsService} from './shared-components/providers/requests.service';
 import {AuthGuardService as AuthGuard} from './shared-components/providers/auth-guard.service';
 
 // Components
-import { AppComponent } from './app.component';
-import { AvatarModule } from 'ngx-avatar';
+import {AvatarModule} from 'ngx-avatar';
 import {MultiPurposePipe} from './shared-components/pipes/multi-purpose.pipe';
 import {FilterSearchPipe} from './shared-components/pipes/filter-search.pipe';
-import { ReuestsContainerComponent } from './main-page/body-container/reuests/reuests-container.component';
+import { AppComponent } from './app.component';
+import { SignInComponent } from './sign-in/sign-in.component';
+import { MainPageComponent } from './main-page/main-page.component';
 import { SideMenuComponent } from './main-page/body-container/side-menu/side-menu.component';
 import { EmployeePanelComponent } from './main-page/body-container/employees/employee-panel/employee-panel.component';
 import {
   EmployeeRegistrationComponent
 } from './main-page/body-container/employees/insert-or-update-employee/employee-registration.component';
-import { MainPageComponent } from './main-page/main-page.component';
-import { SignInComponent } from './sign-in/sign-in.component';
-import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
-import {RequestsService} from './shared-components/providers/requests.service';
+import { RequestsContainerComponent } from './main-page/body-container/request/requests-container.component';
 import {
   ExtraHoursRequestComponent
-} from './main-page/body-container/reuests/new-requests/extra-hours-request/extra-hours-request.component';
+} from './main-page/body-container/request/new-requests/extra-hours-request/extra-hours-request.component';
+import {
+  HolidaysNPermissionRequestComponent
+} from './main-page/body-container/request/new-requests/holidays-n-permission-request/holidays-n-permission-request.component';
+import { BadgeFailRequestComponent } from './main-page/body-container/request/new-requests/badge-fail-request/badge-fail-request.component';
+import { MissionRequestComponent } from './main-page/body-container/request/new-requests/mission-request/mission-request.component';
+import {
+  SubstitutedHolidaysRequestComponent
+} from './main-page/body-container/request/new-requests/substituted-holidays-request/substituted-holidays-request.component';
+import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
 
 // App Routers
 const EmployeeRoutes: Routes = [
@@ -68,7 +76,7 @@ const EmployeeRoutes: Routes = [
     children: [
       {
         path: ':empId/requests',
-        component: ReuestsContainerComponent,
+        component: RequestsContainerComponent,
         children: [
           {
             path: 'extra-hours/:reqId',
@@ -77,13 +85,44 @@ const EmployeeRoutes: Routes = [
           {
             path: 'extra-hours/new',
             component: ExtraHoursRequestComponent
+          },
+          {
+            path: 'holiday-and-permission/:reqId',
+            component: HolidaysNPermissionRequestComponent
+          },
+          {
+            path: 'holiday-and-permission/new',
+            component: HolidaysNPermissionRequestComponent
+          },
+          {
+            path: 'mission/:reqId',
+            component: MissionRequestComponent
+          },
+          {
+            path: 'mission/new',
+            component: MissionRequestComponent
+          },
+          {
+            path: 'badge-fail/:reqId',
+            component: BadgeFailRequestComponent
+          },
+          {
+            path: 'badge-fail/new',
+            component: BadgeFailRequestComponent
+          },
+          {
+            path: 'substituted-holidays/:reqId',
+            component: SubstitutedHolidaysRequestComponent
+          },
+          {
+            path: 'substituted-holidays/new',
+            component: SubstitutedHolidaysRequestComponent
           }
         ]
       },
       {
         path: 'employees',
         component: EmployeePanelComponent,
-        canActivateChild: [AuthGuard],
         children: [
           {
             path: ':emp',
@@ -120,7 +159,7 @@ export function getAuthServiceConfigs() {
 @NgModule({
   declarations: [
     AppComponent,
-    ReuestsContainerComponent,
+    RequestsContainerComponent,
     SideMenuComponent,
     EmployeePanelComponent,
     EmployeeRegistrationComponent,
@@ -129,7 +168,11 @@ export function getAuthServiceConfigs() {
     FilterSearchPipe,
     SignInComponent,
     ConfirmDialogComponent,
-    ExtraHoursRequestComponent
+    ExtraHoursRequestComponent,
+    HolidaysNPermissionRequestComponent,
+    BadgeFailRequestComponent,
+    MissionRequestComponent,
+    SubstitutedHolidaysRequestComponent
   ],
 
   imports: [

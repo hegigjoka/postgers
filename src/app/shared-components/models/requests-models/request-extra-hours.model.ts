@@ -1,6 +1,7 @@
 import {RequestAbstractModel} from './request-abstract.model';
 
 export class RequestExtraHoursModel extends RequestAbstractModel<string> {
+  date?: string;
   directorNotes: string;
   authorizationDate: string;
   directorId: string;
@@ -12,4 +13,8 @@ export class RequestExtraHoursModel extends RequestAbstractModel<string> {
   approvementDate: string;
   insertOperator: string;
   countHD: number;
+  labelMap: {
+    requestTypeId: string;
+    employeeId: string;
+  };
 }

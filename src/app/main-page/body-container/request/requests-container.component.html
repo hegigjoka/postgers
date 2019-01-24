@@ -18,28 +18,28 @@
       <table class="table table-striped">
         <thead>
         <tr>
-          <th>{{fields?.insertDate?.fieldLabel}}</th>
           <th>{{fields?.requestTypeId?.fieldLabel}}</th>
-          <th>Date</th>
-          <th>Time</th>
+          <th>{{fields?.insertDate?.fieldLabel}}</th>
+          <th>{{fields?.expireDate?.fieldLabel}}</th>
+          <th>{{fields?.validationDate?.fieldLabel}}</th>
           <!--<th>{{fields?.countHD?.fieldLabel}}</th>-->
           <th>Employee</th>
           <th>{{fields?.employeeNotes?.fieldLabel}}</th>
-          <th>{{fields?.status?.fieldLabel}}</th>
           <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
+          <th>{{fields?.status?.fieldLabel}}</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.labelMap?.requestTypeId)">
-          <td>{{request?.insertDate | multiPurposePipe: 'date' | date: 'longDate'}}</td>
           <td>{{request?.labelMap?.requestTypeId}}</td>
-          <td>{{(request?.startTimestamp.split('T')[0] === request?.stopTimestamp.split('T')[0] ? request?.startTimestamp.split('T')[0] : request?.startTimestamp.split('T')[0]) | date: 'longDate'}}</td>
-          <td>{{request?.startTimestamp | multiPurposePipe: 'time'}}-{{request?.stopTimestamp | multiPurposePipe: 'time'}}</td>
+          <td>{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td>{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <!--<td>{{request?.countHD}}</td>-->
           <td>{{request?.labelMap?.employeeId}}</td>
           <td>{{request?.employeeNotes}}</td>
-          <td>{{request?.labelMap?.status}}</td>
           <td>{{request?.labelMap?.pendingActionFrom}}</td>
+          <td>{{request?.labelMap?.status}}</td>
         </tr>
         </tbody>
       </table>
@@ -75,7 +75,7 @@
       <div class="new-mt-banner">Missing Badge</div>
       <div class="new-mission" (click)="openRequest('new', 'Mission')">M</div>
       <div class="new-mission-banner">Mission</div>
-      <div class="new-holiday" (click)="openRequest('new', 'Holidays and Permission')">H</div>
+      <div class="new-holiday" (click)="openRequest('new', 'Holiday and Permission')">H</div>
       <div class="new-holiday-banner">Holidays</div>
       <div class="new-xh" (click)="openRequest('new', 'Extra Hours')">xH</div>
       <div class="new-xh-banner">Extra Hours</div>

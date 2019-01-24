@@ -9,10 +9,10 @@ import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-reuests-container',
-  templateUrl: './reuests-container.component.html',
-  styleUrls: ['./reuests-container.component.css']
+  templateUrl: './requests-container.component.html',
+  styleUrls: ['./requests-container.component.css']
 })
-export class ReuestsContainerComponent implements OnInit {
+export class RequestsContainerComponent implements OnInit {
   // filter variables
   title = 'All Requests';
   reqType: string;
@@ -92,6 +92,7 @@ export class ReuestsContainerComponent implements OnInit {
     if (this.sideNav === 'open') {
       this.sideNav = 'close';
       this.reqMenu.toggle();
+      this.getRequests();
     }
   }
 
@@ -100,7 +101,9 @@ export class ReuestsContainerComponent implements OnInit {
     this.sideNav = 'open';
     this.reqMenu.toggle();
     reqType = reqType.toLowerCase().replace(' ', '-');
-    console.log('open side nav for ' + reqType + ' request(' + reqId + ')');
+    if (reqType.match(' ')) {
+      reqType = reqType.replace(' ', '-');
+    }
     this.router.navigate([reqType, reqId], {relativeTo: this.route});
   }
 

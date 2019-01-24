@@ -3,16 +3,17 @@ import {Pipe, PipeTransform} from '@angular/core';
 @Pipe({name: 'multiPurposePipe'})
 
 export class MultiPurposePipe implements PipeTransform {
+  date: Date = new Date();
   transform(value: string, type: string) {
     switch (type) {
       case 'birthday': {
-        return value.split('T')[0];
+        return value ? value.split('T')[0] : '';
       }
-      case 'date': {
-        return value.split('T')[0];
+      case 'hasDateValue': {
+        return value ? value : this.date;
       }
       case 'time': {
-        return value.split('T')[1].substr(0, 5);
+        return value ? value.split('T')[1].substr(0, 5) : '';
       }
       case 'reqType': {
         switch (value) {
@@ -30,6 +31,26 @@ export class MultiPurposePipe implements PipeTransform {
           }
           case  'POOL00000000082': {
             return 'Substitute Holidays';
+          }
+        }
+        break;
+      }
+      case 'statusType': {
+        switch (value) {
+          case 'POOL00000000083': {
+            return 'Approval pending';
+          }
+          case 'POOL00000000084': {
+            return 'Authorization pending';
+          }
+          case 'POOL00000000085': {
+            return 'Authorized';
+          }
+          case 'POOL00000000086': {
+            return 'Denied';
+          }
+          case 'POOL00000000087': {
+            return 'Approved';
           }
         }
       }
