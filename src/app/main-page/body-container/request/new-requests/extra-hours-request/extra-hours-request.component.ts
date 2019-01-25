@@ -3,7 +3,7 @@ import {RequestExtraHoursMetadata} from '../../../../../shared-components/models
 import {RequestsService} from '../../../../../shared-components/providers/requests.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {RequestExtraHoursModel} from '../../../../../shared-components/models/requests-models/request-extra-hours.model';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {EmployeeModel} from '../../../../../shared-components/models/employee-models/employee.model';
 import {EmployeeService} from '../../../../../shared-components/providers/employee.service';
 import {AbstractModel} from '../../../../../shared-components/models/shared-models/abstract.model';
@@ -22,12 +22,15 @@ export class ExtraHoursRequestComponent implements OnInit {
   employee: EmployeeModel;
   offices: AbstractModel[];
   requestForm: FormGroup;
+  date: Date = new Date();
   OfficeId: string;
   ManagerId: string;
   DirectorId: string;
 
   hasSomeField: boolean;
   hasEmployeeField: boolean;
+  displayApprove: boolean;
+  displayAuth: boolean;
 
   constructor(
     private reqServe: RequestsService,
@@ -39,26 +42,27 @@ export class ExtraHoursRequestComponent implements OnInit {
 
   ngOnInit() {
     this.getFields();
+    const insertDate = new Date(this.date.valueOf() + 3600000);
     this.requestForm = new FormGroup({
-      date: new FormControl(''),
-      countHD: new FormControl(0),
-      employeeNotes: new FormControl(''),
-      managerId: new FormControl(''),
-      directorId: new FormControl(''),
-      authorizationId: new FormControl(''),
-      employeeId: new FormControl(localStorage.getItem('EmpId')),
-      officeNameId: new FormControl(''),
-      startTimestamp: new FormControl(''),
-      stopTimestamp: new FormControl(''),
-      insertDate: new FormControl(''),
-      requestTypeId: new FormControl('POOL00000000081'),
+      id: new FormControl(''),
+      someLabel: new FormControl(''),
+      insertDate: new FormControl(insertDate.toISOString().split('.')[0], Validators.required),
+      requestTypeId: new FormControl('POOL00000000081', Validators.required),
+      employeeId: new FormControl(localStorage.getItem('EmpId'), Validators.required),
+      officeNameId: new FormControl('', Validators.required),
+      managerId: new FormControl('', Validators.required),
+      directorId: new FormControl('', Validators.required),
+      date: new FormControl(this.date.toISOString().split('T')[0], [Validators.required]),
+      startTimestamp: new FormControl('', Validators.required),
+      stopTimestamp: new FormControl('', Validators.required),
+      countHD: new FormControl(0, Validators.required),
+      employeeNotes: new FormControl('No notes...'),
       approvementId: new FormControl(''),
+      authorizationId: new FormControl(''),
       labelMap: new FormGroup({
         requestTypeId: new FormControl('Extra Hours'),
         employeeId: new FormControl(localStorage.getItem('EmpFullName'))
-      }),
-      id: new FormControl(''),
-      someLabel: new FormControl('')
+      })
     });
     this.getUrlParams();
   }
@@ -76,7 +80,6 @@ export class ExtraHoursRequestComponent implements OnInit {
       this.requestForm.controls['officeNameId'].disable();
       this.requestForm.controls['managerId'].disable();
       this.requestForm.controls['directorId'].disable();
-      console.log('New request values: ', this.requestForm.value);
     } else {
       this.hasSomeField = true;
       this.hasEmployeeField = true;
@@ -98,28 +101,36 @@ export class ExtraHoursRequestComponent implements OnInit {
     });
   }
 
+  // Get Extra Hours Request
   getXHrequest() {
     this.reqServe.getExtraHoursRequest(this.reqId).subscribe((request) => {
       this.request = request.json().body.data;
       this.request.insertDate = this.request.insertDate.split('T')[0];
 
-      this.requestForm.controls['date'].setValue(this.request.stopTimestamp.split('T')[0]);
-      this.requestForm.controls['countHD'].setValue(this.request.countHD);
-      this.requestForm.controls['employeeNotes'].setValue(this.request.employeeNotes);
-      this.requestForm.controls['authorizationId'].setValue(this.request.authorizationId);
-      this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
-      this.requestForm.controls['insertDate'].setValue(this.request.insertDate);
-      this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
-      this.requestForm.controls['approvementId'].setValue(this.request.approvementId);
       this.requestForm.controls['id'].setValue(this.request.id);
       this.requestForm.controls['someLabel'].setValue(this.request.someLabel);
+      this.requestForm.controls['insertDate'].setValue(this.request.insertDate);
+      this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
+      this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
+      this.requestForm.controls['date'].setValue(this.request.startTimestamp.split('T')[0]);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[1]);
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1]);
+      this.requestForm.controls['countHD'].setValue(this.request.countHD);
+      this.requestForm.controls['employeeNotes'].setValue(this.request.employeeNotes);
+      if (this.request.approvementId !== '') {
+        this.displayApprove = true;
+        this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
+      }
+      if (this.request.approvementId === '') {
+        this.displayAuth = true;
+        this.requestForm.controls['authorizationId'].setValue(this.request.labelMap.authorizationId);
+      }
 
       this.getEmployeeInfo(this.request.employeeId);
     });
   }
 
+  // Get Employee Info
   getEmployeeInfo(empId: string) {
     this.empServe.getEmployee(empId).subscribe((managerNdirectorNoffice) => {
       this.employee = managerNdirectorNoffice.json().body.data;
@@ -139,22 +150,24 @@ export class ExtraHoursRequestComponent implements OnInit {
     });
   }
 
+  // Insert New Request
   insertRequest() {
-    this.requestForm.controls['countHD'].setValue(
-      parseInt(this.requestForm.controls['stopTimestamp'].value, 10) - parseInt(this.requestForm.controls['startTimestamp'].value, 10) );
-    this.requestForm.controls['startTimestamp'].setValue(
-      this.requestForm.controls['date'].value.split('T')[0] + 'T' + this.requestForm.controls['startTimestamp'].value + ':00');
-    this.requestForm.controls['stopTimestamp'].setValue(
-      this.requestForm.controls['date'].value.split('T')[0] + 'T' + this.requestForm.controls['stopTimestamp'].value + ':00');
-    this.requestForm.controls['employeeId'].setValue(localStorage.getItem('EmpId'));
+    const date = this.requestForm.controls['date'].value.split('T')[0] + 'T';
+    const startT = this.requestForm.controls['startTimestamp'].value;
+    const stopT = this.requestForm.controls['stopTimestamp'].value;
+    const start = new Date(date + startT);
+    const stop = new Date(date + stopT);
 
+    this.requestForm.controls['countHD'].setValue(Math.abs((stop.getTime() - start.getTime()) / 3600000));
+    this.requestForm.controls['startTimestamp'].setValue(date + startT + ':00');
+    this.requestForm.controls['stopTimestamp'].setValue(date + stopT + ':00');
 
     this.request = this.requestForm.value;
     this.request.officeNameId = this.OfficeId;
     this.request.managerId = this.ManagerId;
     this.request.directorId = this.DirectorId;
-    console.log('Request body: ', this.request);
-    this.reqServe.insertRequest(this.request).subscribe(
+
+    this.reqServe.insertExtraHoursRequest(this.request).subscribe(
       (status) => {
         if (status.json().status.code === 'STATUS_OK') {
           this.chip.open('Extra hour request is sent successfully!', null, {
@@ -173,26 +186,17 @@ export class ExtraHoursRequestComponent implements OnInit {
           horizontalPosition: 'left',
           panelClass: ['error-chip']
         });
+        this.reset();
       }
     );
   }
 
+  // Reset Request Form
   reset() {
-    this.requestForm.controls['id'].setValue('');
-    this.requestForm.controls['firstName'].setValue('');
-    this.requestForm.controls['lastName'].setValue('');
-    this.requestForm.controls['someLabel'].setValue('');
-    this.requestForm.controls['birthdate'].setValue('');
-    this.requestForm.controls['email'].setValue('');
-    this.requestForm.controls['officeNameId'].setValue('');
-    this.requestForm.controls['officeName'].setValue('');
-    this.requestForm.controls['managerId'].setValue('');
-    this.requestForm.controls['managerFirstName'].setValue('');
-    this.requestForm.controls['managerLastName'].setValue('');
-    this.requestForm.controls['managerEmail'].setValue('');
-    this.requestForm.controls['directorId'].setValue('');
-    this.requestForm.controls['directorFirstName'].setValue('');
-    this.requestForm.controls['directorLastName'].setValue('');
+    this.requestForm.controls['date'].setValue('');
+    this.requestForm.controls['stopTimestamp'].setValue('');
     this.requestForm.controls['startTimestamp'].setValue('');
+    this.requestForm.controls['countHD'].setValue('');
+    this.requestForm.controls['employeeNotes'].setValue('');
   }
 }

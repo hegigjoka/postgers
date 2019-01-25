@@ -12,9 +12,6 @@
 
           <!--Editing Employee Or Inserting Employee Form-->
           <form [formGroup]="requestForm">
-            <label for="insertDate" *ngIf="hasSomeField">{{fields?.insertDate?.fieldLabel}}: </label>
-            <input id="insertDate" type="date" formControlName="insertDate" *ngIf="hasSomeField">
-            <br *ngIf="hasSomeField">
             <div class="form-section">Employee Info</div>
             <hr>
             <label for="employeeId" *ngIf="hasEmployeeField">{{fields?.employeeId?.fieldLabel}}: </label>
@@ -32,13 +29,13 @@
             <div class="form-section">Request Info</div>
             <hr>
             <label for="date">Date: </label>
-            <input id="date" type="date" formControlName="date">
+            <input id="date" type="date" formControlName="date" min="{{date.toISOString().split('T')[0]}}" class="insert-date">
             <br>
             <label for="startTimestamp">{{fields?.startTimestamp?.fieldLabel}}: </label>
-            <input id="startTimestamp" type="time" step="3600" formControlName="startTimestamp">
+            <input id="startTimestamp" type="time" step="1800" formControlName="startTimestamp">
             <br>
             <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
-            <input id="stopTimestamp" type="time" step="3600" formControlName="stopTimestamp">
+            <input id="stopTimestamp" type="time" step="1800" formControlName="stopTimestamp">
             <br>
             <label for="countHD" *ngIf="hasSomeField">{{fields?.countHD?.fieldLabel}}: </label>
             <input id="countHD" type="number" formControlName="countHD" *ngIf="hasSomeField">
@@ -46,8 +43,14 @@
             <label for="employeeNotes">{{fields?.employeeNotes?.fieldLabel}}: </label>
             <textarea id="employeeNotes" type="text" formControlName="employeeNotes"></textarea>
             <br>
+            <label for="approvementId" *ngIf="hasSomeField && displayApprove">{{fields?.approvementId?.fieldLabel}}: </label>
+            <input id="approvementId" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
+            <br *ngIf="hasSomeField && displayApprove">
+            <label for="authorizationId" *ngIf="hasSomeField && displayAuth">{{fields?.authorizationId?.fieldLabel}}: </label>
+            <input id="authorizationId" type="text" formControlName="authorizationId" *ngIf="hasSomeField && displayAuth">
+            <br *ngIf="hasSomeField && displayAuth">
             <div class="buttons" *ngIf="!hasSomeField">
-              <button class="btn" (click)="insertRequest()">
+              <button class="btn" (click)="insertRequest()" *ngIf="requestForm.valid">
                 <mat-icon class="btn-icon">add_circle</mat-icon>
                 Insert
               </button>

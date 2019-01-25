@@ -37,7 +37,7 @@
           <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <!--<td>{{request?.countHD}}</td>-->
           <td>{{request?.labelMap?.employeeId}}</td>
-          <td>{{request?.employeeNotes}}</td>
+          <td [matTooltip]="request?.employeeNotes">{{request?.employeeNotes | multiPurposePipe: 'longNote'}}</td>
           <td>{{request?.labelMap?.pendingActionFrom}}</td>
           <td>{{request?.labelMap?.status}}</td>
         </tr>

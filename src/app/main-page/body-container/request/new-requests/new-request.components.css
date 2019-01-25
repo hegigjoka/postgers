@@ -16,7 +16,7 @@
   height: 100px;
 }
 .form-section{
-  font-family: "Roboto Thin";
+  font-family: "Roboto Light";
   font-size: 14px;
   color: white;
   margin-bottom: -12px;
@@ -54,6 +54,7 @@ input.ng-touched.ng-invalid{
 }
 input[type='date']::-webkit-inner-spin-button,
 input[type='date']::-webkit-clear-button,
+input[type='time']::-webkit-clear-button,
 input[type='number']::-webkit-inner-spin-button,
 input[type='time']::-webkit-inner-spin-button{
   display: none;
@@ -61,8 +62,11 @@ input[type='time']::-webkit-inner-spin-button{
 input::-webkit-calendar-picker-indicator{
   background-color: transparent;
 }
+input[type='time']:disabled{
+  color: white;
+}
 textarea{
-  height: 45px;
+  height: 50px;
   width: 60%;
   color: white;
   background-color: transparent;
@@ -73,6 +77,9 @@ textarea{
   padding-left: 10px;
   float: right;
   margin-bottom: 18px;
+}
+textarea::-webkit-scrollbar{
+  display: none;
 }
 .buttons{
   display: flex;

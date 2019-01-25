@@ -16,5 +16,7 @@ export class RequestExtraHoursModel extends RequestAbstractModel<string> {
   labelMap: {
     requestTypeId: string;
     employeeId: string;
+    approvementId: string;
+    authorizationId: string;
   };
 }

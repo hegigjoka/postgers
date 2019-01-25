@@ -55,7 +55,6 @@ export class SignInComponent implements OnInit {
 
             // get session data
             this.employeeSession = user.json().body.data;
-            this.empId = user.json().body.data.userAttributes.HR_MODULES__APP.attributeValue;
             // clear previews localStorage
             localStorage.removeItem('EmpAuthToken');
             localStorage.removeItem('EmpId');
@@ -69,7 +68,7 @@ export class SignInComponent implements OnInit {
 
               // new session data
               localStorage.setItem('EmpAuthToken', this.employeeSession.authToken);
-              localStorage.setItem('EmpId', this.empId);
+              localStorage.setItem('EmpId', this.employeeSession.userAttributes.HR_MODULES__APP.attributeValue);
               localStorage.setItem('EmpFullName', this.employeeSession.fullName);
               localStorage.setItem('EmpLang', this.employeeSession.lang);
               localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);

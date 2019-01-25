@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers} from '@angular/http';
 import {EmployeeModel} from '../models/employee-models/employee.model';
-// import {HttpParams} from '@angular/common/http';
 
 @Injectable()
 export class EmployeeService {
@@ -69,6 +68,9 @@ export class EmployeeService {
     return this.empServe.get(this.employee + '/' + empId, {headers: this.providersAuthHeader});
   }
   // Retrieve list
+
+
+
   getEmployeeList(
     paginate: number,
     pagesize?: number,
@@ -89,7 +91,8 @@ export class EmployeeService {
     // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
 
     // filters
-    let paramBean = '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName="' + firstName + '",officeNameId="' + officeNameId + '",managerId="' + managerId + '",directorId="' + directorId + '"}';
+    let paramBean = '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName="' + firstName + '",officeNameId="'
+      + officeNameId + '",managerId="' + managerId + '",directorId="' + directorId + '"}';
 
     // statements for filter management
     if (firstName === undefined) {
@@ -118,6 +121,8 @@ export class EmployeeService {
         this.employee + paramBean,
         {headers: this.providersAuthHeader});
   }
+
+
   // Update
   updateEmployee(empId: string, emp: EmployeeModel) {
     return this.empServe.put(this.employee + '/' + empId, {

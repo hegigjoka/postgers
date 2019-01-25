@@ -53,6 +53,10 @@ export class MultiPurposePipe implements PipeTransform {
             return 'Approved';
           }
         }
+        break;
+      }
+      case 'longNote': {
+        return value.length > 10 ? value.substr(0, 10) + '...' : value;
       }
     }
   }
