@@ -27,15 +27,15 @@ export class RequestsContainerComponent implements OnInit {
   constructor(private reqServe: RequestsService, private router: Router, private route: ActivatedRoute, private loc: Location) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((reqtype: Params) => {
-      this.reqType = reqtype['type'];
+    this.route.queryParams.subscribe((reqType: Params) => {
+      this.reqType = reqType['type'];
     });
-    if (this.reqType === 'all') {
-      this.title = 'All Requests';
+    if (this.reqType === 'pendingMe') {
+      this.title = 'Pending Action';
     } else if (this.reqType === 'me') {
       this.title = 'My Requests';
     } else {
-      this.title = 'Pending Action';
+      this.title = 'All Requests';
     }
     this.getOptions();
     this.getRequests();
@@ -88,12 +88,16 @@ export class RequestsContainerComponent implements OnInit {
     }
   }
   updating() {
-    this.getRequests();
     if (this.sideNav === 'open') {
       this.sideNav = 'close';
       this.reqMenu.toggle();
-      this.getRequests();
     }
+    this.route.queryParams.subscribe((reqType: Params) => {
+      this.reqType = reqType['type'];
+    });
+    setTimeout(() => {
+      this.getRequests();
+    }, 300);
   }
 
   // open single request

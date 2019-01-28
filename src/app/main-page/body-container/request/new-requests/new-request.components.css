@@ -1,8 +1,7 @@
 .bcg-emp-menu{
-  background-color: white;
-  height: 100%;
-  width: 400px;
-  border-left: 1px solid #045BA1;
+  min-height: 100%;
+  height: fit-content;
+  width: 420px;
 }
 .emp-menu{
   background-color: #045BA1;
@@ -85,7 +84,12 @@ textarea::-webkit-scrollbar{
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-top: 18px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.buttons > .btn-danger{
+  margin-top: 0;
+  margin-bottom: 0;
 }
 button{
   display: flex;
@@ -96,7 +100,8 @@ button{
   height: 40px;
   padding-top: 4px;
   margin-right: 15px;
-  width: 110px;
+  min-width: 110px;
+  width: fit-content;
 }
 button:hover{
   box-shadow: 0 2px 8px black;
@@ -111,6 +116,8 @@ button:focus{
 .btn-danger{
   color: #cd0022;
   border: none;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 .btn-danger:hover{
   background-color: white;
@@ -125,7 +132,4 @@ button:focus{
   height: unset;
   font-size: 22px;
   margin-right: 5px;
-}
-.has-employee-field{
-  display: none;
 }

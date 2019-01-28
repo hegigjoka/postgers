@@ -1,5 +1,5 @@
 <mat-drawer-container [hasBackdrop]="true" (backdropClick)="backing()">
-  <mat-drawer #request position="end">
+  <mat-drawer class="drawer-request" #request position="end">
     <router-outlet (deactivate)="updating()"></router-outlet>
   </mat-drawer>
   <mat-drawer-content>
@@ -22,8 +22,7 @@
           <th>{{fields?.insertDate?.fieldLabel}}</th>
           <th>{{fields?.expireDate?.fieldLabel}}</th>
           <th>{{fields?.validationDate?.fieldLabel}}</th>
-          <!--<th>{{fields?.countHD?.fieldLabel}}</th>-->
-          <th>Employee</th>
+          <th [ngClass]="{'no-employee': reqType === 'me'}">Employee</th>
           <th>{{fields?.employeeNotes?.fieldLabel}}</th>
           <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
           <th>{{fields?.status?.fieldLabel}}</th>
@@ -35,9 +34,8 @@
           <td>{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <td>{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
-          <!--<td>{{request?.countHD}}</td>-->
-          <td>{{request?.labelMap?.employeeId}}</td>
-          <td [matTooltip]="request?.employeeNotes">{{request?.employeeNotes | multiPurposePipe: 'longNote'}}</td>
+          <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId}}</td>
+          <td>{{request?.employeeNotes | multiPurposePipe: 'longNote'}}</td>
           <td>{{request?.labelMap?.pendingActionFrom}}</td>
           <td>{{request?.labelMap?.status}}</td>
         </tr>
@@ -66,7 +64,7 @@
           </td>
         </tr>
       </table>
-      <div class="total-records">records ({{requests?.totalRecords}})</div>
+      <div class="total-records">( {{requests?.totalRecords}} )</div>
     </div>
     <div class="new-request">
       <div class="new-sub" (click)="openRequest('new', 'Substituted Holidays')">S</div>

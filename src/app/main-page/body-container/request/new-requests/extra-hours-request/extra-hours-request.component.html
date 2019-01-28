@@ -9,6 +9,11 @@
       </div>
       <div class="row">
         <div class="col-12 forms">
+          <datalist id="approvement">
+            <option value="Pending"></option>
+            <option value="Approved"></option>
+            <option value="Denied"></option>
+          </datalist>
 
           <!--Editing Employee Or Inserting Employee Form-->
           <form [formGroup]="requestForm">
@@ -44,7 +49,7 @@
             <textarea id="employeeNotes" type="text" formControlName="employeeNotes"></textarea>
             <br>
             <label for="approvementId" *ngIf="hasSomeField && displayApprove">{{fields?.approvementId?.fieldLabel}}: </label>
-            <input id="approvementId" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
+            <input id="approvementId" list="approvement" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
             <br *ngIf="hasSomeField && displayApprove">
             <label for="authorizationId" *ngIf="hasSomeField && displayAuth">{{fields?.authorizationId?.fieldLabel}}: </label>
             <input id="authorizationId" type="text" formControlName="authorizationId" *ngIf="hasSomeField && displayAuth">
@@ -57,6 +62,30 @@
               <button class="btn btn-danger" (click)="reset()">
                 <mat-icon class="btn-icon">cancel_presentation</mat-icon>
                 Reset
+              </button>
+            </div>
+            <button class="btn btn-danger" (click)="deleteRequest()" *ngIf="isDeletable">
+              <mat-icon class="btn-icon">delete</mat-icon>
+              Delete
+            </button>
+            <div class="buttons" *ngIf="isManager">
+              <button class="btn" (click)="approveOrDeny(1)">
+                <mat-icon class="btn-icon">check_box</mat-icon>
+                Approve
+              </button>
+              <button class="btn btn-danger" (click)="approveOrDeny(0)">
+                <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
+                Deny
+              </button>
+            </div>
+            <div class="buttons" *ngIf="isDirector">
+              <button class="btn" (click)="authorizeOrNotAuthorize(1)">
+                <mat-icon class="btn-icon">check_box</mat-icon>
+                Authorize
+              </button>
+              <button class="btn btn-danger" (click)="authorizeOrNotAuthorize(0)">
+                <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
+                Not Authorize
               </button>
             </div>
           </form>

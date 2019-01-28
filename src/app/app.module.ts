@@ -135,12 +135,12 @@ const EmployeeRoutes: Routes = [
         ]
       }
     ]
+  },
+  {
+    path: '**',
+    redirectTo: '/hr',
+    pathMatch: 'full'
   }
-  // {
-  //   path: '**',
-  //   redirectTo: '/sign-in',
-  //   pathMatch: 'full'
-  // }
 ];
 
 // Google Authentication Service

@@ -7,8 +7,9 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {EmployeeModel} from '../../../../../shared-components/models/employee-models/employee.model';
 import {EmployeeService} from '../../../../../shared-components/providers/employee.service';
 import {AbstractModel} from '../../../../../shared-components/models/shared-models/abstract.model';
-import {MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {Location} from '@angular/common';
+import {ConfirmDialogComponent} from '../../../../../shared-components/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-extra-hours-request',
@@ -29,13 +30,18 @@ export class ExtraHoursRequestComponent implements OnInit {
 
   hasSomeField: boolean;
   hasEmployeeField: boolean;
+  isDeletable: boolean;
+  isManager: boolean;
   displayApprove: boolean;
+  isDirector: boolean;
   displayAuth: boolean;
+  confirmation: boolean;
 
   constructor(
     private reqServe: RequestsService,
     private empServe: EmployeeService,
     private route: ActivatedRoute,
+    private confirmDialog: MatDialog,
     public chip: MatSnackBar,
     private loc: Location
   ) { }
@@ -86,12 +92,6 @@ export class ExtraHoursRequestComponent implements OnInit {
 
       this.requestForm.disable();
       this.getXHrequest();
-
-      setTimeout(() => {
-        if (this.request.employeeId === localStorage.getItem('EmpId')) {
-          this.hasEmployeeField = false;
-        }
-      }, 360);
     }
   }
 
@@ -117,13 +117,18 @@ export class ExtraHoursRequestComponent implements OnInit {
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1]);
       this.requestForm.controls['countHD'].setValue(this.request.countHD);
       this.requestForm.controls['employeeNotes'].setValue(this.request.employeeNotes);
-      if (this.request.approvementId !== '') {
+      if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
+        if (this.request.approvementId === 'POOL00000000044') {
+          this.displayAuth = true;
+          this.requestForm.controls['authorizationId'].setValue(this.request.labelMap.authorizationId);
+        } else if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === localStorage.getItem('EmpId')) {
+          this.isDeletable = true;
+        }
       }
-      if (this.request.approvementId === '') {
-        this.displayAuth = true;
-        this.requestForm.controls['authorizationId'].setValue(this.request.labelMap.authorizationId);
+      if (this.request.employeeId === localStorage.getItem('EmpId')) {
+        this.hasEmployeeField = false;
       }
 
       this.getEmployeeInfo(this.request.employeeId);
@@ -138,6 +143,12 @@ export class ExtraHoursRequestComponent implements OnInit {
       this.requestForm.controls['directorId'].setValue(this.employee.directorFirstName + ' ' + this.employee.directorLastName);
       this.ManagerId = this.employee.managerId;
       this.DirectorId = this.employee.directorId;
+      if (this.employee.managerId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000043') {
+        this.isManager = true;
+      }
+      if (this.employee.directorId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000044') {
+        this.isDirector = true;
+      }
     });
     this.empServe.getFieldMapEmployee().subscribe((office) => {
       this.offices = office.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
@@ -149,6 +160,8 @@ export class ExtraHoursRequestComponent implements OnInit {
       });
     });
   }
+
+  // EXTRA_HOURS_REQUEST_CRUD---------------------------------------------------------------------------------------------------------------
 
   // Insert New Request
   insertRequest() {
@@ -191,6 +204,43 @@ export class ExtraHoursRequestComponent implements OnInit {
     );
   }
 
+  // delete pending request
+  deleteRequest() {
+    const confText = 'Are you sure that you want to delete this pending extra hours request ?';
+    const confType = 'del';
+    const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+      data: {text: confText, conf: confType, type: confType}
+    });
+    confDlg.afterClosed().subscribe((resuelt) => {
+      this.confirmation = resuelt;
+      if (this.confirmation === true) {
+        this.reqServe.deleteExtraHoursRequest(this.reqId).subscribe(
+          (status) => {
+            if (status.json().status.code === 'STATUS_OK') {
+              this.chip.open('Extra hour request is deleted successfully!', null, {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'left',
+                panelClass: ['success-chip']
+              });
+              this.loc.back();
+            }
+          },
+          () => {
+            this.chip.open('Extra hour request can\'t be deleted, sorry!', null, {
+              duration: 5000,
+              verticalPosition: 'bottom',
+              horizontalPosition: 'left',
+              panelClass: ['error-chip']
+            });
+          }
+        );
+      } else {
+        this.loc.back();
+      }
+    });
+  }
+
   // Reset Request Form
   reset() {
     this.requestForm.controls['date'].setValue('');
@@ -199,4 +249,143 @@ export class ExtraHoursRequestComponent implements OnInit {
     this.requestForm.controls['countHD'].setValue('');
     this.requestForm.controls['employeeNotes'].setValue('');
   }
+
+  // approve or deny request
+  approveOrDeny(type: number) {
+    const confType = 'manager';
+    if (type === 1) {
+      const confText = 'Are you shure that you want to approve this request ?';
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe((result) => {
+        if (result.split('|')[0] === 'true') {
+          this.reqServe.managerNdirectorDecisionExtraHoursRequest('approve', this.reqId, result.split('|')[1]).subscribe(
+            (response) => {
+              if (response.json().status.code === 'STATUS_OK') {
+                this.chip.open('Extra hour request is APPROVED!', null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+                this.loc.back();
+              }
+            },
+            () => {
+              this.chip.open('Error, extra hours request isn\'t approved!', null, {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'left',
+                panelClass: ['success-chip']
+              });
+            }
+          );
+        }
+      });
+    } else {
+      const confText = 'Are you shure that you want to deny this request ?';
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe(
+        (result) => {
+          if (result.split('|')[0] === 'true') {
+            this.reqServe.managerNdirectorDecisionExtraHoursRequest('deny', this.reqId, result.split('|')[1]).subscribe(
+              (response) => {
+                if (response.json().status.code === 'STATUS_OK') {
+                  this.chip.open('Extra hour request is DENIED!', null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['success-chip']
+                  });
+                  this.loc.back();
+                }
+              },
+              () => {
+                this.chip.open('Error, extra hours request isn\'t denied!', null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+              }
+            );
+          }
+        }
+      );
+    }
+  }
+
+  // authorize or not request
+  authorizeOrNotAuthorize(type: number) {
+    const confType = 'director';
+    if (type === 1) {
+      const confText = 'Are you sure that you want to authorize this request ?';
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe((result) => {
+        if (result.split('|')[0] === 'true') {
+          this.reqServe.managerNdirectorDecisionExtraHoursRequest(
+            'authorize', this.reqId, result.split('|')[1], result.split('|')[2]
+          ).subscribe(
+            (response) => {
+              if (response.json().status.code === 'STATUS_OK') {
+                this.chip.open('Extra hour request is AUTHORIZED!', null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+                this.loc.back();
+              }
+            },
+            () => {
+              this.chip.open('Error, extra hours request isn\'t authorized!', null, {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'left',
+                panelClass: ['success-chip']
+              });
+            }
+          );
+        }
+      });
+    } else {
+      const confText = 'Are you sure that you want to authorize this request ?';
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe((result) => {
+        if (result.split('|')[0] === 'true') {
+          this.reqServe.managerNdirectorDecisionExtraHoursRequest(
+            'authorize', this.reqId, result.split('|')[1], result.split('|')[2]
+          ).subscribe(
+            (response) => {
+              if (response.json().status.code === 'STATUS_OK') {
+                this.chip.open('Extra hour request is NOT AUTHORIZED!', null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+                this.loc.back();
+              }
+            },
+            () => {
+              this.chip.open('Error while not authorizing this request!', null, {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'left',
+                panelClass: ['success-chip']
+              });
+            }
+          );
+        }
+      });
+    }
+  }
+
 }

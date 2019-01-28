@@ -4,15 +4,10 @@ import {RequestExtraHoursModel} from '../models/requests-models/request-extra-ho
 
 @Injectable()
 export class RequestsService {
-  // Paths
-  tableOptions = 'svc/hr/employee/' + localStorage.getItem('EmpId') + '/requests';
-  extrahoursOptions = this.tableOptions + '/type/extraHours';
-  extrahoursSet = this.extrahoursOptions + '/new';
-  extrahoursGet = this.extrahoursOptions + '/';
-
+  // PATHS----------------------------------------------------------------------------------------------------------------------------------
   urlPath = 'svc/hr/employee/';
 
-  // Headers
+  // HEADERS--------------------------------------------------------------------------------------------------------------------------------
   providersAuthHeader = new Headers({
     'Authorization': 'APPUSER00000005',
     'Accept': 'application/json',
@@ -24,6 +19,7 @@ export class RequestsService {
     'Accept-Language': localStorage.getItem('EmpLang'),
     'Content-Type': 'application/json'
   });
+  // ---------------------------------------------------------------------------------------------------------------------------------------
 
   constructor(private http: Http) {}
 
@@ -48,12 +44,18 @@ export class RequestsService {
       `${this.urlPath}/${localStorage.getItem('EmpId')}/requests?${filter}`,
       {headers: this.providersAuthHeader});
   }
+
+  // EXTRA_HOURS----------------------------------------------------------------------------------------------------------------------------
+
+  // get extra hours single request
   getExtraHoursRequest(reqId: string) {
     const filter = 'paramBean={fillFieldLabels:true}';
     return this.http.get(
       `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}?${filter}`,
       {headers: this.providersAuthHeader});
   }
+
+  // insert new extra hours request
   insertExtraHoursRequest(xHRequest?: RequestExtraHoursModel) {
     return this.http.post(
       `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/new`,
@@ -69,5 +71,59 @@ export class RequestsService {
         requestTypeId: 'POOL00000000081'
       },
       {headers: this.providerAuthHeaderExtra});
+  }
+
+  // manage extra hours request (approve/deny/authorize/not authorize)
+  managerNdirectorDecisionExtraHoursRequest(type: string, reqId: string, notes: string, authType?: string) {
+    if (type === 'approve') {
+      return this.http.put(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+        {
+          id: reqId,
+          approvementId: 'POOL00000000044',
+          managerNotes: notes
+        },
+        {headers: this.providerAuthHeaderExtra}
+      );
+    } else if (type === 'deny') {
+      return this.http.put(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+        {
+          id: reqId,
+          approvementId: 'POOL00000000045',
+          managerNotes: notes
+        },
+        {headers: this.providerAuthHeaderExtra}
+      );
+    } else if (type === 'authorize') {
+      return this.http.put(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+        {
+          id: reqId,
+          authorizationId: 'POOL00000000041',
+          authorizationTypeId: authType,
+          directorNotes: notes
+        },
+        {headers: this.providerAuthHeaderExtra}
+      );
+    } else {
+      return this.http.put(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+        {
+          id: reqId,
+          authorizationId: 'POOL00000000042',
+          authorizationTypeId: 'POOL00000000047',
+          directorNotes: notes
+        },
+        {headers: this.providerAuthHeaderExtra}
+      );
+    }
+  }
+
+  // delete extra hours request
+  deleteExtraHoursRequest(reqId: string) {
+    return this.http.delete(
+      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+      {headers: this.providersAuthHeader});
   }
 }

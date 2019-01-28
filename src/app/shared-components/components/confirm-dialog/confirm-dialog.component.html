@@ -4,9 +4,24 @@
       <div class="conf-dialog-header">Hi {{hrEmployee}} !</div>
       <hr style="background-color: white">
       <div class="conf-dialog-desc">{{text}}</div>
+
+      <label for="notes" *ngIf="extraFieldType">Notes: </label>
+      <input id="notes" type="text" [(ngModel)]="notes" *ngIf="extraFieldType">
+
+      <label for="notes" *ngIf="extraDropdownType">Type: </label>
+      <select *ngIf="extraDropdownType" [(ngModel)]="authType">
+        <option value=" ">Select Type</option>
+        <option value="POOL00000000046">Payment of the related fee</option>
+        <option value="POOL00000000047">Hours recovery (compensatory rest)</option>
+      </select>
+
       <div class="conf-dialog-buttons">
         <button class="btn btn-danger" mat-button (click)="onNoClick()">{{no}}</button>
-        <button class="btn btn-success" mat-button [mat-dialog-close]="!data.conf" *ngIf="type">{{yes}}</button>
+        <button class="btn btn-success"
+                mat-button [mat-dialog-close]="onYesClicl(type, extraFieldType, extraDropdownType)"
+                *ngIf="type">
+          {{yes}}
+        </button>
       </div>
     </div>
   </div>
