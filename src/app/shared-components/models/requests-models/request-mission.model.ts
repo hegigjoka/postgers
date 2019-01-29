@@ -8,4 +8,11 @@ export class RequestMissionModel extends RequestAbstractModel<string> {
   approvementDate: string;
   missionTypeId: string;
   insertOperator: string;
+  labelMap: {
+    requestTypeId: string;
+    employeeId: string;
+    approvementId: string;
+    missionTypeId: string;
+    officeNameId: string;
+  };
 }

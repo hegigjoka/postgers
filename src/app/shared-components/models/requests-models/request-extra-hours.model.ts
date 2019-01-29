@@ -18,5 +18,6 @@ export class RequestExtraHoursModel extends RequestAbstractModel<string> {
     employeeId: string;
     approvementId: string;
     authorizationId: string;
+    officeNameId: string
   };
 }

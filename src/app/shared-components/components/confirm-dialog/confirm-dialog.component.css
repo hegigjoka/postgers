@@ -24,7 +24,7 @@ label{
   width: 15%;
 }
 input, select{
-  background-color: transparent;
+  background-color: #045BA1;
   border-top: none;
   border-left: none;
   border-right: none;
@@ -37,10 +37,6 @@ input, select{
   margin-right: 32px;
   margin-bottom: 18px;
   float: right;
-}
-option{
-  background-color: #045BA1;
-  color: white;
 }
 .conf-dialog-buttons{
   display: flex;

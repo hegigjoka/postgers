@@ -9,21 +9,7 @@ export class EmployeeService {
   status = 'svc/hr/auth/status?appId=HR_MODULES__APP';
   logout = 'svc/hr/auth/logout';
   employee = 'svc/hr/employee';
-  // ---------------------------------------------------------------------------------------------------------------------------------------
-  // Headers
-  // ---------------------------------------------------------------------------------------------------------------------------------------
-  providersAuthHeader = new Headers({
-    'Authorization': 'APPUSER00000005',
-    'Accept': 'application/json',
-    'Accept-Language': localStorage.getItem('EmpLang')
-  });
-  providerAuthHeaderExtra = new Headers({
-    'Authorization': 'APPUSER00000005',
-    'Accept': 'application/json',
-    'Accept-Language': localStorage.getItem('EmpLang'),
-    'Content-Type': 'application/json'
-  });
-  // ---------------------------------------------------------------------------------------------------------------------------------------
+
   constructor(private empServe: Http) {}
   // ---------------------------------------------------------------------------------------------------------------------------------------
   // Signing-in Providers
@@ -46,13 +32,24 @@ export class EmployeeService {
 
   // Getting labels provider
   getFieldMapEmployee() {
-    return this.empServe.options(this.employee, {headers: this.providersAuthHeader});
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang')
+    });
+    return this.empServe.options(this.employee, {headers: header});
   }
   // ---------------------------------------------------------------------------------------------------------------------------------------
   // Employee CRUD provider
   // ---------------------------------------------------------------------------------------------------------------------------------------
   // Create
   insertEmployee(emp: EmployeeModel) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang'),
+      'Content-Type': 'application/json'
+    });
     return this.empServe.post(this.employee + '/new', {
       firstName: emp.firstName,
       lastName: emp.lastName,
@@ -61,16 +58,19 @@ export class EmployeeService {
       directorId: emp.directorId,
       email: emp.email,
       officeNameId: emp.officeNameId
-    }, {headers: this.providerAuthHeaderExtra});
+    }, {headers: header});
   }
   // Retrieve single
   getEmployee(empId: string) {
-    return this.empServe.get(this.employee + '/' + empId, {headers: this.providersAuthHeader});
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang')
+    });
+    return this.empServe.get(this.employee + '/' + empId, {headers: header});
   }
+
   // Retrieve list
-
-
-
   getEmployeeList(
     paginate: number,
     pagesize?: number,
@@ -89,6 +89,13 @@ export class EmployeeService {
     //   directorId: directorId
     // };
     // return this.empServe.get(this.employee, {params: {filters: paramBean}, headers: this.providersAuthHeader});
+
+    // Headers
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang')
+    });
 
     // filters
     let paramBean = '?paramBean={pageNo:' + paginate + ',pageSize:' + pagesize + ',firstName="' + firstName + '",officeNameId="'
@@ -119,12 +126,18 @@ export class EmployeeService {
     // get employee list service
     return this.empServe.get(
         this.employee + paramBean,
-        {headers: this.providersAuthHeader});
+        {headers: header});
   }
 
 
   // Update
   updateEmployee(empId: string, emp: EmployeeModel) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang'),
+      'Content-Type': 'application/json'
+    });
     return this.empServe.put(this.employee + '/' + empId, {
       id: empId,
       firstName: emp.firstName,
@@ -134,11 +147,16 @@ export class EmployeeService {
       directorId: emp.directorId,
       email: emp.email,
       officeNameId: emp.officeNameId
-    }, {headers: this.providerAuthHeaderExtra});
+    }, {headers: header});
   }
   // Delete
   deleteEmployee(empId: string) {
-    return this.empServe.delete(this.employee + '/' + empId, {headers: this.providersAuthHeader});
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang')
+    });
+    return this.empServe.delete(this.employee + '/' + empId, {headers: header});
   }
   // ---------------------------------------------------------------------------------------------------------------------------------------
 }

@@ -13,4 +13,12 @@ export class RequestHolidayModel extends RequestAbstractModel<string> {
   insertOperator: string;
   countHD: number;
   holidayTypeId: string;
+  labelMap: {
+    requestTypeId: string;
+    employeeId: string;
+    approvementId: string;
+    authorizationId: string;
+    holidayTypeId: string;
+    officeNameId: string;
+  };
 }

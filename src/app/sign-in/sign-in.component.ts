@@ -3,6 +3,7 @@ import {AuthService, GoogleLoginProvider} from 'angular-6-social-login';
 import {EmployeeService} from '../shared-components/providers/employee.service';
 import {AppUserModel} from '../shared-components/models/shared-models/app-user.model';
 import {Router} from '@angular/router';
+import {Session} from '../shared-components/models/session';
 
 @Component({
   selector: 'app-sign-in',
@@ -11,14 +12,13 @@ import {Router} from '@angular/router';
 })
 export class SignInComponent implements OnInit {
   employeeSession: AppUserModel;
-  empId: string;
   signingIn: boolean;
 
   constructor(
     private getStatus: EmployeeService,
     private socialAuthService: AuthService,
     private signin: EmployeeService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -49,6 +49,7 @@ export class SignInComponent implements OnInit {
     // get auth token with google sign-in
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
       (userData) => {
+        console.log('Google User Data=> ', userData);
         // subscribe to google sign-in service
         this.signin.signInWithGoogle(userData.idToken).subscribe(
           (user) => {

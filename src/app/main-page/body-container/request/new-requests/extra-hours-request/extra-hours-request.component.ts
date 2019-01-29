@@ -277,7 +277,7 @@ export class ExtraHoursRequestComponent implements OnInit {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
-                panelClass: ['success-chip']
+                panelClass: ['error-chip']
               });
             }
           );
@@ -308,7 +308,7 @@ export class ExtraHoursRequestComponent implements OnInit {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
-                  panelClass: ['success-chip']
+                  panelClass: ['error-chip']
                 });
               }
             );
@@ -347,7 +347,7 @@ export class ExtraHoursRequestComponent implements OnInit {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
-                panelClass: ['success-chip']
+                panelClass: ['error-chip']
               });
             }
           );
@@ -379,7 +379,7 @@ export class ExtraHoursRequestComponent implements OnInit {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
-                panelClass: ['success-chip']
+                panelClass: ['error-chip']
               });
             }
           );

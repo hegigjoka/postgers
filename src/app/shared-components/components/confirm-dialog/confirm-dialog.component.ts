@@ -53,11 +53,11 @@ export class ConfirmDialogComponent implements OnInit {
 
   onYesClicl(type: boolean, field: boolean, dropdown: boolean) {
     if (type === true && field === true && dropdown === true) {
-      return !this.data.conf + '|' + this.notes + '|' + this.authType;
+      return true + '|' + this.notes + '|' + this.authType;
     } else if (type === true && field === true) {
-      return !this.data.conf + '|' + this.notes;
+      return true + '|' + this.notes;
     } else if (type === true) {
-      return !this.data.conf;
+      return true;
     }
   }
 

@@ -1,3 +1,101 @@
-<p>
-  holidays-n-permission-request works!
-</p>
+<div class="container bcg-emp-menu">
+  <div class="row emp-menu">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 header">
+          Extra Hours Request
+          <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 forms">
+          <datalist id="holyType">
+            <option *ngFor="let holy of holidayTypes" [value]="holy?.someLabel"></option>
+          </datalist>
+
+          <!--Editing Employee Or Inserting Employee Form-->
+          <form [formGroup]="requestForm">
+            <div class="form-section">Employee Info</div>
+            <hr>
+            <label for="employeeId" *ngIf="hasEmployeeField">{{fields?.employeeId?.fieldLabel}}: </label>
+            <input id="employeeId" type="text" formControlName="employeeId" *ngIf="hasEmployeeField">
+            <br *ngIf="hasEmployeeField">
+            <label for="officeNameId">{{fields?.officeNameId?.fieldLabel}}: </label>
+            <input id="officeNameId" type="text" formControlName="officeNameId">
+            <br>
+            <label for="managerId">{{fields?.managerId?.fieldLabel}}: </label>
+            <input id="managerId" type="text" formControlName="managerId">
+            <br>
+            <label for="directorId">{{fields?.directorId?.fieldLabel}}: </label>
+            <input id="directorId" type="text" formControlName="directorId">
+            <br>
+            <div class="form-section">Request Info</div>
+            <hr>
+            <label for="holidayTypeId">{{fields?.holidayTypeId?.fieldLabel}}: </label>
+            <input id="holidayTypeId"
+                   list="holyType"
+                   type="text"
+                   [(ngModel)]="holidayTypeInput"
+                   (change)="setHTId(holidayTypeInput)"
+                   formControlName="holidayTypeId">
+            <br>
+            <label for="startTimestamp">{{fields?.startTimestamp?.fieldLabel}}: </label>
+            <input id="startTimestamp" type="date" step="1800" formControlName="startTimestamp">
+            <br>
+            <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
+            <input id="stopTimestamp" type="date" step="1800" formControlName="stopTimestamp">
+            <br>
+            <label for="countHD">{{fields?.countHD?.fieldLabel}}: </label>
+            <input id="countHD" type="number" formControlName="countHD">
+            <br>
+            <label for="employeeNotes">{{fields?.employeeNotes?.fieldLabel}}: </label>
+            <textarea id="employeeNotes" type="text" formControlName="employeeNotes"></textarea>
+            <br>
+            <label for="approvementId" *ngIf="hasSomeField && displayApprove">{{fields?.approvementId?.fieldLabel}}: </label>
+            <input id="approvementId" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
+            <br *ngIf="hasSomeField && displayApprove">
+            <label for="authorizationId" *ngIf="hasSomeField && displayAuth">{{fields?.authorizationId?.fieldLabel}}: </label>
+            <input id="authorizationId" type="text" formControlName="authorizationId" *ngIf="hasSomeField && displayAuth">
+            <br *ngIf="hasSomeField && displayAuth">
+            <div class="buttons" *ngIf="!hasSomeField">
+              <button class="btn" (click)="insertRequest()" *ngIf="requestForm.valid">
+                <mat-icon class="btn-icon">add_circle</mat-icon>
+                Insert
+              </button>
+              <button class="btn btn-danger" (click)="reset()">
+                <mat-icon class="btn-icon">cancel_presentation</mat-icon>
+                Reset
+              </button>
+            </div>
+            <button class="btn btn-danger" (click)="deleteRequest()" *ngIf="isDeletable">
+              <mat-icon class="btn-icon">delete</mat-icon>
+              Delete
+            </button>
+            <div class="buttons" *ngIf="isManager">
+              <button class="btn" (click)="approveOrDeny(1)">
+                <mat-icon class="btn-icon">check_box</mat-icon>
+                Approve
+              </button>
+              <button class="btn btn-danger" (click)="approveOrDeny(0)">
+                <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
+                Deny
+              </button>
+            </div>
+            <div class="buttons" *ngIf="isDirector">
+              <button class="btn" (click)="authorizeOrNotAuthorize(1)">
+                <mat-icon class="btn-icon">check_box</mat-icon>
+                Authorize
+              </button>
+              <button class="btn btn-danger" (click)="authorizeOrNotAuthorize(0)">
+                <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
+                Not Authorize
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
