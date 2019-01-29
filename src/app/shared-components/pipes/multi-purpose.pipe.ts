@@ -12,6 +12,9 @@ export class MultiPurposePipe implements PipeTransform {
       case 'hasDateValue': {
         return value ? value : this.date;
       }
+      case 'hasValue': {
+        return value ? value : 'loading...';
+      }
       case 'time': {
         return value ? value.split('T')[1].substr(0, 5) : '';
       }

@@ -30,14 +30,14 @@
         </thead>
         <tbody>
         <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.labelMap?.requestTypeId)">
-          <td>{{request?.labelMap?.requestTypeId}}</td>
+          <td>{{request?.labelMap?.requestTypeId | multiPurposePipe: 'hasValue'}}</td>
           <td>{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <td>{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
-          <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId}}</td>
-          <td>{{request?.employeeNotes | multiPurposePipe: 'longNote'}}</td>
-          <td>{{request?.labelMap?.pendingActionFrom}}</td>
-          <td>{{request?.labelMap?.status}}</td>
+          <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
+          <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
+          <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
+          <td>{{request?.labelMap?.status | multiPurposePipe: 'hasValue'}}</td>
         </tr>
         </tbody>
       </table>

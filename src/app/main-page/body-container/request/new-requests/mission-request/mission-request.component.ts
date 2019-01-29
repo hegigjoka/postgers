@@ -126,6 +126,7 @@ export class MissionRequestComponent implements OnInit {
       this.requestForm.controls['insertDate'].setValue(this.request.insertDate);
       this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
       this.requestForm.controls['missionTypeId'].setValue(this.request.labelMap.missionTypeId);
+      this.requestForm.controls['missionWhere'].setValue(this.request.missionWhere);
       this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp);
       this.requestForm.controls['startDate'].setValue(this.request.startTimestamp.split('T')[0]);
