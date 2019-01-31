@@ -4,6 +4,7 @@ import {RequestExtraHoursModel} from '../models/requests-models/request-extra-ho
 import {RequestHolidayModel} from '../models/requests-models/request-holiday.model';
 import {RequestMissionModel} from '../models/requests-models/request-mission.model';
 import {RequestMissingBadgeModel} from '../models/requests-models/request-missing-badge.model';
+import {RequestSubstituteModel} from '../models/requests-models/request-substitute.model';
 
 @Injectable()
 export class RequestsService {
@@ -34,6 +35,10 @@ export class RequestsService {
     } else if (type === 'missingBadge') {
       return this.http.options(
         `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge`,
+        {headers: header});
+    } else if (type === 'subHoly') {
+      return this.http.options(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions`,
         {headers: header});
     }
     return this.http.options(
@@ -392,6 +397,105 @@ export class RequestsService {
     });
     return this.http.delete(
       `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge/${reqId}`,
+      {headers: header});
+  }
+  // SUBSTITUTED_HOLIDAYS-------------------------------------------------------------------------------------------------------------------
+
+  // get substituted holidays single request
+  getSubHolyRequest(reqId: string) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang')
+    });
+    const filter = 'paramBean={fillFieldLabels:true}';
+    return this.http.get(
+      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}?${filter}`,
+      {headers: header});
+  }
+
+  // insert new substituted holidays request
+  insertSubHolyRequest(sHRequest?: RequestSubstituteModel) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang'),
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(
+      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/new`,
+      {
+        managerId: sHRequest.managerId,
+        directorId: sHRequest.directorId,
+        employeeId: sHRequest.employeeId,
+        officeNameId: sHRequest.officeNameId,
+        startTimestamp: sHRequest.startTimestamp,
+        stopTimestamp: sHRequest.stopTimestamp,
+        requestTypeId: 'POOL00000000082',
+      },
+      {headers: header});
+  }
+
+  // manage substituted holidays request (approve/deny/authorize/not authorize)
+  managerNdirectorDecisionSubHolyRequest(type: string, reqId: string, notes: string) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang'),
+      'Content-Type': 'application/json'
+    });
+    if (type === 'approve') {
+      return this.http.put(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+        {
+          id: reqId,
+          approvementId: 'POOL00000000044',
+          managerNotes: notes
+        },
+        {headers: header}
+      );
+    } else if (type === 'deny') {
+      return this.http.put(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+        {
+          id: reqId,
+          approvementId: 'POOL00000000045',
+          managerNotes: notes
+        },
+        {headers: header}
+      );
+    } else if (type === 'authorize') {
+      return this.http.put(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+        {
+          id: reqId,
+          authorizationId: 'POOL00000000041',
+          directorNotes: notes
+        },
+        {headers: header}
+      );
+    } else {
+      return this.http.put(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+        {
+          id: reqId,
+          authorizationId: 'POOL00000000042',
+          directorNotes: notes
+        },
+        {headers: header}
+      );
+    }
+  }
+
+  // delete substituted holidays request
+  deleteSubHolyRequest(reqId: string) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang')
+    });
+    return this.http.delete(
+      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
       {headers: header});
   }
 }

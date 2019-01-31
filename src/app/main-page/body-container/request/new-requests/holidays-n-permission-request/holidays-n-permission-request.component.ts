@@ -21,7 +21,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
   fields: RequestHolidayMetadata;
 
   holidayTypes: AbstractModel[];
-  holidayTypeInput: string;
+  holidayTypeInput = 'Holiday Request';
   holyTypeId: string;
 
   reqId: string;
@@ -255,7 +255,6 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
 
   // Reset Request Form
   reset() {
-    this.requestForm.controls['holidayTypeId'].setValue('');
     this.requestForm.controls['stopTimestamp'].setValue('');
     this.requestForm.controls['startTimestamp'].setValue('');
     this.requestForm.controls['countHD'].setValue('');

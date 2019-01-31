@@ -97,7 +97,7 @@ export class BadgeFailRequestComponent implements OnInit {
     });
   }
 
-  setMTId(someLabel) {
+  setMBId(someLabel) {
     if (someLabel.length > 0) {
       this.missingBadgeTypes.forEach((value) => {
         if (value.someLabel === someLabel) {
