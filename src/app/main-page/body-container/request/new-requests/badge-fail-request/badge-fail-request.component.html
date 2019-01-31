@@ -23,7 +23,7 @@
             <label for="officeNameId">{{fields?.officeNameId?.fieldLabel}}: </label>
             <input id="officeNameId" type="text" formControlName="officeNameId">
             <br>
-            <label for="managerId">{{fields?.managerId?.fieldName}}: </label>
+            <label for="managerId">{{fields?.managerId?.fieldLabel}}: </label>
             <input id="managerId" type="text" formControlName="managerId">
             <br>
             <div class="form-section">Request Info</div>
@@ -65,26 +65,6 @@
               <mat-icon class="btn-icon">delete</mat-icon>
               Delete
             </button>
-            <!--<div class="buttons" *ngIf="isManager">-->
-              <!--<button class="btn" (click)="approveOrDeny(1)">-->
-                <!--<mat-icon class="btn-icon">check_box</mat-icon>-->
-                <!--Approve-->
-              <!--</button>-->
-              <!--<button class="btn btn-danger" (click)="approveOrDeny(0)">-->
-                <!--<mat-icon class="btn-icon">indeterminate_check_box</mat-icon>-->
-                <!--Deny-->
-              <!--</button>-->
-            <!--</div>-->
-            <!--<div class="buttons" *ngIf="isDirector">-->
-              <!--<button class="btn" (click)="authorizeOrNotAuthorize(1)">-->
-                <!--<mat-icon class="btn-icon">check_box</mat-icon>-->
-                <!--Authorize-->
-              <!--</button>-->
-              <!--<button class="btn btn-danger" (click)="authorizeOrNotAuthorize(0)">-->
-                <!--<mat-icon class="btn-icon">indeterminate_check_box</mat-icon>-->
-                <!--Not Authorize-->
-              <!--</button>-->
-            <!--</div>-->
           </form>
 
         </div>

@@ -259,7 +259,7 @@ export class MissionRequestComponent implements OnInit {
   approveOrDeny(type: number) {
     const confType = 'manager';
     if (type === 1) {
-      const confText = 'Are you shure that you want to approve this request ?';
+      const confText = 'Are you shure that you want to APPROVE this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
@@ -289,7 +289,7 @@ export class MissionRequestComponent implements OnInit {
         }
       });
     } else {
-      const confText = 'Are you shure that you want to deny this request ?';
+      const confText = 'Are you shure that you want to DENY this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });

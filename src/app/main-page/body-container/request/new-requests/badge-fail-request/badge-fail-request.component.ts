@@ -36,7 +36,6 @@ export class BadgeFailRequestComponent implements OnInit {
   hasSomeField: boolean;
   hasEmployeeField: boolean;
   isDeletable: boolean;
-  isManager: boolean;
   displayApprove: boolean;
   confirmation: boolean;
 
@@ -83,6 +82,7 @@ export class BadgeFailRequestComponent implements OnInit {
       this.requestForm.controls['officeNameId'].disable();
       this.requestForm.controls['managerId'].disable();
     } else {
+      this.isDeletable = true;
       this.hasSomeField = true;
       this.hasEmployeeField = true;
       this.requestForm.disable();
@@ -117,17 +117,15 @@ export class BadgeFailRequestComponent implements OnInit {
       this.requestForm.controls['someLabel'].setValue(this.request.someLabel);
       this.requestForm.controls['insertDate'].setValue(this.request.insertDate);
       this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
-      this.requestForm.controls['badgeFailTypeId'].setValue(this.request.badgeFailTypeId);
+      this.requestForm.controls['badgeFailTypeId'].setValue(this.request.labelMap.badgeFailTypeId);
       this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
       this.requestForm.controls['date'].setValue(this.request.startTimestamp.split('T')[0]);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[1]);
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1]);
+      this.requestForm.controls['employeeNotes'].setValue(this.request.employeeNotes);
       if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
-        if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === localStorage.getItem('EmpId')) {
-          this.isDeletable = true;
-        }
       }
       if (this.request.employeeId === localStorage.getItem('EmpId')) {
         this.hasEmployeeField = false;
@@ -143,9 +141,6 @@ export class BadgeFailRequestComponent implements OnInit {
       this.employee = managerNdirectorNoffice.json().body.data;
       this.requestForm.controls['managerId'].setValue(this.employee.managerFirstName + ' ' + this.employee.managerLastName);
       this.ManagerId = this.employee.managerId;
-      if (this.employee.managerId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000043') {
-        this.isManager = true;
-      }
     });
     this.empServe.getFieldMapEmployee().subscribe((office) => {
       this.offices = office.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
@@ -200,7 +195,7 @@ export class BadgeFailRequestComponent implements OnInit {
 
   // delete pending request
   deleteRequest() {
-    const confText = 'Are you sure that you want to delete this pending extra hours request ?';
+    const confText = 'Are you sure that you want to delete this pending badge failure request ?';
     const confType = 'del';
     const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
       data: {text: confText, conf: confType, type: confType}
@@ -211,7 +206,7 @@ export class BadgeFailRequestComponent implements OnInit {
         this.reqServe.deleteMissingBadgeRequest(this.reqId).subscribe(
           (status) => {
             if (status.json().status.code === 'STATUS_OK') {
-              this.chip.open('Extra hour request is deleted successfully!', null, {
+              this.chip.open('Badge failure request is deleted successfully!', null, {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
@@ -221,7 +216,7 @@ export class BadgeFailRequestComponent implements OnInit {
             }
           },
           () => {
-            this.chip.open('Extra hour request can\'t be deleted, sorry!', null, {
+            this.chip.open('Badge failure request can\'t be deleted, sorry!', null, {
               duration: 5000,
               verticalPosition: 'bottom',
               horizontalPosition: 'left',
@@ -243,72 +238,4 @@ export class BadgeFailRequestComponent implements OnInit {
     this.requestForm.controls['startTimestamp'].setValue('');
     this.requestForm.controls['employeeNotes'].setValue('');
   }
-
-  // approve or deny request
-  // approveOrDeny(type: number) {
-  //   const confType = 'manager';
-  //   if (type === 1) {
-  //     const confText = 'Are you shure that you want to approve this request ?';
-  //     const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
-  //       data: {text: confText, conf: this.confirmation, type: confType}
-  //     });
-  //     confDlg.afterClosed().subscribe((result) => {
-  //       if (result.split('|')[0] === 'true') {
-  //         this.reqServe.managerNdirectorDecisionExtraHoursRequest('approve', this.reqId, result.split('|')[1]).subscribe(
-  //           (response) => {
-  //             if (response.json().status.code === 'STATUS_OK') {
-  //               this.chip.open('Extra hour request is APPROVED!', null, {
-  //                 duration: 5000,
-  //                 verticalPosition: 'bottom',
-  //                 horizontalPosition: 'left',
-  //                 panelClass: ['success-chip']
-  //               });
-  //               this.loc.back();
-  //             }
-  //           },
-  //           () => {
-  //             this.chip.open('Error, extra hours request isn\'t approved!', null, {
-  //               duration: 5000,
-  //               verticalPosition: 'bottom',
-  //               horizontalPosition: 'left',
-  //               panelClass: ['error-chip']
-  //             });
-  //           }
-  //         );
-  //       }
-  //     });
-  //   } else {
-  //     const confText = 'Are you shure that you want to deny this request ?';
-  //     const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
-  //       data: {text: confText, conf: this.confirmation, type: confType}
-  //     });
-  //     confDlg.afterClosed().subscribe(
-  //       (result) => {
-  //         if (result.split('|')[0] === 'true') {
-  //           this.reqServe.managerNdirectorDecisionExtraHoursRequest('deny', this.reqId, result.split('|')[1]).subscribe(
-  //             (response) => {
-  //               if (response.json().status.code === 'STATUS_OK') {
-  //                 this.chip.open('Extra hour request is DENIED!', null, {
-  //                   duration: 5000,
-  //                   verticalPosition: 'bottom',
-  //                   horizontalPosition: 'left',
-  //                   panelClass: ['success-chip']
-  //                 });
-  //                 this.loc.back();
-  //               }
-  //             },
-  //             () => {
-  //               this.chip.open('Error, extra hours request isn\'t denied!', null, {
-  //                 duration: 5000,
-  //                 verticalPosition: 'bottom',
-  //                 horizontalPosition: 'left',
-  //                 panelClass: ['error-chip']
-  //               });
-  //             }
-  //           );
-  //         }
-  //       }
-  //     );
-  //   }
-  // }
 }

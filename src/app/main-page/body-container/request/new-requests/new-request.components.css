@@ -73,6 +73,16 @@ input.input-mission-time{
   float: none;
   width: 20%;
 }
+.sub-dates > input{
+  width: 50%;
+  float: none;
+}
+.sub-dates > mat-icon{
+  color: white;
+  position: relative;
+  top: 8px;
+  left: 15px;
+}
 textarea{
   height: 50px;
   width: 60%;

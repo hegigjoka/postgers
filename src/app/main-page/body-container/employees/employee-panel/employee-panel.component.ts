@@ -80,7 +80,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   openEmployee(empId: string) {
     this.sideNav = 'open';
     this.empMenu.toggle();
-    console.log('open side nav for employee(' + empId + ')');
     this.router.navigate([empId], {relativeTo: this.route});
   }
   // FILTERS--------------------------------------------------------------------------------------------------------------------------------

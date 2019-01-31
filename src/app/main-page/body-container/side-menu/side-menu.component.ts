@@ -23,14 +23,12 @@ export class SideMenuComponent implements OnInit {
     }
   }
   openEmp() {
-    console.log('open employees panel');
     this.router.navigate(['employees'], {relativeTo: this.route});
   }
   openReq() {
     this.requestsType = !(this.requestsType);
   }
   openReqType(type: string) {
-    console.log('open requests panel');
     this.router.navigate([localStorage.getItem('EmpId'), 'requests'], {relativeTo: this.route, queryParams: {type: type}});
   }
   logout() {

@@ -39,15 +39,24 @@
                    (change)="setSHId(holidayTypeInput)"
                    formControlName="holidayTypeId">
             <br>
+            <label for="date">Date: </label>
+            <input id="date" type="date" formControlName="date">
+            <br>
             <label for="startTimestamp">{{fields?.startTimestamp?.fieldLabel}}: </label>
-            <input id="startTimestamp" type="date" step="1800" formControlName="startTimestamp">
+            <input id="startTimestamp" type="time" step="1800" formControlName="startTimestamp">
             <br>
             <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
-            <input id="stopTimestamp" type="date" step="1800" formControlName="stopTimestamp">
+            <input id="stopTimestamp" type="time" step="1800" formControlName="stopTimestamp">
             <br>
             <label for="countHD">{{fields?.countHD?.fieldLabel}}: </label>
             <input id="countHD" type="number" formControlName="countHD">
             <br>
+            <div class="sub-dates" *ngFor="let subdate of subDates;let i = index">
+              <label [for]="'subDate' + i">Substitute Date {{i+1}}: </label>
+              <input [id]="'subDate' + i" type="date" step="1800" [formControlName]="'subDate' + i">
+              <mat-icon *ngIf="i === 0" (click)="newDate()">control_point</mat-icon>
+              <br>
+            </div>
             <label for="employeeNotes">{{fields?.employeeNotes?.fieldLabel}}: </label>
             <textarea id="employeeNotes" type="text" formControlName="employeeNotes"></textarea>
             <br>

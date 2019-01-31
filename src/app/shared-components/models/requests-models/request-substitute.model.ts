@@ -9,7 +9,7 @@ export class RequestSubstituteModel extends RequestAbstractModel<string> {
   approvementId: string;
   managerNotes: string;
   managerId: string;
-  substitutionDates: string;
+  substitutionDates: string[];
   approvementDate: string;
   insertOperator: string;
   countHD: number;

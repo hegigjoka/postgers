@@ -132,6 +132,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
       this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
       this.requestForm.controls['holidayTypeId'].setValue(this.request.labelMap.holidayTypeId);
       this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
+      this.requestForm.controls['officeNameId'].setValue(this.request.labelMap.officeNameId);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[0]);
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[0]);
       this.requestForm.controls['countHD'].setValue(this.request.countHD);
@@ -160,7 +161,6 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
       this.offices = office.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
       this.offices.forEach((value) => {
         if (value.id === this.employee.officeNameId) {
-          this.requestForm.controls['officeNameId'].setValue(value.someLabel);
           this.OfficeId = value.id;
         }
       });
@@ -265,7 +265,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
   approveOrDeny(type: number) {
     const confType = 'manager';
     if (type === 1) {
-      const confText = 'Are you shure that you want to approve this request ?';
+      const confText = 'Are you shure that you want to APPROVE this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
@@ -295,7 +295,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
         }
       });
     } else {
-      const confText = 'Are you shure that you want to deny this request ?';
+      const confText = 'Are you shure that you want to DENY this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
@@ -333,7 +333,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
   authorizeOrNotAuthorize(type: number) {
     const confType = 'director';
     if (type === 1) {
-      const confText = 'Are you sure that you want to authorize this request ?';
+      const confText = 'Are you sure that you want to AUTHORIZE this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
@@ -365,7 +365,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
         }
       });
     } else {
-      const confText = 'Are you sure that you want to authorize this request ?';
+      const confText = 'Are you sure that you want to NOT AUTHORIZE this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });

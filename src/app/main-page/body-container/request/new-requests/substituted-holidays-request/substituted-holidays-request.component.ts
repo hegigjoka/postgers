@@ -30,6 +30,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   offices: AbstractModel[];
   requestForm: FormGroup;
   date: Date = new Date();
+  subDates = [' '];
   OfficeId: string;
   ManagerId: string;
   DirectorId: string;
@@ -67,9 +68,17 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       officeNameId: new FormControl('', Validators.required),
       managerId: new FormControl('', Validators.required),
       directorId: new FormControl('', Validators.required),
+      date: new FormControl('', Validators.required),
       startTimestamp: new FormControl('', Validators.required),
       stopTimestamp: new FormControl('', Validators.required),
       countHD: new FormControl(0, Validators.required),
+      substitutionDates: new FormControl(''),
+      subDate0: new FormControl(''),
+      subDate1: new FormControl(''),
+      subDate2: new FormControl(''),
+      subDate3: new FormControl(''),
+      subDate4: new FormControl(''),
+      subDate5: new FormControl(''),
       employeeNotes: new FormControl('No notes...'),
       approvementId: new FormControl(''),
       authorizationId: new FormControl(''),
@@ -122,6 +131,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   // Get Extra Hours Request
   getHrequest() {
     this.reqServe.getHolidayRequest(this.reqId).subscribe((request) => {
+      let i = 1;
       this.request = request.json().body.data;
       this.request.insertDate = this.request.insertDate.split('T')[0];
 
@@ -131,9 +141,16 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
       this.requestForm.controls['holidayTypeId'].setValue(this.request.labelMap.holidayTypeId);
       this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
-      this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[0]);
-      this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[0]);
+      this.requestForm.controls['date'].setValue(this.request.startTimestamp.split('T')[0]);
+      this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[1].substr(0, 5));
+      this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1].substr(0, 5));
       this.requestForm.controls['countHD'].setValue(this.request.countHD);
+      this.request.substitutionDates.forEach((value) => {
+        const label = 'subDate' + i;
+        this.subDates.push(value);
+        this.requestForm.controls[label].setValue(value);
+        i++;
+      });
       this.requestForm.controls['employeeNotes'].setValue(this.request.employeeNotes);
       if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
@@ -179,22 +196,39 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
     });
   }
 
+  newDate() {
+    if (this.subDates.length < 6) {
+      this.subDates.push(' ');
+    }
+  }
+
   // EXTRA_HOURS_REQUEST_CRUD---------------------------------------------------------------------------------------------------------------
 
   // Insert New Request
   insertRequest() {
+    let i = 0;
+    this.subDates.forEach(() => {
+      const label = 'subDate' + i;
+      this.subDates[i] = this.requestForm.controls[label].value;
+      i++;
+    });
+    this.requestForm.controls['startTimestamp'].setValue(
+      this.requestForm.controls['date'].value + 'T' + this.requestForm.controls['startTimestamp'].value + ':00'
+    );
+    this.requestForm.controls['stopTimestamp'].setValue(
+      this.requestForm.controls['date'].value + 'T' + this.requestForm.controls['stopTimestamp'].value + ':00'
+    );
+    this.requestForm.controls['substitutionDates'].setValue(this.subDates);
     this.request = this.requestForm.value;
     this.request.holidayTypeId = this.holyTypeId;
     this.request.officeNameId = this.OfficeId;
     this.request.managerId = this.ManagerId;
     this.request.directorId = this.DirectorId;
-    this.request.startTimestamp = this.request.startTimestamp + 'T00:00:00';
-    this.request.stopTimestamp = this.request.stopTimestamp + 'T00:00:00';
 
-    this.reqServe.insertHolidaysRequest(this.request).subscribe(
+    this.reqServe.insertSubHolyRequest(this.request).subscribe(
       (status) => {
         if (status.json().status.code === 'STATUS_OK') {
-          this.chip.open('Holiday request is sent successfully!', null, {
+          this.chip.open('Substituted Holidays request is sent successfully!', null, {
             duration: 5000,
             verticalPosition: 'bottom',
             horizontalPosition: 'left',
@@ -204,7 +238,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
         }
       },
       () => {
-        this.chip.open('Holiday request isn\'t sent, sorry!', null, {
+        this.chip.open('Substituted Holidays request isn\'t sent, sorry!', null, {
           duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
