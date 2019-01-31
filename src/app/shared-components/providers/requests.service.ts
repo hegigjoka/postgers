@@ -3,19 +3,12 @@ import {Headers, Http} from '@angular/http';
 import {RequestExtraHoursModel} from '../models/requests-models/request-extra-hours.model';
 import {RequestHolidayModel} from '../models/requests-models/request-holiday.model';
 import {RequestMissionModel} from '../models/requests-models/request-mission.model';
+import {RequestMissingBadgeModel} from '../models/requests-models/request-missing-badge.model';
 
 @Injectable()
 export class RequestsService {
   // PATHS----------------------------------------------------------------------------------------------------------------------------------
   urlPath = 'svc/hr/employee/';
-
-  // HEADERS--------------------------------------------------------------------------------------------------------------------------------
-  providerAuthHeaderExtra = new Headers({
-    'Authorization': localStorage.getItem('EmpAuthToken'),
-    'Accept': 'application/json',
-    'Accept-Language': localStorage.getItem('EmpLang'),
-    'Content-Type': 'application/json'
-  });
   // ---------------------------------------------------------------------------------------------------------------------------------------
 
   constructor(private http: Http) {}
@@ -37,6 +30,10 @@ export class RequestsService {
     } else if (type === 'mission') {
       return this.http.options(
         `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missions`,
+        {headers: header});
+    } else if (type === 'missingBadge') {
+      return this.http.options(
+        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge`,
         {headers: header});
     }
     return this.http.options(
@@ -346,6 +343,55 @@ export class RequestsService {
     });
     return this.http.delete(
       `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/${reqId}`,
+      {headers: header});
+  }
+  // BADGE_FAILURE--------------------------------------------------------------------------------------------------------------------------
+
+  // get missing badge single request
+  getMissingBadgeRequest(reqId: string) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang')
+    });
+    const filter = 'paramBean={fillFieldLabels:true}';
+    return this.http.get(
+      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge/${reqId}?${filter}`,
+      {headers: header});
+  }
+
+  // insert new missing badge request
+  insertMissingBadgeRequest(mBRequest?: RequestMissingBadgeModel) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang'),
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(
+      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge/new`,
+      {
+        employeeNotes: mBRequest.employeeNotes,
+        employeeId: mBRequest.employeeId,
+        officeNameId: mBRequest.officeNameId,
+        managerId: mBRequest.managerId,
+        startTimestamp: mBRequest.startTimestamp,
+        stopTimestamp: mBRequest.stopTimestamp,
+        requestTypeId: 'POOL00000000080',
+        badgeFailTypeId: mBRequest.badgeFailTypeId
+      },
+      {headers: header});
+  }
+
+  // delete missing badge request
+  deleteMissingBadgeRequest(reqId: string) {
+    const header = new Headers({
+      'Authorization': localStorage.getItem('EmpAuthToken'),
+      'Accept': 'application/json',
+      'Accept-Language': localStorage.getItem('EmpLang')
+    });
+    return this.http.delete(
+      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge/${reqId}`,
       {headers: header});
   }
 }

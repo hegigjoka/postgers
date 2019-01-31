@@ -9,11 +9,6 @@
       </div>
       <div class="row">
         <div class="col-12 forms">
-          <datalist id="approvement">
-            <option value="Pending"></option>
-            <option value="Approved"></option>
-            <option value="Denied"></option>
-          </datalist>
 
           <!--Editing Employee Or Inserting Employee Form-->
           <form [formGroup]="requestForm">
@@ -49,7 +44,7 @@
             <textarea id="employeeNotes" type="text" formControlName="employeeNotes"></textarea>
             <br>
             <label for="approvementId" *ngIf="hasSomeField && displayApprove">{{fields?.approvementId?.fieldLabel}}: </label>
-            <input id="approvementId" list="approvement" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
+            <input id="approvementId" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
             <br *ngIf="hasSomeField && displayApprove">
             <label for="authorizationId" *ngIf="hasSomeField && displayAuth">{{fields?.authorizationId?.fieldLabel}}: </label>
             <input id="authorizationId" type="text" formControlName="authorizationId" *ngIf="hasSomeField && displayAuth">
