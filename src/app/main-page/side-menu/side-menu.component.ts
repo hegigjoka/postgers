@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EmployeeService} from '../../../shared-components/providers/employee.service';
+import {EmployeeService} from '../../shared-components/providers/employee.service';
 
 @Component({
   selector: 'app-side-menu',

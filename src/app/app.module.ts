@@ -42,9 +42,9 @@ import {AvatarModule} from 'ngx-avatar';
 import {MultiPurposePipe} from './shared-components/pipes/multi-purpose.pipe';
 import {FilterSearchPipe} from './shared-components/pipes/filter-search.pipe';
 import { AppComponent } from './app.component';
-import { SignInComponent } from './sign-in/sign-in.component';
+import { SignInComponent } from './shared-components/components/sign-in/sign-in.component';
 import { MainPageComponent } from './main-page/main-page.component';
-import { SideMenuComponent } from './main-page/body-container/side-menu/side-menu.component';
+import { SideMenuComponent } from './main-page/side-menu/side-menu.component';
 import { EmployeePanelComponent } from './main-page/body-container/employees/employee-panel/employee-panel.component';
 import {
   EmployeeRegistrationComponent
@@ -52,16 +52,17 @@ import {
 import { RequestsContainerComponent } from './main-page/body-container/request/requests-container.component';
 import {
   ExtraHoursRequestComponent
-} from './main-page/body-container/request/new-requests/extra-hours-request/extra-hours-request.component';
+} from './shared-components/components/new-requests/extra-hours-request/extra-hours-request.component';
 import {
   HolidaysNPermissionRequestComponent
-} from './main-page/body-container/request/new-requests/holidays-n-permission-request/holidays-n-permission-request.component';
-import { BadgeFailRequestComponent } from './main-page/body-container/request/new-requests/badge-fail-request/badge-fail-request.component';
-import { MissionRequestComponent } from './main-page/body-container/request/new-requests/mission-request/mission-request.component';
+} from './shared-components/components/new-requests/holidays-n-permission-request/holidays-n-permission-request.component';
+import { BadgeFailRequestComponent } from './shared-components/components/new-requests/badge-fail-request/badge-fail-request.component';
+import { MissionRequestComponent } from './shared-components/components/new-requests/mission-request/mission-request.component';
 import {
   SubstitutedHolidaysRequestComponent
-} from './main-page/body-container/request/new-requests/substituted-holidays-request/substituted-holidays-request.component';
+} from './shared-components/components/new-requests/substituted-holidays-request/substituted-holidays-request.component';
 import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
+import { PersonelRequestsComponent } from './main-page/body-container/personel-requests/personel-requests.component';
 
 // App Routers
 const EmployeeRoutes: Routes = [
@@ -172,7 +173,8 @@ export function getAuthServiceConfigs() {
     HolidaysNPermissionRequestComponent,
     BadgeFailRequestComponent,
     MissionRequestComponent,
-    SubstitutedHolidaysRequestComponent
+    SubstitutedHolidaysRequestComponent,
+    PersonelRequestsComponent
   ],
 
   imports: [

@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {RequestsService} from '../../../../../shared-components/providers/requests.service';
+import {RequestsService} from '../../../providers/requests.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {EmployeeModel} from '../../../../../shared-components/models/employee-models/employee.model';
-import {EmployeeService} from '../../../../../shared-components/providers/employee.service';
-import {AbstractModel} from '../../../../../shared-components/models/shared-models/abstract.model';
+import {EmployeeModel} from '../../../models/employee-models/employee.model';
+import {EmployeeService} from '../../../providers/employee.service';
+import {AbstractModel} from '../../../models/shared-models/abstract.model';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {Location} from '@angular/common';
-import {ConfirmDialogComponent} from '../../../../../shared-components/components/confirm-dialog/confirm-dialog.component';
-import {RequestSubstituteModel} from '../../../../../shared-components/models/requests-models/request-substitute.model';
-import {RequestSubstituteMetadata} from '../../../../../shared-components/models/requests-models/request-substitute-metadata';
+import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
+import {RequestSubstituteModel} from '../../../models/requests-models/request-substitute.model';
+import {RequestSubstituteMetadata} from '../../../models/requests-models/request-substitute-metadata';
 
 @Component({
   selector: 'app-substituted-holidays-request',
@@ -18,10 +18,6 @@ import {RequestSubstituteMetadata} from '../../../../../shared-components/models
 })
 export class SubstitutedHolidaysRequestComponent implements OnInit {
   fields: RequestSubstituteMetadata;
-
-  holidayTypes: AbstractModel[];
-  holidayTypeInput = 'Substitution Holiday Request';
-  holyTypeId: string;
 
   reqId: string;
   request: RequestSubstituteModel;
@@ -56,14 +52,13 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   ngOnInit() {
     this.getFields();
     this.getEmployeeInfo(localStorage.getItem('EmpId'));
-
     const insertDate = new Date(this.date.valueOf() + 3600000);
     this.requestForm = new FormGroup({
       id: new FormControl(''),
       someLabel: new FormControl(''),
       insertDate: new FormControl(insertDate.toISOString().split('.')[0], Validators.required),
       requestTypeId: new FormControl('POOL00000000082', Validators.required),
-      holidayTypeId: new FormControl('Substitution Holiday Request', Validators.required),
+      holidayTypeId: new FormControl('Hours for Permission (paid)', Validators.required),
       employeeId: new FormControl(localStorage.getItem('EmpId'), Validators.required),
       officeNameId: new FormControl('', Validators.required),
       managerId: new FormControl('', Validators.required),
@@ -82,12 +77,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       employeeNotes: new FormControl('No notes...'),
       approvementId: new FormControl(''),
       authorizationId: new FormControl(''),
-      labelMap: new FormGroup({
-        requestTypeId: new FormControl('Substituted Holidays'),
-        employeeId: new FormControl(localStorage.getItem('EmpFullName')),
-        authorizationId: new FormControl('Pending'),
-        approvementId: new FormControl('Pending')
-      })
+      labelMap: new FormGroup({})
     });
     this.getUrlParams();
   }
@@ -107,52 +97,47 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       this.hasSomeField = true;
       this.hasEmployeeField = true;
       this.requestForm.disable();
-      this.getHrequest();
+      this.getSHrequest();
     }
   }
 
   getFields() {
-    this.reqServe.getTableOptions('holidays').subscribe((fields) => {
+    this.reqServe.getTableOptions('subHoly').subscribe((fields) => {
       this.fields = fields.json().body.data.fieldMap;
-      this.holidayTypes = fields.json().body.data.fieldMap.holidayTypeId.fieldDataPool.list;
     });
   }
 
-  setSHId(someLabel) {
-    if (someLabel.length > 0) {
-      this.holidayTypes.forEach((value) => {
-        if (value.someLabel === someLabel) {
-          this.holyTypeId = value.id;
-        }
-      });
-    }
-  }
-
   // Get Extra Hours Request
-  getHrequest() {
-    this.reqServe.getHolidayRequest(this.reqId).subscribe((request) => {
-      let i = 1;
+  getSHrequest() {
+    this.reqServe.getSubHolyRequest(this.reqId).subscribe((request) => {
+      // get request
       this.request = request.json().body.data;
       this.request.insertDate = this.request.insertDate.split('T')[0];
-
+      // insert request to te form
       this.requestForm.controls['id'].setValue(this.request.id);
       this.requestForm.controls['someLabel'].setValue(this.request.someLabel);
       this.requestForm.controls['insertDate'].setValue(this.request.insertDate);
       this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
-      this.requestForm.controls['holidayTypeId'].setValue(this.request.labelMap.holidayTypeId);
       this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
       this.requestForm.controls['date'].setValue(this.request.startTimestamp.split('T')[0]);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[1].substr(0, 5));
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1].substr(0, 5));
-      this.requestForm.controls['countHD'].setValue(this.request.countHD);
-      this.request.substitutionDates.forEach((value) => {
-        const label = 'subDate' + i;
-        this.subDates.push(value);
-        this.requestForm.controls[label].setValue(value);
-        i++;
-      });
       this.requestForm.controls['employeeNotes'].setValue(this.request.employeeNotes);
+      this.requestForm.controls['countHD'].setValue(this.request.countHD);
+      // insert substitution dates to the form
+      if (this.request.substitutionDates !== undefined) {
+        let i = 0;
+        this.subDates = [];
+        this.request.substitutionDates.forEach((value) => {
+          const label = 'subDate' + i;
+          this.subDates.push(value);
+          this.requestForm.controls[label].setValue(value.split('T')[0]);
+          i++;
+        });
+      }
+      // show approvement or authorization to the form
       if (this.request.approvementId !== undefined) {
+        console.log('passed here');
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
         if (this.request.approvementId === 'POOL00000000044') {
@@ -165,7 +150,6 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       if (this.request.employeeId === localStorage.getItem('EmpId')) {
         this.hasEmployeeField = false;
       }
-
       this.getEmployeeInfo(this.request.employeeId);
     });
   }
@@ -202,28 +186,28 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
     }
   }
 
-  // EXTRA_HOURS_REQUEST_CRUD---------------------------------------------------------------------------------------------------------------
+  // SUBSTITUTED_HOLIDAYS_REQUEST_CRUD------------------------------------------------------------------------------------------------------
 
   // Insert New Request
   insertRequest() {
     let i = 0;
     this.subDates.forEach(() => {
       const label = 'subDate' + i;
-      this.subDates[i] = this.requestForm.controls[label].value;
+      this.subDates[i] = this.requestForm.controls[label].value + 'T00:00:00';
       i++;
     });
+    this.requestForm.controls['substitutionDates'].setValue(this.subDates);
     this.requestForm.controls['startTimestamp'].setValue(
       this.requestForm.controls['date'].value + 'T' + this.requestForm.controls['startTimestamp'].value + ':00'
     );
     this.requestForm.controls['stopTimestamp'].setValue(
       this.requestForm.controls['date'].value + 'T' + this.requestForm.controls['stopTimestamp'].value + ':00'
     );
-    this.requestForm.controls['substitutionDates'].setValue(this.subDates);
     this.request = this.requestForm.value;
-    this.request.holidayTypeId = this.holyTypeId;
     this.request.officeNameId = this.OfficeId;
     this.request.managerId = this.ManagerId;
     this.request.directorId = this.DirectorId;
+    console.log(this.request);
 
     this.reqServe.insertSubHolyRequest(this.request).subscribe(
       (status) => {
@@ -251,7 +235,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
 
   // delete pending request
   deleteRequest() {
-    const confText = 'Are you sure that you want to delete this pending holiday request ?';
+    const confText = 'Are you sure that you want to delete this pending substituted holidays request ?';
     const confType = 'del';
     const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
       data: {text: confText, conf: confType, type: confType}
@@ -259,10 +243,10 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
     confDlg.afterClosed().subscribe((resuelt) => {
       this.confirmation = resuelt;
       if (this.confirmation === true) {
-        this.reqServe.deleteHolidayRequest(this.reqId).subscribe(
+        this.reqServe.deleteSubHolyRequest(this.reqId).subscribe(
           (status) => {
             if (status.json().status.code === 'STATUS_OK') {
-              this.chip.open('Holiday request is deleted successfully!', null, {
+              this.chip.open('Substituted Holidays request is deleted successfully!', null, {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
@@ -272,7 +256,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
             }
           },
           () => {
-            this.chip.open('Holiday request can\'t be deleted, sorry!', null, {
+            this.chip.open('Substituted Holidays request can\'t be deleted, sorry!', null, {
               duration: 5000,
               verticalPosition: 'bottom',
               horizontalPosition: 'left',
@@ -298,16 +282,16 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   approveOrDeny(type: number) {
     const confType = 'manager';
     if (type === 1) {
-      const confText = 'Are you shure that you want to approve this request ?';
+      const confText = 'Are you shure that you want to APPROVE this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
         if (result.split('|')[0] === 'true') {
-          this.reqServe.managerNdirectorDecisionHolidayRequest('approve', this.reqId, result.split('|')[1]).subscribe(
+          this.reqServe.managerNdirectorDecisionSubHolyRequest('approve', this.reqId, result.split('|')[1]).subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Holiday request is APPROVED!', null, {
+                this.chip.open('Substituted Holidays request is APPROVED!', null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
@@ -317,7 +301,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
               }
             },
             () => {
-              this.chip.open('Error, holiday request isn\'t approved!', null, {
+              this.chip.open('Error, substituted holidays request isn\'t approved!', null, {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
@@ -328,17 +312,17 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
         }
       });
     } else {
-      const confText = 'Are you shure that you want to deny this request ?';
+      const confText = 'Are you shure that you want to DENY this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe(
         (result) => {
           if (result.split('|')[0] === 'true') {
-            this.reqServe.managerNdirectorDecisionHolidayRequest('deny', this.reqId, result.split('|')[1]).subscribe(
+            this.reqServe.managerNdirectorDecisionSubHolyRequest('deny', this.reqId, result.split('|')[1]).subscribe(
               (response) => {
                 if (response.json().status.code === 'STATUS_OK') {
-                  this.chip.open('Holiday request is DENIED!', null, {
+                  this.chip.open('Substituted Holidays request is DENIED!', null, {
                     duration: 5000,
                     verticalPosition: 'bottom',
                     horizontalPosition: 'left',
@@ -348,7 +332,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
                 }
               },
               () => {
-                this.chip.open('Error, holiday request isn\'t denied!', null, {
+                this.chip.open('Error, substituted holidays request isn\'t denied!', null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
@@ -366,18 +350,16 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   authorizeOrNotAuthorize(type: number) {
     const confType = 'director';
     if (type === 1) {
-      const confText = 'Are you sure that you want to authorize this request ?';
+      const confText = 'Are you sure that you want to AUTHORIZE this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
         if (result.split('|')[0] === 'true') {
-          this.reqServe.managerNdirectorDecisionHolidayRequest(
-            'authorize', this.reqId, result.split('|')[1]
-          ).subscribe(
+          this.reqServe.managerNdirectorDecisionSubHolyRequest('authorize', this.reqId, result.split('|')[1]).subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Holiday request is AUTHORIZED!', null, {
+                this.chip.open('Substituted Holidays request is AUTHORIZED!', null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
@@ -387,7 +369,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
               }
             },
             () => {
-              this.chip.open('Error, holiday request isn\'t authorized!', null, {
+              this.chip.open('Error, substituted holidays request isn\'t authorized!', null, {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
@@ -398,18 +380,16 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
         }
       });
     } else {
-      const confText = 'Are you sure that you want to authorize this request ?';
+      const confText = 'Are you sure that you want to NOT AUTHORIZE this request ?';
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
         if (result.split('|')[0] === 'true') {
-          this.reqServe.managerNdirectorDecisionHolidayRequest(
-            'authorize', this.reqId, result.split('|')[1]
-          ).subscribe(
+          this.reqServe.managerNdirectorDecisionSubHolyRequest('authorize', this.reqId, result.split('|')[1]).subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Holiday request is NOT AUTHORIZED!', null, {
+                this.chip.open('Substituted Holidays request is NOT AUTHORIZED!', null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',

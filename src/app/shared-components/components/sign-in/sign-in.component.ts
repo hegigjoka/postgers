@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService, GoogleLoginProvider} from 'angular-6-social-login';
-import {EmployeeService} from '../shared-components/providers/employee.service';
-import {AppUserModel} from '../shared-components/models/shared-models/app-user.model';
+import {EmployeeService} from '../../providers/employee.service';
+import {AppUserModel} from '../../models/shared-models/app-user.model';
 import {Router} from '@angular/router';
-import {Session} from '../shared-components/models/session';
 
 @Component({
   selector: 'app-sign-in',

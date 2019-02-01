@@ -10,7 +10,6 @@ import {RequestSubstituteModel} from '../models/requests-models/request-substitu
 export class RequestsService {
   // PATHS----------------------------------------------------------------------------------------------------------------------------------
   urlPath = 'svc/hr/employee/';
-  // ---------------------------------------------------------------------------------------------------------------------------------------
 
   constructor(private http: Http) {}
 
@@ -431,7 +430,10 @@ export class RequestsService {
         officeNameId: sHRequest.officeNameId,
         startTimestamp: sHRequest.startTimestamp,
         stopTimestamp: sHRequest.stopTimestamp,
+        countHD: sHRequest.countHD,
+        substitutionDates: sHRequest.substitutionDates,
         requestTypeId: 'POOL00000000082',
+        employeeNotes: sHRequest.employeeNotes
       },
       {headers: header});
   }

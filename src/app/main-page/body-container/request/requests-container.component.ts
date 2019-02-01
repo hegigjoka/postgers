@@ -14,7 +14,7 @@ import {Location} from '@angular/common';
 })
 export class RequestsContainerComponent implements OnInit {
   // filter variables
-  title = 'All Requests';
+  title = 'My Requests';
   reqType: string;
   paginate = 1;
 
@@ -34,8 +34,6 @@ export class RequestsContainerComponent implements OnInit {
       this.title = 'Pending Action';
     } else if (this.reqType === 'me') {
       this.title = 'My Requests';
-    } else {
-      this.title = 'All Requests';
     }
     this.getOptions();
     this.getRequests();
@@ -58,13 +56,6 @@ export class RequestsContainerComponent implements OnInit {
   }
 
   // Request Filters
-  all() {
-    this.title = 'All Requests';
-    this.reqType = 'all';
-    this.getRequests();
-    this.changeQueryParam();
-  }
-
   onlyMR() {
     this.title = 'My Requests';
     this.reqType = 'me';

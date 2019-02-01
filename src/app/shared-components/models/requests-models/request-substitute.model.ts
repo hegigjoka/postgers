@@ -4,7 +4,6 @@ export class RequestSubstituteModel extends RequestAbstractModel<string> {
   directorNotes: string;
   authorizationDate: string;
   directorId: string;
-  authorizationTypeId: string;
   authorizationId: string;
   approvementId: string;
   managerNotes: string;

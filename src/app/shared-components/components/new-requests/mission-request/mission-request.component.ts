@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {RequestsService} from '../../../../../shared-components/providers/requests.service';
+import {RequestsService} from '../../../providers/requests.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {EmployeeModel} from '../../../../../shared-components/models/employee-models/employee.model';
-import {EmployeeService} from '../../../../../shared-components/providers/employee.service';
-import {AbstractModel} from '../../../../../shared-components/models/shared-models/abstract.model';
+import {EmployeeModel} from '../../../models/employee-models/employee.model';
+import {EmployeeService} from '../../../providers/employee.service';
+import {AbstractModel} from '../../../models/shared-models/abstract.model';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {Location} from '@angular/common';
-import {ConfirmDialogComponent} from '../../../../../shared-components/components/confirm-dialog/confirm-dialog.component';
-import {RequestMissionMetadata} from '../../../../../shared-components/models/requests-models/request-mission-metadata';
-import {RequestMissionModel} from '../../../../../shared-components/models/requests-models/request-mission.model';
+import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
+import {RequestMissionMetadata} from '../../../models/requests-models/request-mission-metadata';
+import {RequestMissionModel} from '../../../models/requests-models/request-mission.model';
 
 @Component({
   selector: 'app-mission-request',

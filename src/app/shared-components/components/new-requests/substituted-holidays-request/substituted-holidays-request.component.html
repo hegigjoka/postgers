@@ -9,10 +9,6 @@
       </div>
       <div class="row">
         <div class="col-12 forms">
-          <datalist id="holyType">
-            <option *ngFor="let holy of holidayTypes" [value]="holy?.someLabel"></option>
-          </datalist>
-
           <!--Editing Employee Or Inserting Employee Form-->
           <form [formGroup]="requestForm">
             <div class="form-section">Employee Info</div>
@@ -31,14 +27,6 @@
             <br>
             <div class="form-section">Request Info</div>
             <hr>
-            <label for="holidayTypeId">{{fields?.holidayTypeId?.fieldLabel}}: </label>
-            <input id="holidayTypeId"
-                   list="holyType"
-                   type="text"
-                   [(ngModel)]="holidayTypeInput"
-                   (change)="setSHId(holidayTypeInput)"
-                   formControlName="holidayTypeId">
-            <br>
             <label for="date">Date: </label>
             <input id="date" type="date" formControlName="date">
             <br>
@@ -54,7 +42,7 @@
             <div class="sub-dates" *ngFor="let subdate of subDates;let i = index">
               <label [for]="'subDate' + i">Substitute Date {{i+1}}: </label>
               <input [id]="'subDate' + i" type="date" step="1800" [formControlName]="'subDate' + i">
-              <mat-icon *ngIf="i === 0" (click)="newDate()">control_point</mat-icon>
+              <mat-icon *ngIf="i === 0 && !hasSomeField" (click)="newDate()">control_point</mat-icon>
               <br>
             </div>
             <label for="employeeNotes">{{fields?.employeeNotes?.fieldLabel}}: </label>

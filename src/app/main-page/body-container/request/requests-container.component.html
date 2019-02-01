@@ -7,7 +7,6 @@
       <div class="dropdown">
         <h2 class="dropdown-toggle" id="requestCategory" data-toggle="dropdown">{{title}}</h2>
         <div class="dropdown-menu" aria-labelledby="requestCategory">
-          <a class="dropdown-item" (click)="all()">All</a>
           <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
           <a class="dropdown-item" (click)="onlyPA()">Pending Action</a>
         </div>
@@ -37,7 +36,10 @@
           <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
           <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
           <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
-          <td>{{request?.labelMap?.status | multiPurposePipe: 'hasValue'}}</td>
+          <td
+            [matTooltip]="request?.managerNotes ? request?.managerNotes : request?.directorNotes ? request?.directorNotes : 'No notes available...'">
+            {{request?.labelMap?.status | multiPurposePipe: 'hasValue'}}
+          </td>
         </tr>
         </tbody>
       </table>
