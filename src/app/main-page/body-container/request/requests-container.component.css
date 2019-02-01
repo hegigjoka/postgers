@@ -11,6 +11,11 @@
   color: #045BA1;
   font-family: "Roboto Light";
 }
+/deep/.mat-tab-label{
+  color: #045BA1;
+  font-family: "Roboto Medium";
+  font-size: 25px;
+}
 .table-striped{
   margin-top: 20px;
   margin-bottom: 20px;

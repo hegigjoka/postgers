@@ -31,6 +31,9 @@ export class SideMenuComponent implements OnInit {
   openReqType(type: string) {
     this.router.navigate([localStorage.getItem('EmpId'), 'requests'], {relativeTo: this.route, queryParams: {type: type}});
   }
+  openHr() {
+    this.router.navigate(['request-management'], {relativeTo: this.route});
+  }
   logout() {
     this.empserve.logoutApp(localStorage.getItem('EmpAuthToken')).subscribe(
       () => {

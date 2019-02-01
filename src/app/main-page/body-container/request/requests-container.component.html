@@ -11,7 +11,10 @@
           <a class="dropdown-item" (click)="onlyPA()">Pending Action</a>
         </div>
       </div>
-      <hr>
+      <mat-tab-group>
+        <mat-tab label="My Requests" (click)="onlyMR()"></mat-tab>
+        <mat-tab label="Pending Action" (click)="onlyPA()"></mat-tab>
+      </mat-tab-group>
     </div>
     <div class="col-12">
       <table class="table table-striped">

@@ -120,7 +120,7 @@ export class ExtraHoursRequestComponent implements OnInit {
       if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
-        if (this.request.approvementId === 'POOL00000000044') {
+        if (this.request.approvementId === 'POOL00000000044' && this.request.authorizationId !== 'POOL00000000041') {
           this.displayAuth = true;
           this.requestForm.controls['authorizationId'].setValue(this.request.labelMap.authorizationId);
         } else if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === localStorage.getItem('EmpId')) {

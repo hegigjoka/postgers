@@ -23,7 +23,9 @@ import {
   MatRippleModule,
   MatDialogModule,
   MatSnackBarModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatDatepickerModule,
+  MatNativeDateModule, MatTabsModule,
 } from '@angular/material';
 
 // Google Login Imports
@@ -134,6 +136,32 @@ const EmployeeRoutes: Routes = [
             component: EmployeeRegistrationComponent
           }
         ]
+      },
+      {
+        path: 'request-management',
+        component: PersonelRequestsComponent,
+        children: [
+          {
+            path: 'extra-hours/:reqId',
+            component: ExtraHoursRequestComponent
+          },
+          {
+            path: 'holiday-and-permission/:reqId',
+            component: HolidaysNPermissionRequestComponent
+          },
+          {
+            path: 'mission/:reqId',
+            component: MissionRequestComponent
+          },
+          {
+            path: 'badge-fail/:reqId',
+            component: BadgeFailRequestComponent
+          },
+          {
+            path: 'substituted-holidays/:reqId',
+            component: SubstitutedHolidaysRequestComponent
+          },
+        ]
       }
     ]
   },
@@ -196,6 +224,9 @@ export function getAuthServiceConfigs() {
     MatDialogModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTabsModule,
     RouterModule.forRoot(EmployeeRoutes)
   ],
 
