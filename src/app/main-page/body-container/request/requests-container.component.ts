@@ -17,6 +17,7 @@ export class RequestsContainerComponent implements OnInit {
   title = 'My Requests';
   reqType: string;
   paginate = 1;
+  badge: number;
 
   // request table variables
   fields: RequestTableMetadata;
@@ -48,6 +49,9 @@ export class RequestsContainerComponent implements OnInit {
   getRequests() {
     this.reqServe.getRequestsList(this.paginate, 10, this.reqType).subscribe((response) => {
       this.requests = response.json().body.data;
+      if (this.reqType === 'pendingMe') {
+        this.badge = response.json().body.data.totalRecords;
+      }
     });
   }
 

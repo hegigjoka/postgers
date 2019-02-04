@@ -39,8 +39,11 @@
 mat-datepicker-toggle{
   color: #045BA1;
   position: relative;
-  left: -54px;
+  left: -30px;
   margin-right: -36px;
+}
+mat-datepicker-toggle /deep/button:focus{
+  outline: none;
 }
 /deep/.mat-calendar-header{
   background-color: #045BA1;
@@ -79,6 +82,9 @@ mat-datepicker-toggle{
   font-family: "Roboto Medium";
   color: #045BA1;
   font-size: 16px;
+}
+input::-webkit-clear-button{
+  display: none;
 }
 ::placeholder{
   color: #045BA1;

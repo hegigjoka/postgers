@@ -5,16 +5,22 @@
   <mat-drawer-content>
     <div class="col-12">
       <div class="dropdown">
-        <h2 class="dropdown-toggle" id="requestCategory" data-toggle="dropdown">{{title}}</h2>
+        <h2 class="dropdown-toggle"
+            id="requestCategory"
+            data-toggle="dropdown"
+            [matBadge]="badge ? badge : ''"
+            matBadgePosition="before">
+          {{title}}
+        </h2>
         <div class="dropdown-menu" aria-labelledby="requestCategory">
           <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
           <a class="dropdown-item" (click)="onlyPA()">Pending Action</a>
         </div>
       </div>
-      <mat-tab-group>
-        <mat-tab label="My Requests" (click)="onlyMR()"></mat-tab>
-        <mat-tab label="Pending Action" (click)="onlyPA()"></mat-tab>
-      </mat-tab-group>
+      <!--<mat-tab-group>-->
+        <!--<mat-tab label="My Requests" (click)="onlyMR()"></mat-tab>-->
+        <!--<mat-tab label="Pending Action" (click)="onlyPA()"></mat-tab>-->
+      <!--</mat-tab-group>-->
     </div>
     <div class="col-12">
       <table class="table table-striped">
@@ -40,7 +46,7 @@
           <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
           <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
           <td
-            [matTooltip]="request?.managerNotes ? request?.managerNotes : request?.directorNotes ? request?.directorNotes : 'No notes available...'">
+            [matTooltip]="request?.directorNotes ? request?.directorNotes : request?.managerNotes ? request?.managerNotes : 'No notes available...'">
             {{request?.labelMap?.status | multiPurposePipe: 'hasValue'}}
           </td>
         </tr>

@@ -1,11 +1,14 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ListResponseModel} from '../../../shared-components/models/shared-models/list-response.model';
 import {RequestModel} from '../../../shared-components/models/requests-models/request.model';
 import {RequestsService} from '../../../shared-components/providers/requests.service';
 import {RequestTableMetadata} from '../../../shared-components/models/requests-models/request-table-metadata';
 import {MatSidenav} from '@angular/material';
 import {Location} from '@angular/common';
+import {PersonelRequestService} from '../../../shared-components/providers/personel-request.service';
+import {EmployeeService} from '../../../shared-components/providers/employee.service';
+import {EmployeeModel} from '../../../shared-components/models/employee-models/employee.model';
 
 @Component({
   selector: 'app-personel-requests',
@@ -13,9 +16,17 @@ import {Location} from '@angular/common';
   styleUrls: ['./personel-requests.component.css']
 })
 export class PersonelRequestsComponent implements OnInit {
-// filter variables
   paginate = 1;
 
+  // filters
+  startAuthDate: Date;
+  endAuthDate: Date;
+
+  employeeId: string;
+  employeeInput = '';
+  employees: ListResponseModel<EmployeeModel>;
+
+  requestTypeId: string;
   requestTypeInput: string;
   requestType = [
     {id: 'POOL00000000078', someLabel: 'Mission'},
@@ -25,29 +36,117 @@ export class PersonelRequestsComponent implements OnInit {
     {id: 'POOL00000000082', someLabel: 'Substituted Holidays'}
   ];
 
+  processedId: string;
+  processedInput: string;
+  processedTypes = [
+    {id: 'POOL00000000088', someLabel: 'Pending'},
+    {id: 'POOL00000000089', someLabel: 'Denied'},
+    {id: 'POOL00000000090', someLabel: 'Approved'}
+  ];
+
   // request table variables
   fields: RequestTableMetadata;
   requests: ListResponseModel<RequestModel>;
   @ViewChild('request') reqMenu: MatSidenav;
   sideNav = 'close';
 
-  constructor(private reqServe: RequestsService, private router: Router, private route: ActivatedRoute, private loc: Location) { }
+  constructor(
+    private empServe: EmployeeService,
+    private reqServe: RequestsService,
+    private persReqServe: PersonelRequestService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private loc: Location
+  ) {}
 
   ngOnInit() {
+    this.startAuthDate = null;
+    this.endAuthDate = null;
     this.getOptions();
     this.getRequests();
   }
 
   getOptions() {
-    this.reqServe.getTableOptions().subscribe((fields) => {
+    this.persReqServe.getOptions().subscribe((fields) => {
       this.fields = fields.json().body.data.fieldMap;
     });
   }
 
   getRequests() {
-    this.reqServe.getRequestsList(this.paginate, 10).subscribe((response) => {
+    this.persReqServe.getPersonelRequests(
+      this.paginate,
+      10,
+      this.processedId ? this.processedId : 'POOL00000000088',
+      this.startAuthDate ? this.startAuthDate.toISOString().split('.')[0] : '',
+      this.employeeId,
+      this.requestTypeId
+    ).subscribe((response) => {
       this.requests = response.json().body.data;
     });
+  }
+
+  getEmployee() {
+    this.empServe.getEmployeeList(1, 100, this.employeeInput.split(' ')[0]).subscribe((employee) => {
+      this.employees = employee.json().body.data;
+      console.log(this.employees);
+    });
+  }
+
+  // set manager, director and office id from datalist
+  setDERPId(someLabel, type?: string) {
+    if (someLabel.length > 0) {
+      if (type === 'reqType') {
+        this.requestType.forEach((value) => {
+          if (value.someLabel === someLabel) {
+            this.requestTypeId = value.id;
+          }
+        });
+      } else if (type === 'empId') {
+        this.employees.list.forEach((value) => {
+          if (value.someLabel === someLabel) {
+            this.employeeId = value.id;
+          }
+        });
+      } else if (type === 'process') {
+        this.processedTypes.forEach((value) => {
+          if (value.someLabel === someLabel) {
+            this.processedId = value.id;
+          }
+        });
+      }
+      this.getRequests();
+    }
+  }
+
+  clearFilter(filter: string) {
+    if (filter === 'emp-filter') {
+      this.employeeId = '';
+      this.employeeInput = '';
+    } else if (filter === 'req-filter') {
+      this.requestTypeId = '';
+      this.requestTypeInput = '';
+    } else if (filter === 'start-date-filter') {
+      this.startAuthDate = null;
+    } else if (filter === 'stop-date-filter') {
+      this.endAuthDate = null;
+    } else {
+      this.processedId = '';
+      this.processedInput = '';
+    }
+    this.getRequests();
+  }
+
+  refresh() {
+    this.paginate = 1;
+    this.employeeId = '';
+    this.employeeInput = '';
+    this.requestTypeId = '';
+    this.requestTypeInput = '';
+    this.startAuthDate = null;
+    this.endAuthDate = null;
+    this.processedId = '';
+    this.processedInput = '';
+    this.getRequests();
   }
 
   // remove sidenav

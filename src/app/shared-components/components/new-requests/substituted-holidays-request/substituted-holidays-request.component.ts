@@ -140,7 +140,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
         console.log('passed here');
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
-        if (this.request.approvementId === 'POOL00000000044' && this.request.authorizationId !== 'POOL00000000041') {
+        if (this.request.approvementId === 'POOL00000000044') {
           this.displayAuth = true;
           this.requestForm.controls['authorizationId'].setValue(this.request.labelMap.authorizationId);
         } else if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === localStorage.getItem('EmpId')) {
@@ -176,6 +176,11 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       }
       if (this.employee.directorId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000044') {
         this.isDirector = true;
+        if (this.request.authorizationId === 'POOL00000000041') {
+          this.isDeletable = false;
+          this.isManager = false;
+          this.isDirector = false;
+        }
       }
     });
   }
@@ -386,7 +391,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       });
       confDlg.afterClosed().subscribe((result) => {
         if (result.split('|')[0] === 'true') {
-          this.reqServe.managerNdirectorDecisionSubHolyRequest('authorize', this.reqId, result.split('|')[1]).subscribe(
+          this.reqServe.managerNdirectorDecisionSubHolyRequest('notAuthorize', this.reqId, result.split('|')[1]).subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {
                 this.chip.open('Substituted Holidays request is NOT AUTHORIZED!', null, {

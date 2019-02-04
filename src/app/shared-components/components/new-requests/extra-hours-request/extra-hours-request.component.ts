@@ -148,6 +148,11 @@ export class ExtraHoursRequestComponent implements OnInit {
       }
       if (this.employee.directorId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000044') {
         this.isDirector = true;
+        if (this.request.authorizationId === 'POOL00000000041') {
+          this.isDeletable = false;
+          this.isManager = false;
+          this.isDirector = false;
+        }
       }
     });
     this.empServe.getFieldMapEmployee().subscribe((office) => {
@@ -362,7 +367,7 @@ export class ExtraHoursRequestComponent implements OnInit {
       confDlg.afterClosed().subscribe((result) => {
         if (result.split('|')[0] === 'true') {
           this.reqServe.managerNdirectorDecisionExtraHoursRequest(
-            'authorize', this.reqId, result.split('|')[1], result.split('|')[2]
+            'notAuthorize', this.reqId, result.split('|')[1], result.split('|')[2]
           ).subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {

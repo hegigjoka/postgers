@@ -21,7 +21,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
   fields: RequestHolidayMetadata;
 
   holidayTypes: AbstractModel[];
-  holidayTypeInput = 'Holiday Request';
+  holidayTypeInput = 'Days Off';
   holyTypeId: string;
 
   reqId: string;
@@ -63,7 +63,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
       someLabel: new FormControl(''),
       insertDate: new FormControl(insertDate.toISOString().split('.')[0], Validators.required),
       requestTypeId: new FormControl('POOL00000000079', Validators.required),
-      holidayTypeId: new FormControl('Holiday Request', Validators.required),
+      holidayTypeId: new FormControl('Days Off', Validators.required),
       employeeId: new FormControl(localStorage.getItem('EmpId'), Validators.required),
       officeNameId: new FormControl('', Validators.required),
       managerId: new FormControl('', Validators.required),
@@ -177,6 +177,11 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
       }
       if (this.employee.directorId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000044') {
         this.isDirector = true;
+        if (this.request.authorizationId === 'POOL00000000041') {
+          this.isDeletable = false;
+          this.isManager = false;
+          this.isDirector = false;
+        }
       }
     });
   }
@@ -373,7 +378,7 @@ export class HolidaysNPermissionRequestComponent implements OnInit {
       confDlg.afterClosed().subscribe((result) => {
         if (result.split('|')[0] === 'true') {
           this.reqServe.managerNdirectorDecisionHolidayRequest(
-            'authorize', this.reqId, result.split('|')[1]
+            'notAuthorize', this.reqId, result.split('|')[1]
           ).subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {

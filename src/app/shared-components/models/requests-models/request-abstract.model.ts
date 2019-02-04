@@ -8,4 +8,5 @@ export class RequestAbstractModel<T> {
   officeNameId: T;
   employeeNotes: T;
   someLabel: T;
+  authorizationId: T;
 }

@@ -3,41 +3,71 @@
     <router-outlet (deactivate)="updating()"></router-outlet>
   </mat-drawer>
   <mat-drawer-content>
+
     <datalist id="reqTypes">
       <option *ngFor="let request of requestType" [value]="request?.someLabel"></option>
     </datalist>
+    <datalist id="process">
+      <option *ngFor="let process of processedTypes" [value]="process?.someLabel"></option>
+    </datalist>
+    <datalist id="employee">
+      <option *ngFor="let employee of employees?.list" [value]="employee?.firstName + ' ' + employee?.lastName"></option>
+    </datalist>
+
     <div class="col-12 header-div">
-      <div class="header">
+      <div class="header" (click)="refresh()">
         Requests Management
       </div>
       <div>
         <mat-icon class="filter-icons">filter_list</mat-icon>
-          <input class="hr-filter" matInput [matDatepicker]="picker" placeholder="from...">
-          <mat-icon class="clear-filter filter-date">cancel</mat-icon>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker></mat-datepicker>
+          <input class="hr-filter"
+                 matInput [matDatepicker]="start"
+                 placeholder="from..."
+                 [(ngModel)]="startAuthDate">
+        <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+        <mat-icon class="clear-filter filter-date" (click)="clearFilter('start-date-filter')" *ngIf="startAuthDate !== null">cancel</mat-icon>
+        <mat-datepicker touchUi #start></mat-datepicker>
       </div>
       <div>
         <mat-icon class="filter-icons">filter_list</mat-icon>
-        <input class="hr-filter" matInput [matDatepicker]="picker1" placeholder="...to">
-        <mat-icon class="clear-filter filter-date">cancel</mat-icon>
-        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker touchUi #picker1></mat-datepicker>
+        <input class="hr-filter"
+               matInput [matDatepicker]="stop"
+               placeholder="...to"
+               [(ngModel)]="endAuthDate">
+        <mat-datepicker-toggle matSuffix [for]="stop"></mat-datepicker-toggle>
+        <mat-icon class="clear-filter filter-date" (click)="clearFilter('stop-date-filter')" *ngIf="endAuthDate !== null">cancel</mat-icon>
+        <mat-datepicker touchUi #stop></mat-datepicker>
       </div>
       <div>
         <mat-icon class="filter-icons">filter_list</mat-icon>
         <input type="text"
+               list="employee"
+               [(ngModel)]="employeeInput"
+               (keyup)="getEmployee()"
+               (change)="setDERPId(employeeInput, 'empId')"
                placeholder="Employee"
                class="hr-filter">
-        <mat-icon class="clear-filter emp-name">cancel</mat-icon>
+        <mat-icon class="clear-filter req-filter" (click)="clearFilter('emp-filter')" *ngIf="employeeInput?.length > 0">cancel</mat-icon>
       </div>
       <div>
         <mat-icon class="filter-icons">filter_list</mat-icon>
         <input type="text"
                list="reqTypes"
+               [(ngModel)]="requestTypeInput"
+               (change)="setDERPId(requestTypeInput, 'reqType')"
                placeholder="Requests Type"
                class="hr-filter">
-        <mat-icon class="clear-filter req-filter">cancel</mat-icon>
+        <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
+      </div>
+      <div>
+        <mat-icon class="filter-icons">filter_list</mat-icon>
+        <input type="text"
+               list="process"
+               [(ngModel)]="processedInput"
+               (change)="setDERPId(processedInput, 'process')"
+               placeholder="Processed Type"
+               class="hr-filter">
+        <mat-icon class="clear-filter req-filter" (click)="clearFilter('process-filter')" *ngIf="processedInput?.length > 0">cancel</mat-icon>
       </div>
     </div>
     <hr>
@@ -65,7 +95,7 @@
           <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
           <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
           <td
-            [matTooltip]="request?.managerNotes ? request?.managerNotes : request?.directorNotes ? request?.directorNotes : 'No notes available...'">
+            [matTooltip]="request?.directorNotes ? request?.directorNotes : 'No notes available...'">
             {{request?.labelMap?.status | multiPurposePipe: 'hasValue'}}
           </td>
         </tr>

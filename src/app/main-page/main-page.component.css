@@ -18,6 +18,10 @@
   font-size: 36px;
   cursor: pointer;
 }
+.menu-icon /deep/.mat-badge-content{
+  background-color: white;
+  color: #045BA1;
+}
 .page-name{
   color: white;
   margin-left: 15px;

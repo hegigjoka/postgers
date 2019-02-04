@@ -166,6 +166,10 @@ export class MissionRequestComponent implements OnInit {
       this.ManagerId = this.employee.managerId;
       if (this.employee.managerId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000043') {
         this.isManager = true;
+        if (this.request.authorizationId === 'POOL00000000041') {
+          this.isDeletable = false;
+          this.isManager = false;
+        }
       }
     });
   }

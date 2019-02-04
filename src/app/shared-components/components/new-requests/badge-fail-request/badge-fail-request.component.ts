@@ -126,6 +126,9 @@ export class BadgeFailRequestComponent implements OnInit {
       if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
+        if (this.request.authorizationId === 'POOL00000000041') {
+          this.isDeletable = false;
+        }
       }
       if (this.request.employeeId === localStorage.getItem('EmpId')) {
         this.hasEmployeeField = false;

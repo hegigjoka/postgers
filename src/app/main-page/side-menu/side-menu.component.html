@@ -20,11 +20,15 @@
     <div class="emp-desc">Employee</div>
   </div>
   <div class="row req" (click)="openReq()">
-    <mat-icon class="req-icon">folder</mat-icon>
+    <mat-icon class="req-icon"
+              [matBadge]="requestsType ? '' : badge ? badge : ''"
+              matBadgePosition="before">
+      folder
+    </mat-icon>
     <div class="req-desc">Requests</div>
     <div class="req-type" *ngIf="requestsType">
       <div (click)="openReqType('me')">My Requests</div>
-      <div (click)="openReqType('pendingMe')">Pending Action</div>
+      <div (click)="openReqType('pendingMe')" [matBadge]="badge ? badge : ''">Pending Action</div>
     </div>
   </div>
   <div class="row pers" (click)="openHr()">

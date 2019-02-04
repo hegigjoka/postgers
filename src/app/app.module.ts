@@ -25,7 +25,7 @@ import {
   MatSnackBarModule,
   MatTooltipModule,
   MatDatepickerModule,
-  MatNativeDateModule, MatTabsModule,
+  MatNativeDateModule, MatTabsModule, MatBadgeModule,
 } from '@angular/material';
 
 // Google Login Imports
@@ -65,6 +65,7 @@ import {
 } from './shared-components/components/new-requests/substituted-holidays-request/substituted-holidays-request.component';
 import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
 import { PersonelRequestsComponent } from './main-page/body-container/personel-requests/personel-requests.component';
+import {PersonelRequestService} from './shared-components/providers/personel-request.service';
 
 // App Routers
 const EmployeeRoutes: Routes = [
@@ -227,12 +228,14 @@ export function getAuthServiceConfigs() {
     MatDatepickerModule,
     MatNativeDateModule,
     MatTabsModule,
+    MatBadgeModule,
     RouterModule.forRoot(EmployeeRoutes)
   ],
 
   providers: [
     EmployeeService,
     RequestsService,
+    PersonelRequestService,
     AuthGuard,
     {
       provide: AuthServiceConfig,

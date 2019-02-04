@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EmployeeService} from '../../shared-components/providers/employee.service';
+import {RequestsService} from '../../shared-components/providers/requests.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -10,10 +11,17 @@ import {EmployeeService} from '../../shared-components/providers/employee.servic
 export class SideMenuComponent implements OnInit {
   avatar: string;
   requestsType: boolean;
+  badge: number;
 
-  constructor(private empserve: EmployeeService, private router: Router, private route: ActivatedRoute) { }
+  constructor(
+    private empserve: EmployeeService,
+    private reqServe: RequestsService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    this.getRequestsBadge();
   }
 
   avatarOrPic() {
@@ -22,10 +30,16 @@ export class SideMenuComponent implements OnInit {
       return true;
     }
   }
+  getRequestsBadge() {
+    this.reqServe.getRequestsList(1, 1, 'pendingMe').subscribe((badge) => {
+      this.badge = badge.json().body.data.totalRecords;
+    });
+  }
   openEmp() {
     this.router.navigate(['employees'], {relativeTo: this.route});
   }
   openReq() {
+    this.getRequestsBadge();
     this.requestsType = !(this.requestsType);
   }
   openReqType(type: string) {

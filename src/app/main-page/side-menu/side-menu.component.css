@@ -9,7 +9,10 @@
   margin-top: 18px;
   margin-right: 140px;
 }
-
+/deep/.mat-badge-content{
+  background-color: #cd0022;
+  color: white;
+}
 .emp, .req, .pers, .logout{
   padding-top: 5px;
   padding-bottom: 5px;
