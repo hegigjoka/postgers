@@ -50,6 +50,10 @@
   margin-left: 36px;
   width: 16%;
 }
+.dropdown-item /deep/.mat-badge-content{
+  background-color: #045BA1;
+  color: white;
+}
 .dropdown-menu > a{
   color: #045BA1;
   font-family: "Roboto Light";

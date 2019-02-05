@@ -23,7 +23,13 @@
         </h2>
         <div class="dropdown-menu" aria-labelledby="requestCategory">
           <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
-          <a class="dropdown-item" (click)="onlyPA()" [matBadge]="badge ? badge : ''">Pending Action</a>
+          <a class="dropdown-item" (click)="onlyPA()">
+            <span [matBadge]="badge ? badge : ''"
+                  matBadgeOverlap="false"
+                  matBadgeSize="medium">
+              Pending Action
+            </span>
+          </a>
         </div>
       </div>
       <div>

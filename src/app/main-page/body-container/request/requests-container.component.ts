@@ -60,6 +60,7 @@ export class RequestsContainerComponent implements OnInit {
       this.title = 'My Requests';
     }
     this.getOptions();
+    this.showBadgeDD = true;
     this.getRequests();
   }
 
