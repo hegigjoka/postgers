@@ -27,6 +27,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   requestForm: FormGroup;
   date: Date = new Date();
   subDates = [' '];
+  addSubDates = 0;
   OfficeId: string;
   ManagerId: string;
   DirectorId: string;
@@ -71,9 +72,6 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       subDate0: new FormControl(''),
       subDate1: new FormControl(''),
       subDate2: new FormControl(''),
-      subDate3: new FormControl(''),
-      subDate4: new FormControl(''),
-      subDate5: new FormControl(''),
       employeeNotes: new FormControl('No notes...'),
       approvementId: new FormControl(''),
       authorizationId: new FormControl(''),
@@ -137,7 +135,6 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
       }
       // show approvement or authorization to the form
       if (this.request.approvementId !== undefined) {
-        console.log('passed here');
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
         if (this.request.approvementId === 'POOL00000000044') {
@@ -186,8 +183,15 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   }
 
   newDate() {
-    if (this.subDates.length < 6) {
-      this.subDates.push(' ');
+    if (this.subDates.length < 3) {
+      const label = 'subDate' + this.addSubDates;
+      if (this.requestForm.controls[label].value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
+        this.subDates.push(' ');
+        this.addSubDates++;
+      }
+      if (this.addSubDates === 2) {
+        this.hasSomeField = true;
+      }
     }
   }
 
