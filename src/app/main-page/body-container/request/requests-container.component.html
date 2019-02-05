@@ -3,7 +3,15 @@
     <router-outlet (deactivate)="updating()"></router-outlet>
   </mat-drawer>
   <mat-drawer-content>
-    <div class="col-12">
+
+    <datalist id="reqTypes">
+      <option *ngFor="let request of requestTypes" [value]="request?.someLabel"></option>
+    </datalist>
+    <datalist id="statTypes">
+      <option *ngFor="let status of statusTypes" [value]="status?.someLabel"></option>
+    </datalist>
+
+    <div class="col-12 header-div">
       <div class="dropdown">
         <h2 class="dropdown-toggle"
             id="requestCategory"
@@ -16,6 +24,26 @@
           <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
           <a class="dropdown-item" (click)="onlyPA()">Pending Action</a>
         </div>
+      </div>
+      <div>
+        <mat-icon class="filter-icons">filter_list</mat-icon>
+        <input type="text"
+               list="reqTypes"
+               [(ngModel)]="requestTypeInput"
+               (change)="setTAId(requestTypeInput, 'reqType')"
+               placeholder="Requests Type"
+               class="hr-filter">
+        <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
+      </div>
+      <div>
+        <mat-icon class="filter-icons">filter_list</mat-icon>
+        <input type="text"
+               list="statTypes"
+               [(ngModel)]="statusInput"
+               (change)="setTAId(statusInput, 'statusType')"
+               placeholder="Status Type"
+               class="hr-filter">
+        <mat-icon class="clear-filter req-filter" (click)="clearFilter('status-filter')" *ngIf="statusInput?.length > 0">cancel</mat-icon>
       </div>
       <!--<mat-tab-group>-->
         <!--<mat-tab label="My Requests" (click)="onlyMR()"></mat-tab>-->

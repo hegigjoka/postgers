@@ -24,6 +24,13 @@ export class SideMenuComponent implements OnInit {
     this.getRequestsBadge();
   }
 
+  setCreds(type: string) {
+    if (type === 'office') {
+      return 'CED';
+    } else {
+      return localStorage.getItem('EmpFullName');
+    }
+  }
   avatarOrPic() {
     if (localStorage.getItem('EmpAvatarImg').length > 0) {
       this.avatar = localStorage.getItem('EmpAvatarImg');

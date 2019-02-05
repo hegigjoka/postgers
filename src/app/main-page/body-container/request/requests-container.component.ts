@@ -19,6 +19,27 @@ export class RequestsContainerComponent implements OnInit {
   paginate = 1;
   badge: number;
 
+  requestTypeId: string;
+  requestTypeInput: string;
+  requestTypes = [
+    {id: 'POOL00000000078', someLabel: 'Mission'},
+    {id: 'POOL00000000079', someLabel: 'Holiday and Permission'},
+    {id: 'POOL00000000080', someLabel: 'Badge Fail'},
+    {id: 'POOL00000000081', someLabel: 'Extra Hours'},
+    {id: 'POOL00000000082', someLabel: 'Substituted Holidays'}
+  ];
+
+  statusId: string;
+  statusInput: string;
+  statusTypes = [
+    {id: 'POOL00000000040', someLabel: 'Authorization Pending'},
+    {id: 'POOL00000000041', someLabel: 'Authorized'},
+    {id: 'POOL00000000042', someLabel: 'Not Authorized'},
+    {id: 'POOL00000000043', someLabel: 'Approvement Pending'},
+    {id: 'POOL00000000044', someLabel: 'Approved'},
+    {id: 'POOL00000000045', someLabel: 'Not Approved'}
+  ];
+
   // request table variables
   fields: RequestTableMetadata;
   requests: ListResponseModel<RequestModel>;
@@ -47,7 +68,7 @@ export class RequestsContainerComponent implements OnInit {
   }
 
   getRequests() {
-    this.reqServe.getRequestsList(this.paginate, 10, this.reqType).subscribe((response) => {
+    this.reqServe.getRequestsList(this.paginate, 10, this.reqType, this.requestTypeId, this.statusId).subscribe((response) => {
       this.requests = response.json().body.data;
       if (this.reqType === 'pendingMe') {
         this.badge = response.json().body.data.totalRecords;
@@ -93,6 +114,35 @@ export class RequestsContainerComponent implements OnInit {
     setTimeout(() => {
       this.getRequests();
     }, 300);
+  }
+
+  setTAId(someLabel, type?: string) {
+    if (someLabel.length > 0) {
+      if (type === 'reqType') {
+        this.requestTypes.forEach((value) => {
+          if (value.someLabel === someLabel) {
+            this.requestTypeId = value.id;
+          }
+        });
+      } else {
+        this.statusTypes.forEach((value) => {
+          if (value.someLabel = someLabel) {
+            this.statusId = value.id;
+          }
+        });
+      }
+      this.getRequests();
+    }
+  }
+  clearFilter(type: string) {
+    if (type === 'req-filter') {
+      this.requestTypeId = '';
+      this.requestTypeInput = '';
+    } else {
+      this.statusId = '';
+      this.statusInput = '';
+    }
+    this.getRequests();
   }
 
   // open single request

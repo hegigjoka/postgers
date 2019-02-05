@@ -23,9 +23,6 @@
             <label for="officeNameId">{{fields?.officeNameId?.fieldLabel}}: </label>
             <input id="officeNameId" type="text" formControlName="officeNameId">
             <br>
-            <label for="managerId">{{fields?.managerId?.fieldLabel}}: </label>
-            <input id="managerId" type="text" formControlName="managerId">
-            <br>
             <div class="form-section">Request Info</div>
             <hr>
             <label for="badgeFailTypeId">{{fields?.badgeFailTypeId?.fieldLabel}}: </label>
@@ -44,9 +41,6 @@
             <br>
             <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
             <input id="stopTimestamp" type="time" step="1800" formControlName="stopTimestamp">
-            <br>
-            <label for="employeeNotes">{{fields?.employeeNotes?.fieldLabel}}: </label>
-            <textarea id="employeeNotes" type="text" formControlName="employeeNotes"></textarea>
             <br>
             <label for="approvementId" *ngIf="hasSomeField && displayApprove">{{fields?.approvementId?.fieldLabel}}: </label>
             <input id="approvementId" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">

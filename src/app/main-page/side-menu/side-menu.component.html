@@ -11,8 +11,8 @@
       <img *ngIf="avatarOrPic()" src="{{avatar}}" class="img-fluid avatar-img">
     </div>
     <div class="col-8 emp-creds">
-      <div>CED office</div>
-      <div>Hegi Gjoka</div>
+      <div>{{setCreds('office')}}</div>
+      <div>{{setCreds('employee')}}</div>
     </div>
   </div>
   <div class="row emp" (click)="openEmp()">

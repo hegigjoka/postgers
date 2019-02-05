@@ -1,11 +1,54 @@
+.header-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.header-div > div{
+  cursor: pointer;
+  margin-right: -5px;
+}
+.filter-icons{
+  color: #045BA1;
+  position: relative;
+  left: 44px;
+  top: 6px;
+}
+.clear-filter{
+  color: #045BA1;
+  position: relative;
+  left: -30px;
+  top: 3px;
+  font-size: 16px;
+}
+.req-filter{
+  left: -40px;
+}
+.hr-filter{
+  margin-left: 15px;
+  margin-top: 20px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid #045BA1;
+  background-color: transparent;
+  padding: 4px 2px 4px 34px;
+  height: 40px;
+  width: 190px;
+  font-family: "Roboto Medium";
+  color: #045BA1;
+  font-size: 16px;
+}
+::placeholder{
+  color: #045BA1;
+}
 .dropdown{
   font-family: "Roboto Medium";
   font-size: 20px;
   color: #045BA1;
   cursor: pointer;
-  padding-left: 8px;
   padding-top: 18px;
-  width: 20%;
+  margin-left: 36px;
+  width: 16%;
 }
 .dropdown-menu > a{
   color: #045BA1;

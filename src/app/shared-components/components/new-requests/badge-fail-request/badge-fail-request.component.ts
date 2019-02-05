@@ -59,11 +59,9 @@ export class BadgeFailRequestComponent implements OnInit {
       badgeFailTypeId: new FormControl('', Validators.required),
       employeeId: new FormControl(localStorage.getItem('EmpId'), Validators.required),
       officeNameId: new FormControl('', Validators.required),
-      managerId: new FormControl('', Validators.required),
       date: new FormControl(this.date.toISOString().split('T')[0], Validators.required),
       startTimestamp: new FormControl('', Validators.required),
       stopTimestamp: new FormControl('', Validators.required),
-      employeeNotes: new FormControl('Notes...'),
       approvementId: new FormControl(''),
       labelMap: new FormGroup({})
     });
@@ -80,7 +78,6 @@ export class BadgeFailRequestComponent implements OnInit {
       this.hasEmployeeField = false;
       this.getEmployeeInfo(localStorage.getItem('EmpId'));
       this.requestForm.controls['officeNameId'].disable();
-      this.requestForm.controls['managerId'].disable();
     } else {
       this.isDeletable = true;
       this.hasSomeField = true;
@@ -122,7 +119,6 @@ export class BadgeFailRequestComponent implements OnInit {
       this.requestForm.controls['date'].setValue(this.request.startTimestamp.split('T')[0]);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[1]);
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1]);
-      this.requestForm.controls['employeeNotes'].setValue(this.request.employeeNotes);
       if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
@@ -142,8 +138,6 @@ export class BadgeFailRequestComponent implements OnInit {
   getEmployeeInfo(empId: string) {
     this.empServe.getEmployee(empId).subscribe((managerNdirectorNoffice) => {
       this.employee = managerNdirectorNoffice.json().body.data;
-      this.requestForm.controls['managerId'].setValue(this.employee.managerFirstName + ' ' + this.employee.managerLastName);
-      this.ManagerId = this.employee.managerId;
     });
     this.empServe.getFieldMapEmployee().subscribe((office) => {
       this.offices = office.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
@@ -169,7 +163,6 @@ export class BadgeFailRequestComponent implements OnInit {
     );
 
     this.request = this.requestForm.value;
-    this.request.managerId = this.ManagerId;
     this.request.officeNameId = this.OfficeId;
 
     this.reqServe.insertMissingBadgeRequest(this.request).subscribe(

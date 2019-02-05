@@ -22,8 +22,8 @@
           <ngx-avatar *ngIf="!avatarOrPic()" class="avatar" [name]="'Hegi Gjoka'" [size]="'46'" bgColor="white" fgColor="#045BA1"></ngx-avatar>
           <img *ngIf="avatarOrPic()" src="{{avatar}}" class="img-fluid avatar-img">
           <div class="office-n-employee">
-            <div>CED</div>
-            <div>Hegi Gjoka</div>
+            <div>{{setCreds('office')}}</div>
+            <div>{{setCreds('employee')}}</div>
           </div>
         </div>
       </div>

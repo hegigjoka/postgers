@@ -39,7 +39,6 @@ export class PersonelRequestsComponent implements OnInit {
   processedId: string;
   processedInput: string;
   processedTypes = [
-    {id: 'POOL00000000088', someLabel: 'Pending'},
     {id: 'POOL00000000089', someLabel: 'Denied'},
     {id: 'POOL00000000090', someLabel: 'Approved'}
   ];

@@ -9,7 +9,7 @@ import {RequestSubstituteModel} from '../models/requests-models/request-substitu
 @Injectable()
 export class RequestsService {
   // PATHS----------------------------------------------------------------------------------------------------------------------------------
-  urlPath = 'svc/hr/employee/';
+  urlPath = 'svc/hr/employee';
 
   constructor(private http: Http) {}
 
@@ -45,17 +45,27 @@ export class RequestsService {
       {headers: header});
   }
 
-  getRequestsList(pageNo: number, pageSize: number, type?: string) {
+  getRequestsList(pageNo: number, pageSize: number, type?: string, reqType?: string, status?: string) {
     const header = new Headers({
       'Authorization': localStorage.getItem('EmpAuthToken'),
       'Accept': 'application/json',
       'Accept-Language': localStorage.getItem('EmpLang')
     });
-    let filter = 'paramBean={pageNo:' + pageNo + ',pageSize:' + pageSize + ',type:"' + type + '",fillFieldLabels:true}';
+    let filter = 'paramBean={pageNo:' + pageNo + ',pageSize:' + pageSize + ',requestTypeId:"' + reqType + '",status:"' + status + '",type:"' + type + '",fillFieldLabels:true}';
     if (type === undefined) {
       filter = filter.split(/,type:"undefined"/)[0] + filter.split(/,type:"undefined"/)[1];
-    } else if (filter.length === 0) {
+    } else if (type === '') {
       filter = filter.split(/,type:""/)[0] + filter.split(/,type:""/)[1];
+    }
+    if (reqType === undefined) {
+      filter = filter.split(/,requestTypeId:"undefined"/)[0] + filter.split(/,requestTypeId:"undefined"/)[1];
+    } else if (reqType === '') {
+      filter = filter.split(/,requestTypeId:""/)[0] + filter.split(/,requestTypeId:""/)[1];
+    }
+    if (status === undefined) {
+      filter = filter.split(/,status:"undefined"/)[0] + filter.split(/,status:"undefined"/)[1];
+    } else if (status === '') {
+      filter = filter.split(/,status:""/)[0] + filter.split(/,status:""/)[1];
     }
     return this.http.get(
       `${this.urlPath}/${localStorage.getItem('EmpId')}/requests?${filter}`,
