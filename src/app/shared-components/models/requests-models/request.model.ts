@@ -14,6 +14,7 @@ export class RequestModel extends RequestAbstractModel<string> {
   holidayTypeId: string;
   directorNotes: string;
   directorId: string;
+  processedId: string;
   badgeFailTypeId: string;
   managerNotes: string;
   managerId: string;
@@ -27,5 +28,6 @@ export class RequestModel extends RequestAbstractModel<string> {
     employeeId: string;
     pendingActionFrom: string;
     status: string;
+    processedId: string;
   };
 }

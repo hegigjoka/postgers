@@ -82,7 +82,7 @@
           <th [ngClass]="{'no-employee': reqType === 'me'}">Employee</th>
           <th>{{fields?.employeeNotes?.fieldLabel}}</th>
           <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
-          <th>{{fields?.status?.fieldLabel}}</th>
+          <th>{{fields?.processedId?.fieldLabel}}</th>
         </tr>
         </thead>
         <tbody>
@@ -96,7 +96,7 @@
           <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
           <td
             [matTooltip]="request?.directorNotes ? request?.directorNotes : 'No notes available...'">
-            {{request?.labelMap?.status | multiPurposePipe: 'hasValue'}}
+            {{request?.labelMap?.processedId | multiPurposePipe: 'hasValue'}}
           </td>
         </tr>
         </tbody>

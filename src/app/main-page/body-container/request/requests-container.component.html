@@ -12,17 +12,18 @@
     </datalist>
 
     <div class="col-12 header-div">
-      <div class="dropdown">
+      <div #dorpdown class="dropdown">
         <h2 class="dropdown-toggle"
             id="requestCategory"
             data-toggle="dropdown"
-            [matBadge]="badge ? badge : ''"
-            matBadgePosition="before">
+            [matBadge]="showBadgeDD && badge ? badge : ''"
+            matBadgePosition="before"
+            (click)="showBadge()">
           {{title}}
         </h2>
         <div class="dropdown-menu" aria-labelledby="requestCategory">
           <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
-          <a class="dropdown-item" (click)="onlyPA()">Pending Action</a>
+          <a class="dropdown-item" (click)="onlyPA()" [matBadge]="badge ? badge : ''">Pending Action</a>
         </div>
       </div>
       <div>

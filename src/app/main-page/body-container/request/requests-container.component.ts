@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ListResponseModel} from '../../../shared-components/models/shared-models/list-response.model';
 import {RequestModel} from '../../../shared-components/models/requests-models/request.model';
@@ -17,6 +17,7 @@ export class RequestsContainerComponent implements OnInit {
   title = 'My Requests';
   reqType: string;
   paginate = 1;
+  showBadgeDD: boolean;
   badge: number;
 
   requestTypeId: string;
@@ -44,6 +45,7 @@ export class RequestsContainerComponent implements OnInit {
   fields: RequestTableMetadata;
   requests: ListResponseModel<RequestModel>;
   @ViewChild('request') reqMenu: MatSidenav;
+  @ViewChild('dorpdown') dd: ElementRef;
   sideNav = 'close';
 
   constructor(private reqServe: RequestsService, private router: Router, private route: ActivatedRoute, private loc: Location) { }
@@ -65,6 +67,16 @@ export class RequestsContainerComponent implements OnInit {
     this.reqServe.getTableOptions().subscribe((fields) => {
       this.fields = fields.json().body.data.fieldMap;
     });
+  }
+
+  showBadge() {
+    setInterval(() => {
+      if (this.dd.nativeElement.classList.contains('show')) {
+        this.showBadgeDD = false;
+      } else {
+        this.showBadgeDD = true;
+      }
+    }, 300);
   }
 
   getRequests() {

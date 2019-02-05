@@ -12,6 +12,7 @@ export class RequestTableMetadata extends RequestAbstractModel<FieldMetadataMode
   expireDate: FieldMetadataModel<any>;
   countHD: FieldMetadataModel<any>;
   empIds: FieldMetadataModel<any>;
+  processedId: FieldMetadataModel<any>;
   holidayTypeId: FieldMetadataModel<any>;
   directorNotes: FieldMetadataModel<any>;
   directorId: FieldMetadataModel<any>;
