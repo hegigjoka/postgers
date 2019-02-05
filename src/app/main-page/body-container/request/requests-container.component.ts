@@ -6,6 +6,7 @@ import {RequestsService} from '../../../shared-components/providers/requests.ser
 import {RequestTableMetadata} from '../../../shared-components/models/requests-models/request-table-metadata';
 import {MatSidenav} from '@angular/material';
 import {Location} from '@angular/common';
+import {AbstractModel} from '../../../shared-components/models/shared-models/abstract.model';
 
 @Component({
   selector: 'app-reuests-container',
@@ -22,24 +23,11 @@ export class RequestsContainerComponent implements OnInit {
 
   requestTypeId: string;
   requestTypeInput: string;
-  requestTypes = [
-    {id: 'POOL00000000078', someLabel: 'Mission'},
-    {id: 'POOL00000000079', someLabel: 'Holiday and Permission'},
-    {id: 'POOL00000000080', someLabel: 'Badge Fail'},
-    {id: 'POOL00000000081', someLabel: 'Extra Hours'},
-    {id: 'POOL00000000082', someLabel: 'Substituted Holidays'}
-  ];
+  requestTypes: AbstractModel[];
 
   statusId: string;
   statusInput: string;
-  statusTypes = [
-    {id: 'POOL00000000040', someLabel: 'Authorization Pending'},
-    {id: 'POOL00000000041', someLabel: 'Authorized'},
-    {id: 'POOL00000000042', someLabel: 'Not Authorized'},
-    {id: 'POOL00000000043', someLabel: 'Approvement Pending'},
-    {id: 'POOL00000000044', someLabel: 'Approved'},
-    {id: 'POOL00000000045', someLabel: 'Not Approved'}
-  ];
+  statusTypes: AbstractModel[];
 
   // request table variables
   fields: RequestTableMetadata;
@@ -67,6 +55,8 @@ export class RequestsContainerComponent implements OnInit {
   getOptions() {
     this.reqServe.getTableOptions().subscribe((fields) => {
       this.fields = fields.json().body.data.fieldMap;
+      this.requestTypes = fields.json().body.data.fieldMap.requestTypeId.fieldDataPool.list;
+      this.statusTypes = fields.json().body.data.fieldMap.status.fieldDataPool.list;
     });
   }
 
@@ -139,7 +129,7 @@ export class RequestsContainerComponent implements OnInit {
         });
       } else {
         this.statusTypes.forEach((value) => {
-          if (value.someLabel = someLabel) {
+          if (value.someLabel === someLabel) {
             this.statusId = value.id;
           }
         });

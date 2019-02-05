@@ -43,6 +43,7 @@ export class SideMenuComponent implements OnInit {
     });
   }
   openEmp() {
+    this.requestsType = false;
     this.router.navigate(['employees'], {relativeTo: this.route});
   }
   openReq() {
@@ -50,9 +51,13 @@ export class SideMenuComponent implements OnInit {
     this.requestsType = !(this.requestsType);
   }
   openReqType(type: string) {
+    if (type === 'pendingMe'){
+      this.requestsType = false;
+    }
     this.router.navigate([localStorage.getItem('EmpId'), 'requests'], {relativeTo: this.route, queryParams: {type: type}});
   }
   openHr() {
+    this.requestsType = false;
     this.router.navigate(['request-management'], {relativeTo: this.route});
   }
   logout() {

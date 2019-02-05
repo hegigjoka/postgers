@@ -54,9 +54,13 @@
   background-color: #045BA1;
   color: white;
 }
+.dropdown-menu{
+  min-width: 82%;
+}
 .dropdown-menu > a{
   color: #045BA1;
   font-family: "Roboto Light";
+  font-size: 20px;
 }
 /deep/.mat-tab-label{
   color: #045BA1;

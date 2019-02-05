@@ -9,6 +9,7 @@ import {Location} from '@angular/common';
 import {PersonelRequestService} from '../../../shared-components/providers/personel-request.service';
 import {EmployeeService} from '../../../shared-components/providers/employee.service';
 import {EmployeeModel} from '../../../shared-components/models/employee-models/employee.model';
+import {AbstractModel} from '../../../shared-components/models/shared-models/abstract.model';
 
 @Component({
   selector: 'app-personel-requests',
@@ -28,20 +29,11 @@ export class PersonelRequestsComponent implements OnInit {
 
   requestTypeId: string;
   requestTypeInput: string;
-  requestType = [
-    {id: 'POOL00000000078', someLabel: 'Mission'},
-    {id: 'POOL00000000079', someLabel: 'Holiday and Permission'},
-    {id: 'POOL00000000080', someLabel: 'Badge Fail'},
-    {id: 'POOL00000000081', someLabel: 'Extra Hours'},
-    {id: 'POOL00000000082', someLabel: 'Substituted Holidays'}
-  ];
+  requestType: AbstractModel[];
 
   processedId: string;
   processedInput: string;
-  processedTypes = [
-    {id: 'POOL00000000089', someLabel: 'Denied'},
-    {id: 'POOL00000000090', someLabel: 'Approved'}
-  ];
+  processedTypes: AbstractModel[];
 
   // request table variables
   fields: RequestTableMetadata;
@@ -68,6 +60,8 @@ export class PersonelRequestsComponent implements OnInit {
   getOptions() {
     this.persReqServe.getOptions().subscribe((fields) => {
       this.fields = fields.json().body.data.fieldMap;
+      this.requestType = fields.json().body.data.fieldMap.requestTypeId.fieldDataPool.list;
+      this.processedTypes = fields.json().body.data.fieldMap.processedId.fieldDataPool.list;
     });
   }
 
