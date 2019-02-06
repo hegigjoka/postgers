@@ -42,9 +42,6 @@
             <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
             <input id="stopTimestamp" type="time" step="1800" formControlName="stopTimestamp">
             <br>
-            <label for="approvementId" *ngIf="hasSomeField && displayApprove">{{fields?.approvementId?.fieldLabel}}: </label>
-            <input id="approvementId" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
-            <br *ngIf="hasSomeField && displayApprove">
             <div class="buttons" *ngIf="!hasSomeField">
               <button class="btn" (click)="insertRequest()" *ngIf="requestForm.valid">
                 <mat-icon class="btn-icon">add_circle</mat-icon>
@@ -59,6 +56,16 @@
               <mat-icon class="btn-icon">delete</mat-icon>
               Delete
             </button>
+            <div class="buttons" *ngIf="proc">
+              <button class="btn" (click)="procReq(1)">
+                <mat-icon class="btn-icon">check</mat-icon>
+                Process
+              </button>
+              <button class="btn btn-danger" (click)="procReq(0)">
+                <mat-icon class="btn-icon">close</mat-icon>
+                Don't process
+              </button>
+            </div>
           </form>
 
         </div>

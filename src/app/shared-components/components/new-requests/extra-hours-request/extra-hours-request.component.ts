@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {RequestExtraHoursMetadata} from '../../../models/requests-models/request-extra-hours-metadata';
 import {RequestsService} from '../../../providers/requests.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {RequestExtraHoursModel} from '../../../models/requests-models/request-extra-hours.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {EmployeeModel} from '../../../models/employee-models/employee.model';
@@ -10,6 +10,7 @@ import {AbstractModel} from '../../../models/shared-models/abstract.model';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {Location} from '@angular/common';
 import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
+import {PersonelRequestService} from '../../../providers/personel-request.service';
 
 @Component({
   selector: 'app-extra-hours-request',
@@ -30,6 +31,7 @@ export class ExtraHoursRequestComponent implements OnInit {
 
   hasSomeField: boolean;
   hasEmployeeField: boolean;
+  proc: boolean;
   isDeletable: boolean;
   isManager: boolean;
   displayApprove: boolean;
@@ -38,8 +40,10 @@ export class ExtraHoursRequestComponent implements OnInit {
   confirmation: boolean;
 
   constructor(
+    private persReqServe: PersonelRequestService,
     private reqServe: RequestsService,
     private empServe: EmployeeService,
+    private router: Router,
     private route: ActivatedRoute,
     private confirmDialog: MatDialog,
     public chip: MatSnackBar,
@@ -120,9 +124,12 @@ export class ExtraHoursRequestComponent implements OnInit {
       if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
-        if (this.request.approvementId === 'POOL00000000044' && this.request.authorizationId !== 'POOL00000000041') {
+        if (this.request.approvementId === 'POOL00000000044' && this.request.authorizationId === 'POOL00000000041') {
           this.displayAuth = true;
           this.requestForm.controls['authorizationId'].setValue(this.request.labelMap.authorizationId);
+          if (this.router.url.match(/\/hr\/request-management/)) {
+            this.proc = true;
+          }
         } else if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === localStorage.getItem('EmpId')) {
           this.isDeletable = true;
         }
@@ -394,4 +401,68 @@ export class ExtraHoursRequestComponent implements OnInit {
     }
   }
 
+  procReq (type: number) {
+    const confType = 'hrOffice';
+    if (type === 1) {
+      const confText = 'Are you sure to PROCESS this extra hours request ?';
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe((result) => {
+        if (result === true) {
+          this.persReqServe.patchPersonelRequests(this.reqId, 'POOL00000000090').subscribe(
+            (response) => {
+              if (response.json().status.code === 'STATUS_OK') {
+                this.chip.open('Request processed successfully!', null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+                this.loc.back();
+              }
+            },
+            () => {
+              this.chip.open('Request isn\'t processed successfully!', null, {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'left',
+                panelClass: ['error-chip']
+              });
+            }
+          );
+        }
+      });
+    } else {
+      const confText = 'Are you sure to DECLINE this extra hours request ?';
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe((result) => {
+        if (result === true) {
+          this.persReqServe.patchPersonelRequests(this.reqId, 'POOL00000000089').subscribe(
+            (response) => {
+              if (response.json().status.code === 'STATUS_OK') {
+                this.chip.open('Request declined successfully!', null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+                this.loc.back();
+              }
+            },
+            () => {
+              this.chip.open('Request isn\'t declined successfully!', null, {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'left',
+                panelClass: ['error-chip']
+              });
+            }
+          );
+        }
+      });
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {RequestsService} from '../../../providers/requests.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {EmployeeModel} from '../../../models/employee-models/employee.model';
 import {EmployeeService} from '../../../providers/employee.service';
@@ -10,6 +10,7 @@ import {Location} from '@angular/common';
 import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
 import {RequestMissingBadgeMetadata} from '../../../models/requests-models/request-missing-badge-metadata';
 import {RequestMissingBadgeModel} from '../../../models/requests-models/request-missing-badge.model';
+import {PersonelRequestService} from '../../../providers/personel-request.service';
 
 @Component({
   selector: 'app-badge-fail-request',
@@ -31,17 +32,18 @@ export class BadgeFailRequestComponent implements OnInit {
   requestForm: FormGroup;
   date: Date = new Date();
   OfficeId: string;
-  ManagerId: string;
 
   hasSomeField: boolean;
   hasEmployeeField: boolean;
+  proc: boolean;
   isDeletable: boolean;
-  displayApprove: boolean;
   confirmation: boolean;
 
   constructor(
+    private persReqServe: PersonelRequestService,
     private reqServe: RequestsService,
     private empServe: EmployeeService,
+    private router: Router,
     private route: ActivatedRoute,
     private confirmDialog: MatDialog,
     public chip: MatSnackBar,
@@ -62,7 +64,6 @@ export class BadgeFailRequestComponent implements OnInit {
       date: new FormControl(this.date.toISOString().split('T')[0], Validators.required),
       startTimestamp: new FormControl('', Validators.required),
       stopTimestamp: new FormControl('', Validators.required),
-      approvementId: new FormControl(''),
       labelMap: new FormGroup({})
     });
     this.getUrlParams();
@@ -119,11 +120,10 @@ export class BadgeFailRequestComponent implements OnInit {
       this.requestForm.controls['date'].setValue(this.request.startTimestamp.split('T')[0]);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[1]);
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1]);
-      if (this.request.approvementId !== undefined) {
-        this.displayApprove = true;
-        this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
-        if (this.request.authorizationId === 'POOL00000000041') {
-          this.isDeletable = false;
+      if (this.request.authorizationId === 'POOL00000000041') {
+        this.isDeletable = false;
+        if (this.router.url.match(/\/hr\/request-management/)) {
+          this.proc = true;
         }
       }
       if (this.request.employeeId === localStorage.getItem('EmpId')) {
@@ -233,5 +233,70 @@ export class BadgeFailRequestComponent implements OnInit {
     this.requestForm.controls['stopTimestamp'].setValue('');
     this.requestForm.controls['startTimestamp'].setValue('');
     this.requestForm.controls['employeeNotes'].setValue('');
+  }
+
+  procReq (type: number) {
+    const confType = 'hrOffice';
+    if (type === 1) {
+      const confText = 'Are you sure to PROCESS this badge failure request ?';
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe((result) => {
+        if (result === true) {
+          this.persReqServe.patchPersonelRequests(this.reqId, 'POOL00000000090').subscribe(
+            (response) => {
+              if (response.json().status.code === 'STATUS_OK') {
+                this.chip.open('Request processed successfully!', null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+                this.loc.back();
+              }
+            },
+            () => {
+              this.chip.open('Request isn\'t processed successfully!', null, {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'left',
+                panelClass: ['error-chip']
+              });
+            }
+          );
+        }
+      });
+    } else {
+      const confText = 'Are you sure to DECLINE this badge failure request ?';
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe((result) => {
+        if (result === true) {
+          this.persReqServe.patchPersonelRequests(this.reqId, 'POOL00000000089').subscribe(
+            (response) => {
+              if (response.json().status.code === 'STATUS_OK') {
+                this.chip.open('Request declined successfully!', null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+                this.loc.back();
+              }
+            },
+            () => {
+              this.chip.open('Request isn\'t declined successfully!', null, {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'left',
+                panelClass: ['error-chip']
+              });
+            }
+          );
+        }
+      });
+    }
   }
 }

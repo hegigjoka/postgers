@@ -35,7 +35,7 @@ export class ConfirmDialogComponent implements OnInit {
   ngOnInit() {
     this.hrEmployee = localStorage.getItem('EmpFullName');
     this.text = this.data.text;
-    if (this.data.type === 'del' || this.data.type === 'manager' || this.data.type.match(/director/)) {
+    if (this.data.type === 'del' || this.data.type === 'manager' || this.data.type.match(/director/) || this.data.type === 'hrOffice') {
       this.type = true;
       this.no = 'NO';
       this.yes = 'Yes';

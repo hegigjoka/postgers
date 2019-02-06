@@ -11,6 +11,7 @@ export class RequestMissingBadgeModel extends RequestAbstractModel<string> {
     requestTypeId: string;
     employeeId: string;
     approvementId: string;
+    authorizationId: string;
     officeNameId: string
     badgeFailTypeId: string;
   };

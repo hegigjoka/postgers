@@ -88,6 +88,16 @@
                 Not Authorize
               </button>
             </div>
+            <div class="buttons" *ngIf="proc">
+              <button class="btn" (click)="procReq(1)">
+                <mat-icon class="btn-icon">check</mat-icon>
+                Process
+              </button>
+              <button class="btn btn-danger" (click)="procReq(0)">
+                <mat-icon class="btn-icon">close</mat-icon>
+                Don't process
+              </button>
+            </div>
           </form>
 
         </div>

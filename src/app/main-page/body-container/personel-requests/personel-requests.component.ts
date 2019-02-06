@@ -107,6 +107,7 @@ export class PersonelRequestsComponent implements OnInit {
           }
         });
       }
+      this.paginate = 1;
       this.getRequests();
     }
   }
@@ -126,6 +127,7 @@ export class PersonelRequestsComponent implements OnInit {
       this.processedId = '';
       this.processedInput = '';
     }
+    this.paginate = 1;
     this.getRequests();
   }
 

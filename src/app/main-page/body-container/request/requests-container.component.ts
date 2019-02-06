@@ -134,6 +134,7 @@ export class RequestsContainerComponent implements OnInit {
           }
         });
       }
+      this.paginate = 1;
       this.getRequests();
     }
   }
@@ -145,6 +146,7 @@ export class RequestsContainerComponent implements OnInit {
       this.statusId = '';
       this.statusInput = '';
     }
+    this.paginate = 1;
     this.getRequests();
   }
 
