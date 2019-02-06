@@ -3,6 +3,9 @@
   flex-direction: row;
   align-items: center;
 }
+.header-div .row{
+  width: 102%;
+}
 .header-div > div{
   cursor: pointer;
   margin-right: -5px;
@@ -17,7 +20,7 @@
 .filter-icons{
   color: #045BA1;
   position: relative;
-  left: 44px;
+  left: 26px;
   top: 6px;
 }
 .clear-filter{
@@ -69,7 +72,6 @@ mat-datepicker-toggle /deep/button:focus{
   color: #045BA1;
 }
 .hr-filter{
-  margin-left: 15px;
   margin-top: 20px;
   border-top: none;
   border-left: none;

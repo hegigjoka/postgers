@@ -12,45 +12,53 @@
     </datalist>
 
     <div class="col-12 header-div">
-      <div #dorpdown class="dropdown">
-        <h2 class="dropdown-toggle"
-            id="requestCategory"
-            data-toggle="dropdown"
-            [matBadge]="showBadgeDD && badge ? badge : ''"
-            matBadgePosition="before"
-            (click)="showBadge()">
-          {{title}}
-        </h2>
-        <div class="dropdown-menu" aria-labelledby="requestCategory">
-          <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
-          <a class="dropdown-item" (click)="onlyPA()">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+          <div #dorpdown class="dropdown">
+            <h2 class="dropdown-toggle"
+                id="requestCategory"
+                data-toggle="dropdown"
+                [matBadge]="showBadgeDD && badge ? badge : ''"
+                matBadgePosition="before"
+                (click)="showBadge()">
+              {{title}}
+            </h2>
+            <div class="dropdown-menu" aria-labelledby="requestCategory">
+              <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
+              <a class="dropdown-item" (click)="onlyPA()">
             <span [matBadge]="badge ? badge : ''"
                   matBadgeOverlap="false"
                   matBadgeSize="medium">
               Pending Action
             </span>
-          </a>
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        <mat-icon class="filter-icons">filter_list</mat-icon>
-        <input type="text"
-               list="reqTypes"
-               [(ngModel)]="requestTypeInput"
-               (change)="setTAId(requestTypeInput, 'reqType')"
-               placeholder="Requests Type"
-               class="hr-filter">
-        <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
-      </div>
-      <div>
-        <mat-icon class="filter-icons">filter_list</mat-icon>
-        <input type="text"
-               list="statTypes"
-               [(ngModel)]="statusInput"
-               (change)="setTAId(statusInput, 'statusType')"
-               placeholder="Status Type"
-               class="hr-filter">
-        <mat-icon class="clear-filter req-filter" (click)="clearFilter('status-filter')" *ngIf="statusInput?.length > 0">cancel</mat-icon>
+        <div class="col-lg-8 col-md-8 col-sm-12">
+          <div class="row">
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="reqTypes"
+                     [(ngModel)]="requestTypeInput"
+                     (change)="setTAId(requestTypeInput, 'reqType')"
+                     placeholder="Requests Type"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="statTypes"
+                     [(ngModel)]="statusInput"
+                     (change)="setTAId(statusInput, 'statusType')"
+                     placeholder="Status Type"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('status-filter')" *ngIf="statusInput?.length > 0">cancel</mat-icon>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-12">
@@ -84,7 +92,7 @@
         </tbody>
       </table>
     </div>
-    <div class="col-3 paginate">
+    <div class="col-lg-3 col-md-6 col-sm-9 paginate">
       <table border="0">
         <tr>
           <td>

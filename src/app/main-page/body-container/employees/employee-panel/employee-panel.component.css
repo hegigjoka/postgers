@@ -3,6 +3,9 @@
   flex-direction: row;
   align-items: center;
 }
+.header-div .row{
+  width: 102%;
+}
 .header-div > div{
   cursor: pointer;
 }
