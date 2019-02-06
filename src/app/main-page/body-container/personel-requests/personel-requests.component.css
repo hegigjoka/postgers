@@ -8,6 +8,7 @@
 }
 .header-div > div{
   cursor: pointer;
+  margin-right: -5px;
 }
 .header{
   font-family: "Roboto Black";
@@ -19,23 +20,59 @@
 .filter-icons{
   color: #045BA1;
   position: relative;
-  left: 44px;
+  left: 26px;
   top: 6px;
 }
 .clear-filter{
   color: #045BA1;
   position: relative;
-  left: -55px;
+  left: -30px;
   top: 3px;
   font-size: 16px;
 }
 .emp-name{
-  left: -39px;
+  left: -20px;
 }
-.employee-filter{
-  margin-left: 15px;
+.req-filter{
+  left: -40px;
+}
+.filter-date{
+  left: -44px;
+}
+mat-datepicker-toggle{
+  color: #045BA1;
+  position: relative;
+  left: -30px;
+  margin-right: -36px;
+}
+mat-datepicker-toggle /deep/button:focus{
+  outline: none;
+}
+/deep/.mat-calendar-header{
+  background-color: #045BA1;
+  color: white;
+}
+/deep/.mat-datepicker-content .mat-calendar-previous-button,
+/deep/.mat-datepicker-content .mat-calendar-next-button{
+  color: white;
+}
+/deep/.mat-calendar-arrow{
+  border-top-color: white;
+}
+/deep/.mat-calendar-body-today:not(.mat-calendar-body-selected){
+  border: 2px solid #045BA1;
+}
+/deep/.mat-calendar-body-selected{
+  color: white!important;
+  background-color: #045BA1;
+}
+/deep/.mat-calendar-body-cell-content,
+/deep/.mat-calendar-table-header,
+/deep/.mat-calendar-body-label{
+  color: #045BA1;
+}
+.hr-filter{
   margin-top: 20px;
-  margin-right: 15px;
   border-top: none;
   border-left: none;
   border-right: none;
@@ -43,21 +80,21 @@
   background-color: transparent;
   padding: 4px 2px 4px 34px;
   height: 40px;
-  width: 218px;
+  width: 190px;
   font-family: "Roboto Medium";
   color: #045BA1;
   font-size: 16px;
 }
-datalist option::-webkit-scrollbar-thumb{
-  background-color: #045BA1;
+input::-webkit-clear-button{
+  display: none;
 }
 ::placeholder{
   color: #045BA1;
 }
-.employee-filter > input{
-  width: 98%;
+.table-striped{
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-/*css for employee table list*/
 table{
   margin-top: 38px;
   border-bottom: 1px solid #045BA1;
@@ -82,6 +119,9 @@ td{
   font-family: "Roboto Medium";
   font-size: 15px;
   color: #323232;
+}
+.no-employee{
+  display: none;
 }
 .tuple > td{
   padding-left: 40px;
@@ -120,24 +160,3 @@ td{
   color: #045BA1;
   font-size: 35px;
 }
-
-/*add new emp button*/
-.new-emp{
-  background-color: #045BA1;
-  color: white;
-  cursor: pointer;
-  background-color: #045BA1;
-  border-radius: 50%;
-  padding-top: 11px;
-  padding-left: 13px;
-  font-size: 24px;
-  height: 55px;
-  width: 55px;
-  position: fixed;
-  right: 30px;
-  bottom: 30px;
-}
-.new-emp:hover{
-  box-shadow: 0 5px 10px black;
-}
-

@@ -1,0 +1,138 @@
+<mat-drawer-container [hasBackdrop]="true" (backdropClick)="backing()">
+  <mat-drawer class="drawer-request" #request position="end">
+    <router-outlet (deactivate)="updating()"></router-outlet>
+  </mat-drawer>
+  <mat-drawer-content>
+
+    <datalist id="reqTypes">
+      <option *ngFor="let request of requestType" [value]="request?.someLabel"></option>
+    </datalist>
+    <datalist id="process">
+      <option *ngFor="let process of processedTypes" [value]="process?.someLabel"></option>
+    </datalist>
+    <datalist id="employee">
+      <option *ngFor="let employee of employees?.list" [value]="employee?.firstName + ' ' + employee?.lastName"></option>
+    </datalist>
+
+    <div class="col-12 header-div">
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12">
+          <div class="header" (click)="refresh()">
+            Requests Management
+          </div>
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-12">
+          <div class="row">
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input class="hr-filter"
+                     matInput [matDatepicker]="start"
+                     placeholder="from..."
+                     [(ngModel)]="startAuthDate">
+              <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('start-date-filter')" *ngIf="startAuthDate !== null">cancel</mat-icon>
+              <mat-datepicker touchUi #start></mat-datepicker>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input class="hr-filter"
+                     matInput [matDatepicker]="stop"
+                     placeholder="...to"
+                     [(ngModel)]="endAuthDate">
+              <mat-datepicker-toggle matSuffix [for]="stop"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('stop-date-filter')" *ngIf="endAuthDate !== null">cancel</mat-icon>
+              <mat-datepicker touchUi #stop></mat-datepicker>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="employee"
+                     [(ngModel)]="employeeInput"
+                     (keyup)="getEmployee()"
+                     (change)="setDERPId(employeeInput, 'empId')"
+                     placeholder="Employee"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('emp-filter')" *ngIf="employeeInput?.length > 0">cancel</mat-icon>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="reqTypes"
+                     [(ngModel)]="requestTypeInput"
+                     (change)="setDERPId(requestTypeInput, 'reqType')"
+                     placeholder="Requests Type"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="process"
+                     [(ngModel)]="processedInput"
+                     (change)="setDERPId(processedInput, 'process')"
+                     placeholder="Processed Type"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('process-filter')" *ngIf="processedInput?.length > 0">cancel</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>{{fields?.requestTypeId?.fieldLabel}}</th>
+          <th>{{fields?.insertDate?.fieldLabel}}</th>
+          <th>{{fields?.expireDate?.fieldLabel}}</th>
+          <th>{{fields?.validationDate?.fieldLabel}}</th>
+          <th [ngClass]="{'no-employee': reqType === 'me'}">Employee</th>
+          <th>{{fields?.employeeNotes?.fieldLabel}}</th>
+          <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
+          <th>{{fields?.processedId?.fieldLabel}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.labelMap?.requestTypeId)">
+          <td>{{request?.labelMap?.requestTypeId | multiPurposePipe: 'hasValue'}}</td>
+          <td>{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td>{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
+          <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
+          <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
+          <td
+            [matTooltip]="request?.directorNotes ? request?.directorNotes : 'No notes available...'">
+            {{request?.labelMap?.processedId | multiPurposePipe: 'hasValue'}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-9 paginate">
+      <table border="0">
+        <tr>
+          <td>
+            <mat-icon class="prev" (click)="pages(-10, requests?.totalPages)">first_page</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="prev" (click)="pages(-1, requests?.totalPages)">chevron_left</mat-icon>
+          </td>
+          <td>
+            <div class="page-number">
+              {{paginate}} of {{requests?.totalPages}}
+            </div>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(1, requests?.totalPages)">chevron_right</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(10, requests?.totalPages)">last_page</mat-icon>
+          </td>
+        </tr>
+      </table>
+      <div class="total-records">( {{requests?.totalRecords}} )</div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

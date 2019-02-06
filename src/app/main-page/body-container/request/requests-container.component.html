@@ -1,0 +1,133 @@
+<mat-drawer-container [hasBackdrop]="true" (backdropClick)="backing()">
+  <mat-drawer class="drawer-request" #request position="end">
+    <router-outlet (deactivate)="updating()"></router-outlet>
+  </mat-drawer>
+  <mat-drawer-content>
+
+    <datalist id="reqTypes">
+      <option *ngFor="let request of requestTypes" [value]="request?.someLabel"></option>
+    </datalist>
+    <datalist id="statTypes">
+      <option *ngFor="let status of statusTypes" [value]="status?.someLabel"></option>
+    </datalist>
+
+    <div class="col-12 header-div">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+          <div #dorpdown class="dropdown">
+            <h2 class="dropdown-toggle"
+                id="requestCategory"
+                data-toggle="dropdown"
+                [matBadge]="showBadgeDD && badge ? badge : ''"
+                matBadgePosition="before"
+                (click)="showBadge()">
+              {{title}}
+            </h2>
+            <div class="dropdown-menu" aria-labelledby="requestCategory">
+              <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
+              <a class="dropdown-item" (click)="onlyPA()">
+            <span [matBadge]="badge ? badge : ''"
+                  matBadgeOverlap="false"
+                  matBadgeSize="medium">
+              Pending Action
+            </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-12">
+          <div class="row">
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="reqTypes"
+                     [(ngModel)]="requestTypeInput"
+                     (change)="setTAId(requestTypeInput, 'reqType')"
+                     placeholder="Requests Type"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="statTypes"
+                     [(ngModel)]="statusInput"
+                     (change)="setTAId(statusInput, 'statusType')"
+                     placeholder="Status Type"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('status-filter')" *ngIf="statusInput?.length > 0">cancel</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>{{fields?.requestTypeId?.fieldLabel}}</th>
+          <th>{{fields?.insertDate?.fieldLabel}}</th>
+          <th>{{fields?.expireDate?.fieldLabel}}</th>
+          <th>{{fields?.validationDate?.fieldLabel}}</th>
+          <th [ngClass]="{'no-employee': reqType === 'me'}">Employee</th>
+          <th>{{fields?.employeeNotes?.fieldLabel}}</th>
+          <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
+          <th>{{fields?.status?.fieldLabel}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.labelMap?.requestTypeId)">
+          <td>{{request?.labelMap?.requestTypeId | multiPurposePipe: 'hasValue'}}</td>
+          <td>{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td>{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
+          <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
+          <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
+          <td
+            [matTooltip]="request?.directorNotes ? request?.directorNotes : request?.managerNotes ? request?.managerNotes : 'No notes available...'">
+            {{request?.labelMap?.status | multiPurposePipe: 'hasValue'}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-9 paginate">
+      <table border="0">
+        <tr>
+          <td>
+            <mat-icon class="prev" (click)="pages(-10, requests?.totalPages)">first_page</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="prev" (click)="pages(-1, requests?.totalPages)">chevron_left</mat-icon>
+          </td>
+          <td>
+            <div class="page-number">
+              {{paginate}} of {{requests?.totalPages}}
+            </div>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(1, requests?.totalPages)">chevron_right</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(10, requests?.totalPages)">last_page</mat-icon>
+          </td>
+        </tr>
+      </table>
+      <div class="total-records">( {{requests?.totalRecords}} )</div>
+    </div>
+    <div class="new-request">
+      <div class="new-sub" (click)="openRequest('new', 'Substituted Holidays')">S</div>
+      <div class="new-sub-banner">Substituted Holidays</div>
+      <div class="new-mt" (click)="openRequest('new', 'Badge Fail')">BF</div>
+      <div class="new-mt-banner">Badge Failure</div>
+      <div class="new-mission" (click)="openRequest('new', 'Mission')">M</div>
+      <div class="new-mission-banner">Mission</div>
+      <div class="new-holiday" (click)="openRequest('new', 'Holiday and Permission')">H</div>
+      <div class="new-holiday-banner">Holiday and Permission</div>
+      <div class="new-xh" (click)="openRequest('new', 'Extra Hours')">xH</div>
+      <div class="new-xh-banner">Extra Hours</div>
+      <div class="new">+</div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

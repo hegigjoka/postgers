@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService, GoogleLoginProvider} from 'angular-6-social-login';
-import {Response} from '@angular/http';
-import {EmployeeService} from '../shared-components/providers/employee.service';
-import {AppUserModel} from '../shared-components/models/shared-models/app-user.model';
+import {EmployeeService} from '../../providers/employee.service';
+import {AppUserModel} from '../../models/shared-models/app-user.model';
 import {Router} from '@angular/router';
 
 @Component({
@@ -18,7 +17,7 @@ export class SignInComponent implements OnInit {
     private getStatus: EmployeeService,
     private socialAuthService: AuthService,
     private signin: EmployeeService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -49,15 +48,15 @@ export class SignInComponent implements OnInit {
     // get auth token with google sign-in
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
       (userData) => {
-
         // subscribe to google sign-in service
         this.signin.signInWithGoogle(userData.idToken).subscribe(
-          (user: Response) => {
+          (user) => {
 
             // get session data
             this.employeeSession = user.json().body.data;
             // clear previews localStorage
             localStorage.removeItem('EmpAuthToken');
+            localStorage.removeItem('EmpId');
             localStorage.removeItem('EmpFullName');
             localStorage.removeItem('EmpLang');
             localStorage.removeItem('EmpAvatarImg');
@@ -68,16 +67,17 @@ export class SignInComponent implements OnInit {
 
               // new session data
               localStorage.setItem('EmpAuthToken', this.employeeSession.authToken);
+              localStorage.setItem('EmpId', this.employeeSession.userAttributes.HR_MODULES__APP.attributeValue);
               localStorage.setItem('EmpFullName', this.employeeSession.fullName);
               localStorage.setItem('EmpLang', this.employeeSession.lang);
               localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
               localStorage.setItem('EmpAccess', this.employeeSession.userAccessLevel.toString());
-            }, 2000);
+            }, 1000);
 
             // navigate to desired location
             setTimeout(() => {
               this.router.navigate(['hr']);
-            }, 2000);
+            }, 1000);
           }
         );
       }

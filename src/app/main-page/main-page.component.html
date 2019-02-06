@@ -22,8 +22,8 @@
           <ngx-avatar *ngIf="!avatarOrPic()" class="avatar" [name]="'Hegi Gjoka'" [size]="'46'" bgColor="white" fgColor="#045BA1"></ngx-avatar>
           <img *ngIf="avatarOrPic()" src="{{avatar}}" class="img-fluid avatar-img">
           <div class="office-n-employee">
-            <div>CED</div>
-            <div>Hegi Gjoka</div>
+            <div>{{setCreds('office')}}</div>
+            <div>{{setCreds('employee')}}</div>
           </div>
         </div>
       </div>
@@ -31,7 +31,6 @@
     <div style="height: 92.5%;" class="row">
       <router-outlet (activate)="searchingFunc()"></router-outlet>
     </div>
-    <div style="width: 100%; height: 2px; background-color: #045BA1"></div>
   </mat-drawer-content>
 </mat-drawer-container>
 

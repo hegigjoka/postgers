@@ -1,49 +1,139 @@
+.header-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.header-div .row{
+  width: 102%;
+}
+.filter-icons{
+  color: #045BA1;
+  position: relative;
+  left: 44px;
+  top: 6px;
+}
+.clear-filter{
+  color: #045BA1;
+  position: relative;
+  left: -30px;
+  top: 3px;
+  font-size: 16px;
+}
+.req-filter{
+  left: -40px;
+}
+.hr-filter{
+  margin-left: 15px;
+  margin-top: 20px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid #045BA1;
+  background-color: transparent;
+  padding: 4px 2px 4px 34px;
+  height: 40px;
+  width: 190px;
+  font-family: "Roboto Medium";
+  color: #045BA1;
+  font-size: 16px;
+}
+::placeholder{
+  color: #045BA1;
+}
 .dropdown{
-  font-family: UniSansRegular;
+  font-family: "Roboto Medium";
   font-size: 20px;
   color: #045BA1;
-  padding-left: 8px;
+  cursor: pointer;
   padding-top: 18px;
-  width: 20%;
+  margin-left: 36px;
+  width: fit-content;
+}
+.dropdown-item /deep/.mat-badge-content{
+  background-color: #045BA1;
+  color: white;
+}
+.dropdown-menu{
+  min-width: 86%;
 }
 .dropdown-menu > a{
   color: #045BA1;
-  font-family: UniSansRegular;
+  font-family: "Roboto Light";
+  font-size: 20px;
+}
+/deep/.mat-tab-label{
+  color: #045BA1;
+  font-family: "Roboto Medium";
+  font-size: 25px;
 }
 .table-striped{
   margin-top: 20px;
   margin-bottom: 20px;
 }
-th{
-  font-family: UniSansRegular;
-  font-size: 18px;
-  color: #045BA1;
+table{
+  margin-top: 38px;
+  border-bottom: 1px solid #045BA1;
 }
-h4{
-  color: #045BA1;
+thead > tr{
+  background-color: #045BA1;
+  color: white;
+}
+.tuple:hover{
+  background-color: #045BA1;
+  cursor: pointer;
+}
+.tuple:hover > td{
+  color: white;
+}
+th{
+  font-family: "Roboto Medium";
+  font-size: 17px;
+  padding-left: 40px;
+}
+td{
+  font-family: "Roboto Medium";
+  font-size: 15px;
+  color: #323232;
+}
+.no-employee{
+  display: none;
+}
+.tuple > td{
+  padding-left: 40px;
 }
 
 /*Pagination Buttons*/
+.paginate table{
+  width: 60%;
+  border-bottom: none;
+}
+.paginate td{
+  width: 20%;
+}
 .paginate{
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   margin-right: auto;
   margin-left: auto;
+  color: #045BA1;
+}
+.page-number{
+  color: #045BA1;
+  margin-top: -4px;
+  margin-left: -3px;
+}
+.total-records{
+  font-family: "Roboto Light";
+  margin-top: 30px;
 }
 .prev{
-  background-color: #045BA1;
-  display: flex;
-  justify-content: flex-start;
-  height: 30px;
-  padding: 0 6px 3px 6px;
-  margin-right: 10px;
+  color: #045BA1;
+  font-size: 35px;
 }
 .next{
-  background-color: #045BA1;
-  display: flex;
-  justify-content: flex-end;
-  height: 30px;
-  padding: 0 6px 3px 6px;
-  margin-left: 10px;
+  color: #045BA1;
+  font-size: 35px;
 }
 
 /*New Request*/
@@ -55,7 +145,7 @@ h4{
   width: 55px;
 }
 .new-request:hover{
-  height: 255px;
+  height: 305px;
 }
 .new{
   background-color: #045BA1;
@@ -127,14 +217,37 @@ h4{
   height: 45px;
   width: 45px;
   font-size: 20px;
-  padding-top: 6px;
-  padding-left: 8px;
+  padding-top: 7px;
+  padding-left: 12px;
   position: fixed;
   bottom: 240px;
   right: 35px;
 }
+.new-sub{
+  display: none;
+  background-color: #323232;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  font-size: 20px;
+  padding-top: 7px;
+  padding-left: 17px;
+  position: fixed;
+  bottom: 290px;
+  right: 35px;
+}
 
 /*New Request Banners*/
+.new-sub-banner{
+  display: none;
+  font-size: 18px;
+  color: #323232;
+  position: fixed;
+  bottom: 300px;
+  right: 90px;
+}
 .new-mt-banner{
   display: none;
   font-size: 18px;
@@ -177,10 +290,11 @@ h4{
 .new-request:hover > .new-xh, .new-request:hover > .new-xh-banner,
 .new-request:hover > .new-holiday, .new-request:hover > .new-holiday-banner,
 .new-request:hover > .new-mission, .new-request:hover > .new-mission-banner,
-.new-request:hover > .new-mt, .new-request:hover > .new-mt-banner{
+.new-request:hover > .new-mt, .new-request:hover > .new-mt-banner,
+.new-request:hover > .new-sub, .new-request:hover > .new-sub-banner{
   display: block;
 }
-.new-xh:hover, .new-holiday:hover, .new-mission:hover, .new-mt:hover{
+.new-xh:hover, .new-holiday:hover, .new-mission:hover, .new-mt:hover, .new-sub:hover{
   transition: 600ms;
   transform: rotate(360deg);
   box-shadow: 0 4px 12px black;

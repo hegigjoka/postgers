@@ -2,9 +2,9 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 export interface DialogData {
+  type: string;
   text: string;
   conf: boolean;
-  type: string;
 }
 
 @Component({
@@ -15,10 +15,17 @@ export interface DialogData {
 export class ConfirmDialogComponent implements OnInit {
 
   hrEmployee: string;
+
   text: string;
+
+  extraFieldType: boolean;
+  extraDropdownType: boolean;
   type: boolean;
   no: string;
   yes: string;
+
+  notes = 'Notes...';
+  authType = ' ';
 
   constructor(
     public confDlg: MatDialogRef<ConfirmDialogComponent>,
@@ -28,13 +35,29 @@ export class ConfirmDialogComponent implements OnInit {
   ngOnInit() {
     this.hrEmployee = localStorage.getItem('EmpFullName');
     this.text = this.data.text;
-    if (this.data.type === 'del') {
+    if (this.data.type === 'del' || this.data.type === 'manager' || this.data.type.match(/director/) || this.data.type === 'hrOffice') {
       this.type = true;
       this.no = 'NO';
       this.yes = 'Yes';
+      if (this.data.type === 'manager' || this.data.type.match(/director/)) {
+        this.extraFieldType = true;
+        if (this.data.type === 'xHdirector') {
+          this.extraDropdownType = true;
+        }
+      }
     } else {
       this.type = false;
       this.no = 'Back';
+    }
+  }
+
+  onYesClicl(type: boolean, field: boolean, dropdown: boolean) {
+    if (type === true && field === true && dropdown === true) {
+      return true + '|' + this.notes + '|' + this.authType;
+    } else if (type === true && field === true) {
+      return true + '|' + this.notes;
+    } else if (type === true) {
+      return true;
     }
   }
 

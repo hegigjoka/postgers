@@ -28,6 +28,7 @@ export class MainPageComponent implements OnInit {
       () => {},
       (error) => {
         localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpId');
         localStorage.removeItem('EmpFullName');
         localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
@@ -44,12 +45,18 @@ export class MainPageComponent implements OnInit {
     setTimeout(() => {
       if (this.iconToggler === false) {
         this.icon = 'menu';
-        console.log('side-menu is closed');
       } else {
         this.icon = 'close';
-        console.log('side-menu is opened');
       }
     }, 300);
+  }
+
+  setCreds(type: string) {
+    if (type === 'office') {
+      return 'CED';
+    } else {
+      return localStorage.getItem('EmpFullName');
+    }
   }
 
   avatarOrPic() {

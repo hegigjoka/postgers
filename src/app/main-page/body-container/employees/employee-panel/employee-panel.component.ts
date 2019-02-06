@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {EmployeeService} from '../../../../shared-components/providers/employee.service';
 import {
-  EmployeeTableFieldGroup
-} from '../../../../shared-components/models/employee-models/employee-table-field-group';
+  EmployeeMetadata
+} from '../../../../shared-components/models/employee-models/employee-metadata';
 import {ListResponseModel} from '../../../../shared-components/models/shared-models/list-response.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSidenav} from '@angular/material';
@@ -22,7 +22,7 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   sideNav: string;
   private sub: Subscription = new Subscription();
   paginate = 1;
-  tableFields: EmployeeTableFieldGroup;
+  tableFields: EmployeeMetadata;
   employees: ListResponseModel<EmployeeModel>;
 
   // filter variables
@@ -80,7 +80,6 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   openEmployee(empId: string) {
     this.sideNav = 'open';
     this.empMenu.toggle();
-    console.log('open side nav for employee(' + empId + ')');
     this.router.navigate([empId], {relativeTo: this.route});
   }
   // FILTERS--------------------------------------------------------------------------------------------------------------------------------

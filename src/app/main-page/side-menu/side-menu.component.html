@@ -11,23 +11,33 @@
       <img *ngIf="avatarOrPic()" src="{{avatar}}" class="img-fluid avatar-img">
     </div>
     <div class="col-8 emp-creds">
-      <div>CED office</div>
-      <div>Hegi Gjoka</div>
+      <div>{{setCreds('office')}}</div>
+      <div>{{setCreds('employee')}}</div>
     </div>
   </div>
   <div class="row emp" (click)="openEmp()">
-    <mat-icon class="emp-icon">group</mat-icon>
-    <div class="emp-desc">Employee</div>
+    <mat-icon class="emp-icon">work</mat-icon>
+    <div class="emp-desc">Employees</div>
   </div>
   <div class="row req" (click)="openReq()">
-    <mat-icon class="req-icon">folder</mat-icon>
+    <mat-icon class="req-icon"
+              [matBadge]="requestsType ? '' : badge ? badge : ''"
+              matBadgePosition="before">
+      folder
+    </mat-icon>
     <div class="req-desc">Requests</div>
     <div class="req-type" *ngIf="requestsType">
-      <div (click)="openReqType('all')">All Requests</div>
-      <div (click)="openReqType('my')">My Requests</div>
-      <div (click)="openReqType('myp')">My Pending Requests</div>
-      <div (click)="openReqType('pa')">Pending Action</div>
+      <div (click)="openReqType('me')">My Requests</div>
+      <div (click)="openReqType('pendingMe')" [matBadge]="badge ? badge : ''">Pending Action</div>
     </div>
+  </div>
+  <div class="row pers" (click)="openHr()">
+    <mat-icon class="pers-icon">group</mat-icon>
+    <div class="pers-desc">HR Office</div>
+  </div>
+  <div class="row calendar">
+    <mat-icon class="calendar-icon">calendar_today</mat-icon>
+    <div class="calendar-desc">Google Calendar</div>
   </div>
   <div class="row logout" (click)="logout()">
     <mat-icon class="logout-icon">save_alt</mat-icon>

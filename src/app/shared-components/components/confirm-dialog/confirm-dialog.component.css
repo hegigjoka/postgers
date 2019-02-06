@@ -15,6 +15,29 @@
   font-size: 18px;
   margin-bottom: 10px;
 }
+label{
+  font-family: "Roboto Light";
+  color: white;
+  margin-top: 10px;
+  margin-bottom: 18px;
+  height: 40px;
+  width: 15%;
+}
+input, select{
+  background-color: #045BA1;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid white;
+  color: white;
+  font-family: "Roboto Light";
+  padding-left: 10px;
+  width: 76%;
+  height: 40px;
+  margin-right: 32px;
+  margin-bottom: 18px;
+  float: right;
+}
 .conf-dialog-buttons{
   display: flex;
   flex-direction: row;
@@ -22,7 +45,8 @@
 }
 button{
   background-color: white;
-  color: #28a745;
+  font-family: "Roboto Medium";
+  color: #045BA1;
 }
 button:hover{
   color: white;

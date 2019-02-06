@@ -8,7 +8,6 @@ import {Router} from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-
   constructor(private getStatus: EmployeeService, private router: Router) {}
 
   ngOnInit() {
@@ -22,6 +21,7 @@ export class AppComponent implements OnInit {
       },
     () => {
       localStorage.removeItem('EmpAuthToken');
+      localStorage.removeItem('EmpId');
       localStorage.removeItem('EmpFullName');
       localStorage.removeItem('EmpLang');
       localStorage.removeItem('EmpAvatarImg');
