@@ -49,6 +49,9 @@
             <label for="authorizationId" *ngIf="hasSomeField && displayAuth">{{fields?.authorizationId?.fieldLabel}}: </label>
             <input id="authorizationId" type="text" formControlName="authorizationId" *ngIf="hasSomeField && displayAuth">
             <br *ngIf="hasSomeField && displayAuth">
+            <label for="authorizationTypeId" *ngIf="hasSomeField && displayAuth">{{fields?.authorizationTypeId?.fieldLabel}}: </label>
+            <input id="authorizationTypeId" type="text" formControlName="authorizationTypeId" *ngIf="hasSomeField && displayAuth">
+            <br *ngIf="hasSomeField && displayAuth">
             <div class="buttons" *ngIf="!hasSomeField">
               <button class="btn" (click)="insertRequest()" *ngIf="requestForm.valid">
                 <mat-icon class="btn-icon">add_circle</mat-icon>

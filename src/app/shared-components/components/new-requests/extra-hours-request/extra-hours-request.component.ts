@@ -69,6 +69,7 @@ export class ExtraHoursRequestComponent implements OnInit {
       employeeNotes: new FormControl('No notes...'),
       approvementId: new FormControl(''),
       authorizationId: new FormControl(''),
+      authorizationTypeId: new FormControl(''),
       labelMap: new FormGroup({
         requestTypeId: new FormControl('Extra Hours'),
         employeeId: new FormControl(localStorage.getItem('EmpFullName'))
@@ -127,7 +128,8 @@ export class ExtraHoursRequestComponent implements OnInit {
         if (this.request.approvementId === 'POOL00000000044' && this.request.authorizationId === 'POOL00000000041') {
           this.displayAuth = true;
           this.requestForm.controls['authorizationId'].setValue(this.request.labelMap.authorizationId);
-          if (this.router.url.match(/\/hr\/request-management/)) {
+          this.requestForm.controls['authorizationTypeId'].setValue(this.request.labelMap.authorizationTypeId);
+          if (this.router.url.match(/\/hr\/request-management/) && this.request.processedId === 'POOL00000000088') {
             this.proc = true;
           }
         } else if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === localStorage.getItem('EmpId')) {

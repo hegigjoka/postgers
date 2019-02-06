@@ -122,7 +122,7 @@ export class BadgeFailRequestComponent implements OnInit {
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1]);
       if (this.request.authorizationId === 'POOL00000000041') {
         this.isDeletable = false;
-        if (this.router.url.match(/\/hr\/request-management/)) {
+        if (this.router.url.match(/\/hr\/request-management/) && this.request.processedId === 'POOL00000000088') {
           this.proc = true;
         }
       }

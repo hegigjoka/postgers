@@ -141,7 +141,7 @@ export class MissionRequestComponent implements OnInit {
       if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
-        if (this.request.authorizationId === 'POOL00000000041' && this.router.url.match(/\/hr\/request-management/)) {
+        if (this.request.authorizationId === 'POOL00000000041' && this.router.url.match(/\/hr\/request-management/) && this.request.processedId === 'POOL00000000088') {
           this.proc = true;
         }
         if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === localStorage.getItem('EmpId')) {

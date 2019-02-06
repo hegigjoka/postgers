@@ -31,8 +31,8 @@ export class PersonelRequestsComponent implements OnInit {
   requestTypeInput: string;
   requestType: AbstractModel[];
 
-  processedId: string;
-  processedInput: string;
+  processedId = 'POOL00000000088';
+  processedInput = 'Pending';
   processedTypes: AbstractModel[];
 
   // request table variables
@@ -69,7 +69,7 @@ export class PersonelRequestsComponent implements OnInit {
     this.persReqServe.getPersonelRequests(
       this.paginate,
       10,
-      this.processedId ? this.processedId : 'POOL00000000088',
+      this.processedId,
       this.startAuthDate ? this.startAuthDate.toISOString().split('.')[0] : '',
       this.employeeId,
       this.requestTypeId
@@ -124,7 +124,7 @@ export class PersonelRequestsComponent implements OnInit {
     } else if (filter === 'stop-date-filter') {
       this.endAuthDate = null;
     } else {
-      this.processedId = '';
+      this.processedId = 'POOL00000000088';
       this.processedInput = '';
     }
     this.paginate = 1;
@@ -139,7 +139,7 @@ export class PersonelRequestsComponent implements OnInit {
     this.requestTypeInput = '';
     this.startAuthDate = null;
     this.endAuthDate = null;
-    this.processedId = '';
+    this.processedId = 'POOL00000000088';
     this.processedInput = '';
     this.getRequests();
   }

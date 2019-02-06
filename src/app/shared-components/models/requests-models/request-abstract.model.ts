@@ -9,4 +9,5 @@ export class RequestAbstractModel<T> {
   employeeNotes: T;
   someLabel: T;
   authorizationId: T;
+  processedId: T;
 }

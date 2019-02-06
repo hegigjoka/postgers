@@ -48,7 +48,6 @@ export class SignInComponent implements OnInit {
     // get auth token with google sign-in
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
       (userData) => {
-        console.log('Google User Data=> ', userData);
         // subscribe to google sign-in service
         this.signin.signInWithGoogle(userData.idToken).subscribe(
           (user) => {
