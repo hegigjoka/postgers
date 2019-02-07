@@ -3,6 +3,7 @@ import {AuthService, GoogleLoginProvider} from 'angular-6-social-login';
 import {EmployeeService} from '../../providers/employee.service';
 import {AppUserModel} from '../../models/shared-models/app-user.model';
 import {Router} from '@angular/router';
+import {HrPermission} from '../../permissions/hr-permission';
 
 @Component({
   selector: 'app-sign-in',
@@ -14,6 +15,7 @@ export class SignInComponent implements OnInit {
   signingIn: boolean;
 
   constructor(
+    public permissions: HrPermission,
     private getStatus: EmployeeService,
     private socialAuthService: AuthService,
     private signin: EmployeeService,
@@ -27,15 +29,27 @@ export class SignInComponent implements OnInit {
   // verify if it's authenticated
   getStatuss() {
     this.getStatus.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
-      () => {
-        this.router.navigate(['hr']);
+      (response) => {
+        if (response.json().status.code === 'STATUS_OK') {
+          this.permissions.hrAllRequest = response.json().body.data.appPermissions['hr/allRequests'];
+          this.permissions.hrEmployee = response.json().body.data.appPermissions['hr/employee'];
+          this.permissions.hrRequests = response.json().body.data.appPermissions['hr/employee/:empId/requests'];
+          this.permissions.hrRequestsType = response.json().body.data.appPermissions['hr/employee/:empId/requests/type/:type'];
+          this.router.navigate(['hr']);
+        } else {
+          localStorage.removeItem('EmpAuthToken');
+          localStorage.removeItem('EmpId');
+          localStorage.removeItem('EmpFullName');
+          localStorage.removeItem('EmpLang');
+          localStorage.removeItem('EmpAvatarImg');
+          this.router.navigate(['sign-in']);
+        }
       },
       () => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpFullName');
         localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
-        localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
       });
   }
@@ -60,7 +74,6 @@ export class SignInComponent implements OnInit {
             localStorage.removeItem('EmpFullName');
             localStorage.removeItem('EmpLang');
             localStorage.removeItem('EmpAvatarImg');
-            localStorage.removeItem('EmpAccess');
 
             // insert to localStorage new session data
             setTimeout(() => {
@@ -71,7 +84,6 @@ export class SignInComponent implements OnInit {
               localStorage.setItem('EmpFullName', this.employeeSession.fullName);
               localStorage.setItem('EmpLang', this.employeeSession.lang);
               localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
-              localStorage.setItem('EmpAccess', this.employeeSession.userAccessLevel.toString());
             }, 1000);
 
             // navigate to desired location

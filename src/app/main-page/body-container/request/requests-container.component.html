@@ -116,7 +116,7 @@
       </table>
       <div class="total-records">( {{requests?.totalRecords}} )</div>
     </div>
-    <div class="new-request">
+    <div class="new-request" *ngIf="allowNewRequest">
       <div class="new-sub" (click)="openRequest('new', 'Substituted Holidays')">S</div>
       <div class="new-sub-banner">Substituted Holidays</div>
       <div class="new-mt" (click)="openRequest('new', 'Badge Fail')">BF</div>

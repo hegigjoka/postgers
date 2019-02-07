@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core'
 import {MatSidenav} from '@angular/material';
 import {EmployeeService} from '../shared-components/providers/employee.service';
 import {Router} from '@angular/router';
+import {HrPermission} from '../shared-components/permissions/hr-permission';
 
 @Component({
   selector: 'app-main-page',
@@ -17,22 +18,36 @@ export class MainPageComponent implements OnInit {
   iconToggler: boolean;
   avatar: string;
 
-  constructor(private status: EmployeeService, private router: Router) {}
+  constructor(public permissions: HrPermission, private status: EmployeeService, private router: Router) {}
 
   ngOnInit() {
     this.getStatus();
+    console.log('I\'m initialized');
   }
 
   getStatus() {
     this.status.getAppStatus(localStorage.getItem('EmpAuthToken')).subscribe(
-      () => {},
+      (response) => {
+        if (response.json().status.code === 'STATUS_OK') {
+          this.permissions.hrAllRequest = response.json().body.data.appPermissions['hr/allRequests'];
+          this.permissions.hrEmployee = response.json().body.data.appPermissions['hr/employee'];
+          this.permissions.hrRequests = response.json().body.data.appPermissions['hr/employee/:empId/requests'];
+          this.permissions.hrRequestsType = response.json().body.data.appPermissions['hr/employee/:empId/requests/type/:type'];
+        } else {
+          localStorage.removeItem('EmpAuthToken');
+          localStorage.removeItem('EmpId');
+          localStorage.removeItem('EmpFullName');
+          localStorage.removeItem('EmpLang');
+          localStorage.removeItem('EmpAvatarImg');
+          this.router.navigate(['sign-in']);
+        }
+      },
       (error) => {
         localStorage.removeItem('EmpAuthToken');
         localStorage.removeItem('EmpId');
         localStorage.removeItem('EmpFullName');
         localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
-        localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
       }
     );

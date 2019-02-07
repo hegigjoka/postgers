@@ -66,6 +66,7 @@ import {
 import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
 import { PersonelRequestsComponent } from './main-page/body-container/personel-requests/personel-requests.component';
 import {PersonelRequestService} from './shared-components/providers/personel-request.service';
+import {HrPermission} from './shared-components/permissions/hr-permission';
 
 // App Routers
 const EmployeeRoutes: Routes = [
@@ -237,6 +238,7 @@ export function getAuthServiceConfigs() {
     RequestsService,
     PersonelRequestService,
     AuthGuard,
+    HrPermission,
     {
       provide: AuthServiceConfig,
       useFactory: getAuthServiceConfigs

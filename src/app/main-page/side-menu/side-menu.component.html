@@ -15,11 +15,11 @@
       <div>{{setCreds('employee')}}</div>
     </div>
   </div>
-  <div class="row emp" (click)="openEmp()">
+  <div class="row emp" (click)="openEmp()" *ngIf="allowEmployee">
     <mat-icon class="emp-icon">work</mat-icon>
     <div class="emp-desc">Employees</div>
   </div>
-  <div class="row req" (click)="openReq()">
+  <div class="row req" (click)="openReq()" *ngIf="allowRequests">
     <mat-icon class="req-icon"
               [matBadge]="requestsType ? '' : badge ? badge : ''"
               matBadgePosition="before">
@@ -31,7 +31,7 @@
       <div (click)="openReqType('pendingMe')" [matBadge]="badge ? badge : ''">Pending Action</div>
     </div>
   </div>
-  <div class="row pers" (click)="openHr()">
+  <div class="row pers" (click)="openHr()" *ngIf="allowHrOffice">
     <mat-icon class="pers-icon">group</mat-icon>
     <div class="pers-desc">HR Office</div>
   </div>

@@ -132,7 +132,7 @@
     </div>
 
     <!--Create employee button-->
-    <div class="new-emp" (click)="openEmployee('new-employee')">
+    <div class="new-emp" (click)="openEmployee('new-employee')" *ngIf="allowNewEmployee">
       <mat-icon>person_add</mat-icon>
     </div>
   </mat-drawer-content>

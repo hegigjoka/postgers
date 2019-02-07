@@ -61,11 +61,11 @@
                    [(ngModel)]="officeInput"
                    formControlName="officeNameId">
             <div class="buttons" *ngIf="!newOrOld">
-              <button class="btn" (click)="updateEmployee()" *ngIf="employeeForm.valid">
+              <button class="btn" (click)="updateEmployee()" *ngIf="employeeForm.valid && allowUpdateEmployee">
                 <mat-icon class="btn-icon">update</mat-icon>
                 Update
               </button>
-              <button class="btn btn-danger" (click)="deleteEmployee()">
+              <button class="btn btn-danger" (click)="deleteEmployee()" *ngIf="allowDeleteEmployee">
                 <mat-icon class="btn-icon">delete</mat-icon>
                 Delete
               </button>

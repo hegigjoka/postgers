@@ -10,6 +10,7 @@ import {PersonelRequestService} from '../../../shared-components/providers/perso
 import {EmployeeService} from '../../../shared-components/providers/employee.service';
 import {EmployeeModel} from '../../../shared-components/models/employee-models/employee.model';
 import {AbstractModel} from '../../../shared-components/models/shared-models/abstract.model';
+import {HrPermission} from '../../../shared-components/permissions/hr-permission';
 
 @Component({
   selector: 'app-personel-requests',
@@ -41,7 +42,10 @@ export class PersonelRequestsComponent implements OnInit {
   @ViewChild('request') reqMenu: MatSidenav;
   sideNav = 'close';
 
+  allowOpenRequest: boolean;
+
   constructor(
+    public permissions: HrPermission,
     private empServe: EmployeeService,
     private reqServe: RequestsService,
     private persReqServe: PersonelRequestService,
@@ -55,6 +59,9 @@ export class PersonelRequestsComponent implements OnInit {
     this.endAuthDate = null;
     this.getOptions();
     this.getRequests();
+    if (this.permissions.hrRequestsType.allowGet === true) {
+      this.allowOpenRequest = true;
+    }
   }
 
   getOptions() {
@@ -162,13 +169,15 @@ export class PersonelRequestsComponent implements OnInit {
 
   // open single request
   openRequest(reqId: string, reqType: string) {
-    this.sideNav = 'open';
-    this.reqMenu.toggle();
-    reqType = reqType.toLowerCase().replace(' ', '-');
-    if (reqType.match(' ')) {
-      reqType = reqType.replace(' ', '-');
+    if (this.allowOpenRequest === true) {
+      this.sideNav = 'open';
+      this.reqMenu.toggle();
+      reqType = reqType.toLowerCase().replace(' ', '-');
+      if (reqType.match(' ')) {
+        reqType = reqType.replace(' ', '-');
+      }
+      this.router.navigate([reqType, reqId], {relativeTo: this.route});
     }
-    this.router.navigate([reqType, reqId], {relativeTo: this.route});
   }
 
   // Previews and Next

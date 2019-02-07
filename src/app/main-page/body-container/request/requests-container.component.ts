@@ -7,6 +7,7 @@ import {RequestTableMetadata} from '../../../shared-components/models/requests-m
 import {MatSidenav} from '@angular/material';
 import {Location} from '@angular/common';
 import {AbstractModel} from '../../../shared-components/models/shared-models/abstract.model';
+import {HrPermission} from '../../../shared-components/permissions/hr-permission';
 
 @Component({
   selector: 'app-reuests-container',
@@ -36,7 +37,16 @@ export class RequestsContainerComponent implements OnInit {
   @ViewChild('dorpdown') dd: ElementRef;
   sideNav = 'close';
 
-  constructor(private reqServe: RequestsService, private router: Router, private route: ActivatedRoute, private loc: Location) { }
+  allowNewRequest: boolean;
+  allowOpenRequest: boolean;
+
+  constructor(
+    public permissions: HrPermission,
+    private reqServe: RequestsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private loc: Location
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((reqType: Params) => {
@@ -50,6 +60,12 @@ export class RequestsContainerComponent implements OnInit {
     this.getOptions();
     this.showBadgeDD = true;
     this.getRequests();
+    if (this.permissions.hrRequestsType.allowGet) {
+      this.allowOpenRequest = true;
+    }
+    if (this.permissions.hrRequestsType.allowPost) {
+      this.allowNewRequest = true;
+    }
   }
 
   getOptions() {
@@ -152,13 +168,15 @@ export class RequestsContainerComponent implements OnInit {
 
   // open single request
   openRequest(reqId: string, reqType: string) {
-    this.sideNav = 'open';
-    this.reqMenu.toggle();
-    reqType = reqType.toLowerCase().replace(' ', '-');
-    if (reqType.match(' ')) {
-      reqType = reqType.replace(' ', '-');
+    if (this.allowOpenRequest === true || (this.allowNewRequest === true && reqId.match(/new/))) {
+      this.sideNav = 'open';
+      this.reqMenu.toggle();
+      reqType = reqType.toLowerCase().replace(' ', '-');
+      if (reqType.match(' ')) {
+        reqType = reqType.replace(' ', '-');
+      }
+      this.router.navigate([reqType, reqId], {relativeTo: this.route});
     }
-    this.router.navigate([reqType, reqId], {relativeTo: this.route});
   }
 
   // Previews and Next

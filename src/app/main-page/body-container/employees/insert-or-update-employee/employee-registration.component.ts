@@ -12,6 +12,7 @@ import {ListResponseModel} from '../../../../shared-components/models/shared-mod
 import {AbstractModel} from '../../../../shared-components/models/shared-models/abstract.model';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {ConfirmDialogComponent} from '../../../../shared-components/components/confirm-dialog/confirm-dialog.component';
+import {HrPermission} from '../../../../shared-components/permissions/hr-permission';
 
 @Component({
   selector: 'app-employee-registration',
@@ -47,9 +48,13 @@ export class EmployeeRegistrationComponent implements OnInit {
   employee: EmployeeModel;
   employeeForm: FormGroup;
   confirmation: boolean;
+
+  allowUpdateEmployee: boolean;
+  allowDeleteEmployee: boolean;
   // ---------------------------------------------------------------------------------------------------------------------------------------
 
   constructor(
+    public permissions: HrPermission,
     private empServe: EmployeeService,
     private route: ActivatedRoute,
     private router: Router,
@@ -82,6 +87,12 @@ export class EmployeeRegistrationComponent implements OnInit {
     });
     this.getUrlParam();
     this.newOrOldForm();
+    if (this.permissions.hrEmployee.allowPut === true) {
+      this.allowUpdateEmployee = true;
+    }
+    if (this.permissions.hrEmployee.allowDelete === true) {
+      this.allowDeleteEmployee = true;
+    }
   }
   // ON_INIT_FUNCTIONS----------------------------------------------------------------------------------------------------------------------
 

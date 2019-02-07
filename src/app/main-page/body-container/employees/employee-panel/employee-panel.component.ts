@@ -10,6 +10,7 @@ import {Location} from '@angular/common';
 import {Subscription} from 'rxjs';
 import {EmployeeModel} from '../../../../shared-components/models/employee-models/employee.model';
 import {AbstractModel} from '../../../../shared-components/models/shared-models/abstract.model';
+import {HrPermission} from '../../../../shared-components/permissions/hr-permission';
 
 @Component({
   selector: 'app-employee-panel',
@@ -40,8 +41,12 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   directorFilter = '';
   directorId: string;
 
+  allowOpenEmployee: boolean;
+  allowNewEmployee: boolean;
+
   // constructor
   constructor(
+    public permissions: HrPermission,
     private empserve: EmployeeService,
     private router: Router,
     private route: ActivatedRoute,
@@ -52,6 +57,12 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getOfficesDataList();
     this.getEmployees();
+    if (this.permissions.hrEmployee.allowGet === true) {
+      this.allowOpenEmployee = true;
+    }
+    if (this.permissions.hrEmployee.allowPost === true) {
+      this.allowNewEmployee = true;
+    }
   }
 
   // on destroy component
@@ -78,9 +89,11 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
 
   // get single employee id
   openEmployee(empId: string) {
-    this.sideNav = 'open';
-    this.empMenu.toggle();
-    this.router.navigate([empId], {relativeTo: this.route});
+    if (this.allowOpenEmployee === true || (this.allowNewEmployee === true && empId.match(/new-employee/))) {
+      this.sideNav = 'open';
+      this.empMenu.toggle();
+      this.router.navigate([empId], {relativeTo: this.route});
+    }
   }
   // FILTERS--------------------------------------------------------------------------------------------------------------------------------
 

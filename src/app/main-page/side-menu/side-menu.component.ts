@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EmployeeService} from '../../shared-components/providers/employee.service';
 import {RequestsService} from '../../shared-components/providers/requests.service';
+import {HrPermission} from '../../shared-components/permissions/hr-permission';
 
 @Component({
   selector: 'app-side-menu',
@@ -12,16 +13,32 @@ export class SideMenuComponent implements OnInit {
   avatar: string;
   requestsType: boolean;
   badge: number;
+  allowEmployee: boolean;
+  allowRequests: boolean;
+  allowHrOffice: boolean;
 
   constructor(
     private empserve: EmployeeService,
     private reqServe: RequestsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public permissions: HrPermission
   ) { }
 
   ngOnInit() {
-    this.getRequestsBadge();
+    setTimeout(() => {
+      console.log('I\'m initialized too :)');
+      if (this.permissions.hrEmployee.allowList === true) {
+        this.allowEmployee = true;
+      }
+      if (this.permissions.hrRequests.allowList === true) {
+        this.allowRequests = true;
+      }
+      if (this.permissions.hrAllRequest.allowList === true) {
+        this.allowHrOffice = true;
+      }
+      this.getRequestsBadge();
+    }, 600);
   }
 
   setCreds(type: string) {
@@ -68,7 +85,6 @@ export class SideMenuComponent implements OnInit {
         localStorage.removeItem('EmpFullName');
         localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
-        localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
       },
       () => {
@@ -77,7 +93,6 @@ export class SideMenuComponent implements OnInit {
         localStorage.removeItem('EmpFullName');
         localStorage.removeItem('EmpLang');
         localStorage.removeItem('EmpAvatarImg');
-        localStorage.removeItem('EmpAccess');
         this.router.navigate(['sign-in']);
       }
     );
