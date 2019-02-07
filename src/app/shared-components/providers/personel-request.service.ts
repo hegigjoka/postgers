@@ -45,13 +45,14 @@ export class PersonelRequestService {
     return this.http.get(`${this.url}${filter}`, {headers: header});
   }
 
-  patchPersonelRequests(reqId: string, procId: string) {
+  patchPersonelRequests(reqId: string, reqType: string, procId: string) {
     const header = new Headers({
       'Authorization': localStorage.getItem('EmpAuthToken'),
       'Accept': 'application/json',
       'Accept-Language': localStorage.getItem('EmpLang'),
       'Content-Type': 'application/json'
     });
-    return this.http.patch(`${this.url}/${reqId}/partial/processedId`, {processedId: procId}, {headers: header});
+    const empId = localStorage.getItem('EmpId');
+    return this.http.patch(`svc/hr/employee/${empId}/requests/type/${reqType}/${reqId}/partial/processedId`, {processedId: procId}, {headers: header});
   }
 }

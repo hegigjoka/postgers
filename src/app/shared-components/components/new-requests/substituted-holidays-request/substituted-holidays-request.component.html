@@ -11,24 +11,24 @@
         <div class="col-12 forms">
           <!--Editing Employee Or Inserting Employee Form-->
           <form [formGroup]="requestForm">
-            <div class="form-section">Employee Info</div>
-            <hr>
+            <div class="form-section" *ngIf="hasSomeField">Employee Info</div>
+            <hr *ngIf="hasSomeField">
             <label for="employeeId" *ngIf="hasEmployeeField">{{fields?.employeeId?.fieldLabel}}: </label>
             <input id="employeeId" type="text" formControlName="employeeId" *ngIf="hasEmployeeField">
             <br *ngIf="hasEmployeeField">
-            <label for="officeNameId">{{fields?.officeNameId?.fieldLabel}}: </label>
-            <input id="officeNameId" type="text" formControlName="officeNameId">
-            <br>
-            <label for="managerId">{{fields?.managerId?.fieldLabel}}: </label>
-            <input id="managerId" type="text" formControlName="managerId">
-            <br>
-            <label for="directorId">{{fields?.directorId?.fieldLabel}}: </label>
-            <input id="directorId" type="text" formControlName="directorId">
-            <br>
-            <div class="form-section">Request Info</div>
-            <hr>
+            <label for="officeNameId" *ngIf="hasSomeField">{{fields?.officeNameId?.fieldLabel}}: </label>
+            <input id="officeNameId" type="text" formControlName="officeNameId" *ngIf="hasSomeField">
+            <br *ngIf="hasSomeField">
+            <label for="managerId" *ngIf="hasSomeField">{{fields?.managerId?.fieldLabel}}: </label>
+            <input id="managerId" type="text" formControlName="managerId" *ngIf="hasSomeField">
+            <br *ngIf="hasSomeField">
+            <label for="directorId" *ngIf="hasSomeField">{{fields?.directorId?.fieldLabel}}: </label>
+            <input id="directorId" type="text" formControlName="directorId" *ngIf="hasSomeField">
+            <br *ngIf="hasSomeField">
+            <div class="form-section" *ngIf="hasSomeField">Request Info</div>
+            <hr *ngIf="hasSomeField">
             <label for="date">Date: </label>
-            <input id="date" type="date" formControlName="date">
+            <input id="date" type="date" min="{{date.toISOString().split('T')[0]}}" formControlName="date">
             <br>
             <label for="startTimestamp">{{fields?.startTimestamp?.fieldLabel}}: </label>
             <input id="startTimestamp" type="time" step="1800" formControlName="startTimestamp">
@@ -41,8 +41,8 @@
             <br>
             <div class="sub-dates" *ngFor="let subdate of subDates;let i = index">
               <label [for]="'subDate' + i">Substitute Date {{i+1}}: </label>
-              <input [id]="'subDate' + i" type="date" step="1800" [formControlName]="'subDate' + i">
-              <mat-icon *ngIf="i === 0 && !hasSomeField" (click)="newDate()">control_point</mat-icon>
+              <input [id]="'subDate' + i" type="date" min="{{date.toISOString().split('T')[0]}}" [formControlName]="'subDate' + i">
+              <mat-icon *ngIf="i === 0 && !hideButton" (click)="newDate()">control_point</mat-icon>
               <br>
             </div>
             <label for="employeeNotes">{{fields?.employeeNotes?.fieldLabel}}: </label>
@@ -64,11 +64,11 @@
                 Reset
               </button>
             </div>
-            <button class="btn btn-danger" (click)="deleteRequest()" *ngIf="isDeletable">
+            <button class="btn btn-danger" (click)="deleteRequest()" *ngIf="isDeletable && allowDeleteRequest">
               <mat-icon class="btn-icon">delete</mat-icon>
               Delete
             </button>
-            <div class="buttons" *ngIf="isManager">
+            <div class="buttons" *ngIf="isManager && allowUpdateRequest">
               <button class="btn" (click)="approveOrDeny(1)">
                 <mat-icon class="btn-icon">check_box</mat-icon>
                 Approve
@@ -78,7 +78,7 @@
                 Deny
               </button>
             </div>
-            <div class="buttons" *ngIf="isDirector">
+            <div class="buttons" *ngIf="isDirector && allowUpdateRequest">
               <button class="btn" (click)="authorizeOrNotAuthorize(1)">
                 <mat-icon class="btn-icon">check_box</mat-icon>
                 Authorize
@@ -88,7 +88,7 @@
                 Not Authorize
               </button>
             </div>
-            <div class="buttons" *ngIf="proc">
+            <div class="buttons" *ngIf="proc && allowUpdateRequest">
               <button class="btn" (click)="procReq(1)">
                 <mat-icon class="btn-icon">check</mat-icon>
                 Process

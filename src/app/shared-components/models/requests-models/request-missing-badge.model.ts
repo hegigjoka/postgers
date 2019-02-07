@@ -10,9 +10,11 @@ export class RequestMissingBadgeModel extends RequestAbstractModel<string> {
   labelMap: {
     requestTypeId: string;
     employeeId: string;
+    managerId: string;
+    directorId: string;
+    officeNameId: string;
     approvementId: string;
     authorizationId: string;
-    officeNameId: string
     badgeFailTypeId: string;
   };
 }

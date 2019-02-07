@@ -11,18 +11,15 @@ import {HrPermission} from '../shared-components/permissions/hr-permission';
 })
 export class MainPageComponent implements OnInit {
   @ViewChild('menu') menu: MatSidenav;
+  sideNav = 'close';
   @Output() searching: EventEmitter<string> = new EventEmitter();
   search: string;
-  x: boolean;
-  icon = 'menu';
-  iconToggler: boolean;
   avatar: string;
 
   constructor(public permissions: HrPermission, private status: EmployeeService, private router: Router) {}
 
   ngOnInit() {
     this.getStatus();
-    console.log('I\'m initialized');
   }
 
   getStatus() {
@@ -54,16 +51,14 @@ export class MainPageComponent implements OnInit {
   }
 
   iconToggle() {
-    this.x = !(this.x);
-    this.iconToggler = !(this.iconToggler);
+    this.sideNav = 'open';
     this.menu.toggle();
-    setTimeout(() => {
-      if (this.iconToggler === false) {
-        this.icon = 'menu';
-      } else {
-        this.icon = 'close';
-      }
-    }, 300);
+  }
+  backing(firedEvent?: boolean) {
+    if (this.sideNav === 'open' || firedEvent === true) {
+      this.sideNav = 'close';
+      this.menu.toggle();
+    }
   }
 
   setCreds(type: string) {

@@ -99,12 +99,21 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
 
   // get offices datalist
   getOfficesDataList() {
-    this.empserve.getFieldMapEmployee().subscribe((response) => {
-      this.offices = response.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
-
-      // get employee panel labels(no relation with dataList)
-      this.tableFields = response.json().body.data.fieldMap;
-    });
+    this.empserve.getFieldMapEmployee().subscribe(
+      (response) => {
+        this.offices = response.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
+        // get employee panel labels(no relation with dataList)
+        this.tableFields = response.json().body.data.fieldMap;
+      },
+      () => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpId');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
+        localStorage.removeItem('EmpAvatarImg');
+        this.router.navigate(['sign-in']);
+      }
+    );
   }
 
   // get manager dataList

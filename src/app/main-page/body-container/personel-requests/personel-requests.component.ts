@@ -19,6 +19,7 @@ import {HrPermission} from '../../../shared-components/permissions/hr-permission
 })
 export class PersonelRequestsComponent implements OnInit {
   paginate = 1;
+  reqType: string;
 
   // filters
   startAuthDate: Date;
@@ -65,11 +66,21 @@ export class PersonelRequestsComponent implements OnInit {
   }
 
   getOptions() {
-    this.persReqServe.getOptions().subscribe((fields) => {
-      this.fields = fields.json().body.data.fieldMap;
-      this.requestType = fields.json().body.data.fieldMap.requestTypeId.fieldDataPool.list;
-      this.processedTypes = fields.json().body.data.fieldMap.processedId.fieldDataPool.list;
-    });
+    this.persReqServe.getOptions().subscribe(
+      (fields) => {
+        this.fields = fields.json().body.data.fieldMap;
+        this.requestType = fields.json().body.data.fieldMap.requestTypeId.fieldDataPool.list;
+        this.processedTypes = fields.json().body.data.fieldMap.processedId.fieldDataPool.list;
+      },
+      () => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpId');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
+        localStorage.removeItem('EmpAvatarImg');
+        this.router.navigate(['sign-in']);
+      }
+    );
   }
 
   getRequests() {
@@ -82,6 +93,9 @@ export class PersonelRequestsComponent implements OnInit {
       this.requestTypeId
     ).subscribe((response) => {
       this.requests = response.json().body.data;
+    });
+    this.route.queryParams.subscribe((reqType) => {
+      this.reqType = reqType['type'];
     });
   }
 

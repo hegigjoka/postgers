@@ -81,25 +81,25 @@
         <thead>
         <tr>
           <th>Employee</th>
-          <th>{{tableFields?.birthdate?.fieldLabel}}</th>
-          <th>{{tableFields?.email?.fieldLabel}}</th>
+          <th class="small-display">{{tableFields?.birthdate?.fieldLabel}}</th>
+          <th class="small-display">{{tableFields?.email?.fieldLabel}}</th>
           <th>{{tableFields?.officeName?.fieldLabel}}</th>
           <th>Manager</th>
-          <th>{{tableFields?.managerEmail?.fieldLabel}}</th>
+          <th class="small-display">{{tableFields?.managerEmail?.fieldLabel}}</th>
           <th>Director</th>
-          <th>{{tableFields?.directorEmail?.fieldLabel}}</th>
+          <th class="small-display">{{tableFields?.directorEmail?.fieldLabel}}</th>
         </tr>
         </thead>
         <tbody>
         <tr class="tuple" *ngFor="let employee of employees?.list" (click)="openEmployee(employee?.id)">
           <td>{{employee?.someLabel}}</td>
-          <td>{{employee?.birthdate | multiPurposePipe: 'birthday'}}</td>
-          <td>{{employee?.email}}</td>
+          <td class="small-display">{{employee?.birthdate | multiPurposePipe: 'birthday'}}</td>
+          <td class="small-display">{{employee?.email}}</td>
           <td>{{employee?.officeName}}</td>
           <td>{{employee?.managerFirstName}} {{employee?.managerLastName}}</td>
-          <td>{{employee?.managerEmail}}</td>
+          <td class="small-display">{{employee?.managerEmail}}</td>
           <td>{{employee?.directorFirstName}} {{employee?.directorLastName}}</td>
-          <td>{{employee?.directorEmail}}</td>
+          <td class="small-display">{{employee?.directorEmail}}</td>
         </tr>
         </tbody>
       </table>

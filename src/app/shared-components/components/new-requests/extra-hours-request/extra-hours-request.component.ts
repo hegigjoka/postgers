@@ -4,13 +4,11 @@ import {RequestsService} from '../../../providers/requests.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {RequestExtraHoursModel} from '../../../models/requests-models/request-extra-hours.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {EmployeeModel} from '../../../models/employee-models/employee.model';
-import {EmployeeService} from '../../../providers/employee.service';
-import {AbstractModel} from '../../../models/shared-models/abstract.model';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {Location} from '@angular/common';
 import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.component';
 import {PersonelRequestService} from '../../../providers/personel-request.service';
+import {HrPermission} from '../../../permissions/hr-permission';
 
 @Component({
   selector: 'app-extra-hours-request',
@@ -21,13 +19,8 @@ export class ExtraHoursRequestComponent implements OnInit {
   fields: RequestExtraHoursMetadata;
   reqId: string;
   request: RequestExtraHoursModel;
-  employee: EmployeeModel;
-  offices: AbstractModel[];
   requestForm: FormGroup;
   date: Date = new Date();
-  OfficeId: string;
-  ManagerId: string;
-  DirectorId: string;
 
   hasSomeField: boolean;
   hasEmployeeField: boolean;
@@ -37,12 +30,16 @@ export class ExtraHoursRequestComponent implements OnInit {
   displayApprove: boolean;
   isDirector: boolean;
   displayAuth: boolean;
+  displayAuthType: boolean;
   confirmation: boolean;
 
+  allowUpdateRequest: boolean;
+  allowDeleteRequest: boolean;
+
   constructor(
+    public permissions: HrPermission,
     private persReqServe: PersonelRequestService,
     private reqServe: RequestsService,
-    private empServe: EmployeeService,
     private router: Router,
     private route: ActivatedRoute,
     private confirmDialog: MatDialog,
@@ -59,9 +56,9 @@ export class ExtraHoursRequestComponent implements OnInit {
       insertDate: new FormControl(insertDate.toISOString().split('.')[0], Validators.required),
       requestTypeId: new FormControl('POOL00000000081', Validators.required),
       employeeId: new FormControl(localStorage.getItem('EmpId'), Validators.required),
-      officeNameId: new FormControl('', Validators.required),
-      managerId: new FormControl('', Validators.required),
-      directorId: new FormControl('', Validators.required),
+      officeNameId: new FormControl(''),
+      managerId: new FormControl(''),
+      directorId: new FormControl(''),
       date: new FormControl(this.date.toISOString().split('T')[0], [Validators.required]),
       startTimestamp: new FormControl('', Validators.required),
       stopTimestamp: new FormControl('', Validators.required),
@@ -76,6 +73,12 @@ export class ExtraHoursRequestComponent implements OnInit {
       })
     });
     this.getUrlParams();
+    if (this.permissions.hrRequestsType.allowPut === true) {
+      this.allowUpdateRequest = true;
+    }
+    if (this.permissions.hrRequestsType.allowDelete === true) {
+      this.allowDeleteRequest = true;
+    }
   }
 
   getUrlParams() {
@@ -86,15 +89,9 @@ export class ExtraHoursRequestComponent implements OnInit {
     if (this.reqId === 'new') {
       this.hasSomeField = false;
       this.hasEmployeeField = false;
-
-      this.getEmployeeInfo(localStorage.getItem('EmpId'));
-      this.requestForm.controls['officeNameId'].disable();
-      this.requestForm.controls['managerId'].disable();
-      this.requestForm.controls['directorId'].disable();
     } else {
       this.hasSomeField = true;
       this.hasEmployeeField = true;
-
       this.requestForm.disable();
       this.getXHrequest();
     }
@@ -117,18 +114,25 @@ export class ExtraHoursRequestComponent implements OnInit {
       this.requestForm.controls['insertDate'].setValue(this.request.insertDate);
       this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
       this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
+      this.requestForm.controls['officeNameId'].setValue(this.request.labelMap.officeNameId);
+      this.requestForm.controls['managerId'].setValue(this.request.labelMap.managerId);
+      this.requestForm.controls['directorId'].setValue(this.request.labelMap.directorId);
       this.requestForm.controls['date'].setValue(this.request.startTimestamp.split('T')[0]);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[1]);
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1]);
       this.requestForm.controls['countHD'].setValue(this.request.countHD);
       this.requestForm.controls['employeeNotes'].setValue(this.request.employeeNotes);
+
       if (this.request.approvementId !== undefined) {
         this.displayApprove = true;
         this.requestForm.controls['approvementId'].setValue(this.request.labelMap.approvementId);
-        if (this.request.approvementId === 'POOL00000000044' && this.request.authorizationId === 'POOL00000000041') {
+        if (this.request.approvementId === 'POOL00000000044') {
           this.displayAuth = true;
           this.requestForm.controls['authorizationId'].setValue(this.request.labelMap.authorizationId);
-          this.requestForm.controls['authorizationTypeId'].setValue(this.request.labelMap.authorizationTypeId);
+          if (this.request.authorizationId === 'POOL00000000041') {
+            this.displayAuthType = true;
+            this.requestForm.controls['authorizationTypeId'].setValue(this.request.labelMap.authorizationTypeId);
+          }
           if (this.router.url.match(/\/hr\/request-management/) && this.request.processedId === 'POOL00000000088') {
             this.proc = true;
           }
@@ -136,42 +140,16 @@ export class ExtraHoursRequestComponent implements OnInit {
           this.isDeletable = true;
         }
       }
+
       if (this.request.employeeId === localStorage.getItem('EmpId')) {
         this.hasEmployeeField = false;
       }
-
-      this.getEmployeeInfo(this.request.employeeId);
-    });
-  }
-
-  // Get Employee Info
-  getEmployeeInfo(empId: string) {
-    this.empServe.getEmployee(empId).subscribe((managerNdirectorNoffice) => {
-      this.employee = managerNdirectorNoffice.json().body.data;
-      this.requestForm.controls['managerId'].setValue(this.employee.managerFirstName + ' ' + this.employee.managerLastName);
-      this.requestForm.controls['directorId'].setValue(this.employee.directorFirstName + ' ' + this.employee.directorLastName);
-      this.ManagerId = this.employee.managerId;
-      this.DirectorId = this.employee.directorId;
-      if (this.employee.managerId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000043') {
+      if (localStorage.getItem('EmpId') === this.request.managerId && this.request.approvementId === 'POOL00000000043') {
         this.isManager = true;
       }
-      if (this.employee.directorId === localStorage.getItem('EmpId') && this.request.approvementId === 'POOL00000000044') {
+      if (localStorage.getItem('EmpId') === this.request.directorId && this.request.approvementId === 'POOL00000000044' && this.request.authorizationId !== 'POOL00000000041') {
         this.isDirector = true;
-        if (this.request.authorizationId === 'POOL00000000041') {
-          this.isDeletable = false;
-          this.isManager = false;
-          this.isDirector = false;
-        }
       }
-    });
-    this.empServe.getFieldMapEmployee().subscribe((office) => {
-      this.offices = office.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
-      this.offices.forEach((value) => {
-        if (value.id === this.employee.officeNameId) {
-          this.requestForm.controls['officeNameId'].setValue(value.someLabel);
-          this.OfficeId = value.id;
-        }
-      });
     });
   }
 
@@ -190,9 +168,6 @@ export class ExtraHoursRequestComponent implements OnInit {
     this.requestForm.controls['stopTimestamp'].setValue(date + stopT + ':00');
 
     this.request = this.requestForm.value;
-    this.request.officeNameId = this.OfficeId;
-    this.request.managerId = this.ManagerId;
-    this.request.directorId = this.DirectorId;
 
     this.reqServe.insertExtraHoursRequest(this.request).subscribe(
       (status) => {
@@ -403,6 +378,7 @@ export class ExtraHoursRequestComponent implements OnInit {
     }
   }
 
+  // process auth requests
   procReq (type: number) {
     const confType = 'hrOffice';
     if (type === 1) {
@@ -412,7 +388,7 @@ export class ExtraHoursRequestComponent implements OnInit {
       });
       confDlg.afterClosed().subscribe((result) => {
         if (result === true) {
-          this.persReqServe.patchPersonelRequests(this.reqId, 'POOL00000000090').subscribe(
+          this.persReqServe.patchPersonelRequests(this.reqId, 'extraHours', 'POOL00000000090').subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {
                 this.chip.open('Request processed successfully!', null, {
@@ -442,7 +418,7 @@ export class ExtraHoursRequestComponent implements OnInit {
       });
       confDlg.afterClosed().subscribe((result) => {
         if (result === true) {
-          this.persReqServe.patchPersonelRequests(this.reqId, 'POOL00000000089').subscribe(
+          this.persReqServe.patchPersonelRequests(this.reqId, 'extraHours', 'POOL00000000089').subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {
                 this.chip.open('Request declined successfully!', null, {

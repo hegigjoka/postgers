@@ -66,11 +66,11 @@
         <thead>
         <tr>
           <th>{{fields?.requestTypeId?.fieldLabel}}</th>
-          <th>{{fields?.insertDate?.fieldLabel}}</th>
-          <th>{{fields?.expireDate?.fieldLabel}}</th>
-          <th>{{fields?.validationDate?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.insertDate?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.expireDate?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.validationDate?.fieldLabel}}</th>
           <th [ngClass]="{'no-employee': reqType === 'me'}">Employee</th>
-          <th>{{fields?.employeeNotes?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.employeeNotes?.fieldLabel}}</th>
           <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
           <th>{{fields?.status?.fieldLabel}}</th>
         </tr>
@@ -78,11 +78,11 @@
         <tbody>
         <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.labelMap?.requestTypeId)">
           <td>{{request?.labelMap?.requestTypeId | multiPurposePipe: 'hasValue'}}</td>
-          <td>{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
-          <td>{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
-          <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td class="small-display">{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td class="small-display">{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td class="small-display">{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
-          <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
+          <td class="small-display">{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
           <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
           <td
             [matTooltip]="request?.directorNotes ? request?.directorNotes : request?.managerNotes ? request?.managerNotes : 'No notes available...'">
@@ -92,7 +92,7 @@
         </tbody>
       </table>
     </div>
-    <div class="col-lg-3 col-md-6 col-sm-9 paginate">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 paginate">
       <table border="0">
         <tr>
           <td>

@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {RequestsService} from '../../../providers/requests.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {EmployeeModel} from '../../../models/employee-models/employee.model';
-import {EmployeeService} from '../../../providers/employee.service';
 import {AbstractModel} from '../../../models/shared-models/abstract.model';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {Location} from '@angular/common';
@@ -11,6 +9,7 @@ import {ConfirmDialogComponent} from '../../confirm-dialog/confirm-dialog.compon
 import {RequestMissingBadgeMetadata} from '../../../models/requests-models/request-missing-badge-metadata';
 import {RequestMissingBadgeModel} from '../../../models/requests-models/request-missing-badge.model';
 import {PersonelRequestService} from '../../../providers/personel-request.service';
+import {HrPermission} from '../../../permissions/hr-permission';
 
 @Component({
   selector: 'app-badge-fail-request',
@@ -27,11 +26,8 @@ export class BadgeFailRequestComponent implements OnInit {
   reqId: string;
   request: RequestMissingBadgeModel;
 
-  employee: EmployeeModel;
-  offices: AbstractModel[];
   requestForm: FormGroup;
   date: Date = new Date();
-  OfficeId: string;
 
   hasSomeField: boolean;
   hasEmployeeField: boolean;
@@ -39,10 +35,13 @@ export class BadgeFailRequestComponent implements OnInit {
   isDeletable: boolean;
   confirmation: boolean;
 
+  allowUpdateRequest: boolean;
+  allowDeleteRequest: boolean;
+
   constructor(
+    public permissions: HrPermission,
     private persReqServe: PersonelRequestService,
     private reqServe: RequestsService,
-    private empServe: EmployeeService,
     private router: Router,
     private route: ActivatedRoute,
     private confirmDialog: MatDialog,
@@ -60,13 +59,19 @@ export class BadgeFailRequestComponent implements OnInit {
       requestTypeId: new FormControl('POOL00000000080', Validators.required),
       badgeFailTypeId: new FormControl('', Validators.required),
       employeeId: new FormControl(localStorage.getItem('EmpId'), Validators.required),
-      officeNameId: new FormControl('', Validators.required),
+      officeNameId: new FormControl(''),
       date: new FormControl(this.date.toISOString().split('T')[0], Validators.required),
       startTimestamp: new FormControl('', Validators.required),
       stopTimestamp: new FormControl('', Validators.required),
       labelMap: new FormGroup({})
     });
     this.getUrlParams();
+    if (this.permissions.hrRequestsType.allowPut === true) {
+      this.allowUpdateRequest = true;
+    }
+    if (this.permissions.hrRequestsType.allowDelete === true) {
+      this.allowDeleteRequest = true;
+    }
   }
 
   getUrlParams() {
@@ -77,8 +82,6 @@ export class BadgeFailRequestComponent implements OnInit {
     if (this.reqId === 'new') {
       this.hasSomeField = false;
       this.hasEmployeeField = false;
-      this.getEmployeeInfo(localStorage.getItem('EmpId'));
-      this.requestForm.controls['officeNameId'].disable();
     } else {
       this.isDeletable = true;
       this.hasSomeField = true;
@@ -117,9 +120,11 @@ export class BadgeFailRequestComponent implements OnInit {
       this.requestForm.controls['requestTypeId'].setValue(this.request.requestTypeId);
       this.requestForm.controls['badgeFailTypeId'].setValue(this.request.labelMap.badgeFailTypeId);
       this.requestForm.controls['employeeId'].setValue(this.request.labelMap.employeeId);
+      this.requestForm.controls['officeNameId'].setValue(this.request.labelMap.officeNameId);
       this.requestForm.controls['date'].setValue(this.request.startTimestamp.split('T')[0]);
       this.requestForm.controls['startTimestamp'].setValue(this.request.startTimestamp.split('T')[1]);
       this.requestForm.controls['stopTimestamp'].setValue(this.request.stopTimestamp.split('T')[1]);
+
       if (this.request.authorizationId === 'POOL00000000041') {
         this.isDeletable = false;
         if (this.router.url.match(/\/hr\/request-management/) && this.request.processedId === 'POOL00000000088') {
@@ -129,24 +134,6 @@ export class BadgeFailRequestComponent implements OnInit {
       if (this.request.employeeId === localStorage.getItem('EmpId')) {
         this.hasEmployeeField = false;
       }
-
-      this.getEmployeeInfo(this.request.employeeId);
-    });
-  }
-
-  // Get Employee Info
-  getEmployeeInfo(empId: string) {
-    this.empServe.getEmployee(empId).subscribe((managerNdirectorNoffice) => {
-      this.employee = managerNdirectorNoffice.json().body.data;
-    });
-    this.empServe.getFieldMapEmployee().subscribe((office) => {
-      this.offices = office.json().body.data.fieldMap.officeNameId.fieldDataPool.list;
-      this.offices.forEach((value) => {
-        if (value.id === this.employee.officeNameId) {
-          this.requestForm.controls['officeNameId'].setValue(value.someLabel);
-          this.OfficeId = value.id;
-        }
-      });
     });
   }
 
@@ -163,7 +150,6 @@ export class BadgeFailRequestComponent implements OnInit {
     );
 
     this.request = this.requestForm.value;
-    this.request.officeNameId = this.OfficeId;
 
     this.reqServe.insertMissingBadgeRequest(this.request).subscribe(
       (status) => {
@@ -244,7 +230,7 @@ export class BadgeFailRequestComponent implements OnInit {
       });
       confDlg.afterClosed().subscribe((result) => {
         if (result === true) {
-          this.persReqServe.patchPersonelRequests(this.reqId, 'POOL00000000090').subscribe(
+          this.persReqServe.patchPersonelRequests(this.reqId, 'missingBadge', 'POOL00000000090').subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {
                 this.chip.open('Request processed successfully!', null, {
@@ -274,7 +260,7 @@ export class BadgeFailRequestComponent implements OnInit {
       });
       confDlg.afterClosed().subscribe((result) => {
         if (result === true) {
-          this.persReqServe.patchPersonelRequests(this.reqId, 'POOL00000000089').subscribe(
+          this.persReqServe.patchPersonelRequests(this.reqId, 'missingBadge', 'POOL00000000089').subscribe(
             (response) => {
               if (response.json().status.code === 'STATUS_OK') {
                 this.chip.open('Request declined successfully!', null, {

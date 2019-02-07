@@ -89,7 +89,6 @@
           <th>{{fields?.validationDate?.fieldLabel}}</th>
           <th [ngClass]="{'no-employee': reqType === 'me'}">Employee</th>
           <th>{{fields?.employeeNotes?.fieldLabel}}</th>
-          <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
           <th>{{fields?.processedId?.fieldLabel}}</th>
         </tr>
         </thead>
@@ -101,7 +100,6 @@
           <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
           <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
-          <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
           <td
             [matTooltip]="request?.directorNotes ? request?.directorNotes : 'No notes available...'">
             {{request?.labelMap?.processedId | multiPurposePipe: 'hasValue'}}

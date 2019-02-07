@@ -69,11 +69,21 @@ export class RequestsContainerComponent implements OnInit {
   }
 
   getOptions() {
-    this.reqServe.getTableOptions().subscribe((fields) => {
-      this.fields = fields.json().body.data.fieldMap;
-      this.requestTypes = fields.json().body.data.fieldMap.requestTypeId.fieldDataPool.list;
-      this.statusTypes = fields.json().body.data.fieldMap.status.fieldDataPool.list;
-    });
+    this.reqServe.getTableOptions().subscribe(
+      (fields) => {
+        this.fields = fields.json().body.data.fieldMap;
+        this.requestTypes = fields.json().body.data.fieldMap.requestTypeId.fieldDataPool.list;
+        this.statusTypes = fields.json().body.data.fieldMap.status.fieldDataPool.list;
+      },
+      () => {
+        localStorage.removeItem('EmpAuthToken');
+        localStorage.removeItem('EmpId');
+        localStorage.removeItem('EmpFullName');
+        localStorage.removeItem('EmpLang');
+        localStorage.removeItem('EmpAvatarImg');
+        this.router.navigate(['sign-in']);
+      }
+    );
   }
 
   showBadge() {

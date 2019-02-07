@@ -100,10 +100,7 @@ export class RequestsService {
       {
         countHD: xHRequest.countHD,
         employeeNotes: xHRequest.employeeNotes,
-        managerId: xHRequest.managerId,
-        directorId: xHRequest.directorId,
         employeeId: xHRequest.employeeId,
-        officeNameId: xHRequest.officeNameId,
         startTimestamp: xHRequest.startTimestamp,
         stopTimestamp: xHRequest.stopTimestamp,
         requestTypeId: 'POOL00000000081'
@@ -204,10 +201,7 @@ export class RequestsService {
       {
         countHD: hRequest.countHD,
         employeeNotes: hRequest.employeeNotes,
-        managerId: hRequest.managerId,
-        directorId: hRequest.directorId,
         employeeId: hRequest.employeeId,
-        officeNameId: hRequest.officeNameId,
         startTimestamp: hRequest.startTimestamp,
         stopTimestamp: hRequest.stopTimestamp,
         requestTypeId: 'POOL00000000079',
@@ -305,9 +299,7 @@ export class RequestsService {
       `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missions/new`,
       {
         employeeNotes: hRequest.employeeNotes,
-        managerId: hRequest.managerId,
         employeeId: hRequest.employeeId,
-        officeNameId: hRequest.officeNameId,
         startTimestamp: hRequest.startTimestamp,
         stopTimestamp: hRequest.stopTimestamp,
         requestTypeId: 'POOL00000000078',
@@ -387,8 +379,6 @@ export class RequestsService {
       {
         employeeNotes: mBRequest.employeeNotes,
         employeeId: mBRequest.employeeId,
-        officeNameId: mBRequest.officeNameId,
-        managerId: mBRequest.managerId,
         startTimestamp: mBRequest.startTimestamp,
         stopTimestamp: mBRequest.stopTimestamp,
         requestTypeId: 'POOL00000000080',
@@ -434,10 +424,7 @@ export class RequestsService {
     return this.http.post(
       `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/new`,
       {
-        managerId: sHRequest.managerId,
-        directorId: sHRequest.directorId,
         employeeId: sHRequest.employeeId,
-        officeNameId: sHRequest.officeNameId,
         startTimestamp: sHRequest.startTimestamp,
         stopTimestamp: sHRequest.stopTimestamp,
         countHD: sHRequest.countHD,

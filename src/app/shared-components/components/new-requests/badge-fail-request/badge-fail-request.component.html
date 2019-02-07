@@ -15,16 +15,16 @@
 
           <!--Editing Employee Or Inserting Employee Form-->
           <form [formGroup]="requestForm">
-            <div class="form-section">Employee Info</div>
-            <hr>
+            <div class="form-section" *ngIf="hasSomeField">Employee Info</div>
+            <hr *ngIf="hasSomeField">
             <label for="employeeId" *ngIf="hasEmployeeField">{{fields?.employeeId?.fieldLabel}}: </label>
             <input id="employeeId" type="text" formControlName="employeeId" *ngIf="hasEmployeeField">
             <br *ngIf="hasEmployeeField">
-            <label for="officeNameId">{{fields?.officeNameId?.fieldLabel}}: </label>
-            <input id="officeNameId" type="text" formControlName="officeNameId">
-            <br>
-            <div class="form-section">Request Info</div>
-            <hr>
+            <label for="officeNameId" *ngIf="hasSomeField">{{fields?.officeNameId?.fieldLabel}}: </label>
+            <input id="officeNameId" type="text" formControlName="officeNameId" *ngIf="hasSomeField">
+            <br *ngIf="hasSomeField">
+            <div class="form-section" *ngIf="hasSomeField">Request Info</div>
+            <hr *ngIf="hasSomeField">
             <label for="badgeFailTypeId">{{fields?.badgeFailTypeId?.fieldLabel}}: </label>
             <input id="badgeFailTypeId"
                    type="text"

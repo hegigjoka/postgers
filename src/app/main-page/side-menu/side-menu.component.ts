@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EmployeeService} from '../../shared-components/providers/employee.service';
 import {RequestsService} from '../../shared-components/providers/requests.service';
@@ -13,6 +13,7 @@ export class SideMenuComponent implements OnInit {
   avatar: string;
   requestsType: boolean;
   badge: number;
+  @Output() fireEvent: EventEmitter<boolean> = new EventEmitter();
   allowEmployee: boolean;
   allowRequests: boolean;
   allowHrOffice: boolean;
@@ -27,7 +28,6 @@ export class SideMenuComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      console.log('I\'m initialized too :)');
       if (this.permissions.hrEmployee.allowList === true) {
         this.allowEmployee = true;
       }
@@ -61,6 +61,7 @@ export class SideMenuComponent implements OnInit {
   }
   openEmp() {
     this.requestsType = false;
+    this.fireEvent.emit(true);
     this.router.navigate(['employees'], {relativeTo: this.route});
   }
   openReq() {
@@ -71,10 +72,12 @@ export class SideMenuComponent implements OnInit {
     if (type === 'pendingMe'){
       this.requestsType = false;
     }
+    this.fireEvent.emit(true);
     this.router.navigate([localStorage.getItem('EmpId'), 'requests'], {relativeTo: this.route, queryParams: {type: type}});
   }
   openHr() {
     this.requestsType = false;
+    this.fireEvent.emit(true);
     this.router.navigate(['request-management'], {relativeTo: this.route});
   }
   logout() {
