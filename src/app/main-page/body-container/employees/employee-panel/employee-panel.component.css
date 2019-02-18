@@ -157,4 +157,16 @@ td{
   .small-display{
     display: none;
   }
+  .header{
+    text-align: center;
+  }
+}
+@media only screen and (max-width: 500px){
+  .employee-filter{
+    margin-left: 76px;
+    width: 265px;
+  }
+  .filter-icons{
+    left: 104px;
+  }
 }

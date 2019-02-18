@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {EmployeeService} from './shared-components/providers/employee.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {HrPermission} from './shared-components/permissions/hr-permission';
+import { TranslateService } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-root',
@@ -9,10 +11,23 @@ import {HrPermission} from './shared-components/permissions/hr-permission';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor(public permissions: HrPermission, private getStatus: EmployeeService, private router: Router) {}
+  constructor(
+    public permissions: HrPermission,
+    private getStatus: EmployeeService,
+    private translate: TranslateService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    translate.setDefaultLang('en');
+  }
 
   ngOnInit() {
     this.getStatuss();
+    this.switchLanguage(localStorage.getItem('EmpLang') ? localStorage.getItem('EmpLang') : 'en');
+  }
+
+  switchLanguage(language: string) {
+    this.translate.use(language);
   }
 
   getStatuss() {
@@ -23,22 +38,19 @@ export class AppComponent implements OnInit {
           this.permissions.hrEmployee = response.json().body.data.appPermissions['hr/employee'];
           this.permissions.hrRequests = response.json().body.data.appPermissions['hr/employee/:empId/requests'];
           this.permissions.hrRequestsType = response.json().body.data.appPermissions['hr/employee/:empId/requests/type/:type'];
-          this.router.navigate(['hr']);
+          this.permissions.employee.id = response.json().body.data.userAttributes.HR_MODULES__APP.attributeValue;
+          this.permissions.employee.fullName = response.json().body.data.fullName;
+          this.permissions.employee.img = response.json().body.data.pictureSrc;
+          if (this.route.snapshot['_routerState'].url.match(/sign-in/)) {
+            this.router.navigate(['hr']);
+          }
         } else {
           localStorage.removeItem('EmpAuthToken');
-          localStorage.removeItem('EmpId');
-          localStorage.removeItem('EmpFullName');
-          localStorage.removeItem('EmpLang');
-          localStorage.removeItem('EmpAvatarImg');
           this.router.navigate(['sign-in']);
         }
       },
     () => {
       localStorage.removeItem('EmpAuthToken');
-      localStorage.removeItem('EmpId');
-      localStorage.removeItem('EmpFullName');
-      localStorage.removeItem('EmpLang');
-      localStorage.removeItem('EmpAvatarImg');
       this.router.navigate(['sign-in']);
     });
   }

@@ -22,6 +22,41 @@
 .req-filter{
   left: -40px;
 }
+.filter-date{
+  left: -44px;
+}
+mat-datepicker-toggle{
+  color: #045BA1;
+  position: relative;
+  left: -30px;
+  margin-right: -36px;
+}
+mat-datepicker-toggle /deep/button:focus{
+  outline: none;
+}
+/deep/.mat-calendar-header{
+  background-color: #045BA1;
+  color: white;
+}
+/deep/.mat-datepicker-content .mat-calendar-previous-button,
+/deep/.mat-datepicker-content .mat-calendar-next-button{
+  color: white;
+}
+/deep/.mat-calendar-arrow{
+  border-top-color: white;
+}
+/deep/.mat-calendar-body-today:not(.mat-calendar-body-selected){
+  border: 2px solid #045BA1;
+}
+/deep/.mat-calendar-body-selected{
+  color: white!important;
+  background-color: #045BA1;
+}
+/deep/.mat-calendar-body-cell-content,
+/deep/.mat-calendar-table-header,
+/deep/.mat-calendar-body-label{
+  color: #045BA1;
+}
 .hr-filter{
   margin-left: 15px;
   margin-top: 20px;
@@ -315,5 +350,19 @@ td{
 @media only screen and (max-width: 760px) {
   .small-display{
     display: none;
+  }
+  .dropdown{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media only screen and (max-width: 450px){
+  .hr-filter{
+    margin-left: 82px;
+    width: 222px;
+  }
+  .filter-icons{
+    left: 111px;
   }
 }

@@ -4,13 +4,14 @@ import {
   EmployeeMetadata
 } from '../../../../shared-components/models/employee-models/employee-metadata';
 import {ListResponseModel} from '../../../../shared-components/models/shared-models/list-response.model';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {MatSidenav} from '@angular/material';
 import {Location} from '@angular/common';
 import {Subscription} from 'rxjs';
 import {EmployeeModel} from '../../../../shared-components/models/employee-models/employee.model';
 import {AbstractModel} from '../../../../shared-components/models/shared-models/abstract.model';
 import {HrPermission} from '../../../../shared-components/permissions/hr-permission';
+import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-employee-panel',
@@ -23,6 +24,7 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   sideNav: string;
   private sub: Subscription = new Subscription();
   paginate = 1;
+  pageSize = 10;
   tableFields: EmployeeMetadata;
   employees: ListResponseModel<EmployeeModel>;
 
@@ -41,11 +43,12 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
   directorFilter = '';
   directorId: string;
 
+  // permissions variables
   allowOpenEmployee: boolean;
   allowNewEmployee: boolean;
 
-  // constructor
   constructor(
+    public brkPoint: BreakpointObserver,
     public permissions: HrPermission,
     private empserve: EmployeeService,
     private router: Router,
@@ -53,19 +56,42 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
     private loc: Location
   ) {}
 
-  // on init component
   ngOnInit() {
+    // in case of opened sidenav while refreshing
+    if (this.route.snapshot['_routerState'].url.match(/EMPL[0-9]{11}/)) {
+      this.sideNav = 'open';
+      if (this.sideNav === 'open') {
+        this.empMenu.toggle();
+      }
+    }
+    // get datalist for filter office
     this.getOfficesDataList();
-    this.getEmployees();
-    if (this.permissions.hrEmployee.allowGet === true) {
-      this.allowOpenEmployee = true;
-    }
-    if (this.permissions.hrEmployee.allowPost === true) {
-      this.allowNewEmployee = true;
-    }
+    // resize employees list
+    this.brkPoint.observe(['(min-height: 920px)']).subscribe((state: BreakpointState) => {
+      if (state.matches) {
+        this.pageSize = 10;
+        this.getEmployees();
+      } else {
+        this.pageSize = 6;
+        this.getEmployees();
+      }
+    });
+    // permissions
+    setTimeout(() => {
+      if (this.permissions.hrEmployee.allowGet === true) {
+        this.allowOpenEmployee = true;
+      }
+      if (this.permissions.hrEmployee.allowPost === true) {
+        this.allowNewEmployee = true;
+      }
+    }, 600);
+    // GLOBAL SEARCH
+    this.route.queryParams.subscribe((search: Params) => {
+      this.someLabelFilter = search['search'] ? search['search'] : '';
+      this.getEmployees();
+    });
   }
 
-  // on destroy component
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
@@ -223,7 +249,7 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
     this.sub.add(
       this.empserve.getEmployeeList(
         this.paginate,
-        10,
+        this.pageSize,
         this.someLabelFilter,
         this.officeId,
         this.managerId,
@@ -234,7 +260,7 @@ export class EmployeePanelComponent implements OnInit, OnDestroy {
     );
   }
 
-  // PAGINATE-------------------------------------------------------------------------------------------------------------------------------
+  // PAGINATION-------------------------------------------------------------------------------------------------------------------------------
   pages(move: number, totalPages: number) {
     if (this.paginate > 1 && this.paginate < totalPages) {
       if (move === 1 && this.paginate < totalPages) {

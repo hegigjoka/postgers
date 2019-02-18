@@ -13,6 +13,7 @@ import {AbstractModel} from '../../../../shared-components/models/shared-models/
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {ConfirmDialogComponent} from '../../../../shared-components/components/confirm-dialog/confirm-dialog.component';
 import {HrPermission} from '../../../../shared-components/permissions/hr-permission';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-employee-registration',
@@ -21,7 +22,6 @@ import {HrPermission} from '../../../../shared-components/permissions/hr-permiss
 })
 
 export class EmployeeRegistrationComponent implements OnInit {
-
   // labels var
   labels: EmployeeMetadata;
 
@@ -54,6 +54,7 @@ export class EmployeeRegistrationComponent implements OnInit {
   // ---------------------------------------------------------------------------------------------------------------------------------------
 
   constructor(
+    private translate: TranslateService,
     public permissions: HrPermission,
     private empServe: EmployeeService,
     private route: ActivatedRoute,
@@ -81,7 +82,7 @@ export class EmployeeRegistrationComponent implements OnInit {
       directorFirstName: new FormControl(''),
       directorLastName: new FormControl(''),
       directorEmail: new FormControl(''),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [Validators.required, Validators.email, this.emailVal.bind(this)]),
       officeNameId: new FormControl('', Validators.required),
       officeName: new FormControl('')
     });
@@ -227,7 +228,7 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.employee = this.employeeForm.value;
     this.empServe.updateEmployee(this.empId, this.employee).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
-        this.chip.open('Updated successfully !', null, {
+        this.chip.open(this.translate.instant('emp_update_tag'), null, {
           duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
@@ -235,7 +236,7 @@ export class EmployeeRegistrationComponent implements OnInit {
         });
         this.loc.back();
       } else {
-        this.chip.open('Unable to update this employee !', null, {
+        this.chip.open(this.translate.instant('emp_not_update_tag'), null, {
           duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
@@ -247,7 +248,7 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   // delete employee
   deleteEmployee() {
-    const confText = 'Are you SURE that you want to delete employee ' + this.employee.someLabel + ' ?';
+    const confText = this.translate.instant('emp_delete_conf') + this.employee.someLabel + ' ?';
     const confType = 'del';
     const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
       data: {text: confText, conf: this.confirmation, type: confType}
@@ -257,7 +258,7 @@ export class EmployeeRegistrationComponent implements OnInit {
       if (this.confirmation === true) {
         this.empServe.deleteEmployee(this.empId).subscribe((response) => {
           if (response.json().status.code === 'STATUS_OK') {
-            this.chip.open('Deleted successfully !', null, {
+            this.chip.open(this.translate.instant('emp_delete_tag'), null, {
               duration: 5000,
               verticalPosition: 'bottom',
               horizontalPosition: 'left',
@@ -265,7 +266,7 @@ export class EmployeeRegistrationComponent implements OnInit {
             });
             this.loc.back();
           } else {
-            this.chip.open('Unable to delete employee, because this employee must have dependencies !', null, {
+            this.chip.open(this.translate.instant('emp_not_delete_tag'), null, {
               duration: 5000,
               verticalPosition: 'bottom',
               horizontalPosition: 'left',
@@ -284,19 +285,11 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.employeeForm.controls['id'].setValue('');
     this.employeeForm.controls['firstName'].setValue('');
     this.employeeForm.controls['lastName'].setValue('');
-    this.employeeForm.controls['someLabel'].setValue('');
     this.employeeForm.controls['birthdate'].setValue('');
+    this.employeeForm.controls['managerId'].setValue('');
+    this.employeeForm.controls['directorId'].setValue('');
     this.employeeForm.controls['email'].setValue('');
     this.employeeForm.controls['officeNameId'].setValue('');
-    this.employeeForm.controls['officeName'].setValue('');
-    this.employeeForm.controls['managerId'].setValue('');
-    this.employeeForm.controls['managerFirstName'].setValue('');
-    this.employeeForm.controls['managerLastName'].setValue('');
-    this.employeeForm.controls['managerEmail'].setValue('');
-    this.employeeForm.controls['directorId'].setValue('');
-    this.employeeForm.controls['directorFirstName'].setValue('');
-    this.employeeForm.controls['directorLastName'].setValue('');
-    this.employeeForm.controls['directorEmail'].setValue('');
   }
 
   // inserting employee
@@ -308,7 +301,7 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.employee = this.employeeForm.value;
     this.empServe.insertEmployee(this.employee).subscribe((response) => {
       if (response.json().status.code === 'STATUS_OK') {
-        this.chip.open('Inserted successfully !', null, {
+        this.chip.open(this.translate.instant('emp_insert_tag'), null, {
           duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
@@ -316,7 +309,7 @@ export class EmployeeRegistrationComponent implements OnInit {
         });
         this.loc.back();
       } else {
-        this.chip.open('Unable to insert new employee !', null, {
+        this.chip.open(this.translate.instant('emp_not_insert_tag'), null, {
           duration: 3000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',

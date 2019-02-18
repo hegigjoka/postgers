@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 
 @Injectable()
 export class HrPermission {
+  employee = new EmployeeId();
   hrAllRequest = new Permission();
   hrEmployee = new Permission();
   hrRequests = new Permission();
@@ -14,8 +15,6 @@ export class Permission {
   allowPost: boolean;
   allowPut: boolean;
   allowDelete: boolean;
-  appResourceId: string;
-  appRoleId: string;
   id: string;
 
   constructor() {
@@ -24,5 +23,16 @@ export class Permission {
     this.allowPost = false;
     this.allowPut = false;
     this.allowDelete = false;
+  }
+}
+export class EmployeeId {
+  id: string;
+  img: string;
+  fullName: string;
+
+  constructor() {
+    this.id = '';
+    this.img = '';
+    this.fullName = '';
   }
 }

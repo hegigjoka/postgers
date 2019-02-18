@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12 header">
-          Badge Failure Request
+          {{'BF_header' | translate}}
           <hr>
         </div>
       </div>
@@ -29,15 +29,16 @@
             <input id="badgeFailTypeId"
                    type="text"
                    list="missingBadgeTypeId"
+                   placeholder="{{'placeholder_req_type' | translate}}"
                    [(ngModel)]="missingBadgeTypeInput"
                    (change)="setMBId(missingBadgeTypeInput)"
                    formControlName="badgeFailTypeId">
             <br>
-            <label for="date">Date: </label>
+            <label for="date">{{'req_date_label' | translate}}</label>
             <input id="date" type="date" formControlName="date" min="{{date.toISOString().split('T')[0]}}">
             <br>
             <label for="startTimestamp">{{fields?.startTimestamp?.fieldLabel}}: </label>
-            <input id="startTimestamp" type="time" step="1800" formControlName="startTimestamp">
+            <input id="startTimestamp" type="time" step="1800" [(ngModel)]="startTime" formControlName="startTimestamp">
             <br>
             <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
             <input id="stopTimestamp" type="time" step="1800" formControlName="stopTimestamp">
@@ -45,25 +46,25 @@
             <div class="buttons" *ngIf="!hasSomeField">
               <button class="btn" (click)="insertRequest()" *ngIf="requestForm.valid">
                 <mat-icon class="btn-icon">add_circle</mat-icon>
-                Insert
+                {{'insert' | translate}}
               </button>
               <button class="btn btn-danger" (click)="reset()">
                 <mat-icon class="btn-icon">cancel_presentation</mat-icon>
-                Reset
+                {{'reset' | translate}}
               </button>
             </div>
             <button class="btn btn-danger" (click)="deleteRequest()" *ngIf="isDeletable">
               <mat-icon class="btn-icon">delete</mat-icon>
-              Delete
+              {{'delete' | translate}}
             </button>
             <div class="buttons" *ngIf="proc">
               <button class="btn" (click)="procReq(1)">
                 <mat-icon class="btn-icon">check</mat-icon>
-                Process
+                {{'process' | translate}}
               </button>
               <button class="btn btn-danger" (click)="procReq(0)">
                 <mat-icon class="btn-icon">close</mat-icon>
-                Don't process
+                {{'decline' | translate}}
               </button>
             </div>
           </form>

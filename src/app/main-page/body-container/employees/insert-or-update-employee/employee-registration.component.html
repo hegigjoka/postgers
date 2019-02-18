@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12 header">
-          Employee Menu
+          {{"emp_header_menu" | translate}}
           <hr>
         </div>
       </div>
@@ -63,21 +63,21 @@
             <div class="buttons" *ngIf="!newOrOld">
               <button class="btn" (click)="updateEmployee()" *ngIf="employeeForm.valid && allowUpdateEmployee">
                 <mat-icon class="btn-icon">update</mat-icon>
-                Update
+                {{"update" | translate}}
               </button>
               <button class="btn btn-danger" (click)="deleteEmployee()" *ngIf="allowDeleteEmployee">
                 <mat-icon class="btn-icon">delete</mat-icon>
-                Delete
+                {{"delete" | translate}}
               </button>
             </div>
             <div class="buttons" *ngIf="newOrOld">
               <button class="btn" (click)="insertEmployee()" *ngIf="employeeForm.valid">
                 <mat-icon class="btn-icon">person_add</mat-icon>
-                Insert
+                {{"insert" | translate}}
               </button>
               <button class="btn btn-danger" (click)="reset()">
                 <mat-icon class="btn-icon">cancel_presentation</mat-icon>
-                Reset
+                {{"reset" | translate}}
               </button>
             </div>
           </form>

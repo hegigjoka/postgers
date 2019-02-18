@@ -1,14 +1,9 @@
 <div class="container-fluid">
   <div class="row top-menu-style">
-    <div class="col-lg-2 col-md-4 col-sm-8">
-      <div class="row menu-row">
-        <div class="page-name">Employee Requests</div>
-      </div>
-    </div>
-    <div class="col-lg-8 col-md-6 col-sm-2"></div>
-    <div class="col-2">
-      <div class="row menu-row">
-        <button mat-raised-button (click)="socialSignIn()">Sign in</button>
+    <div class="col-12 contents">
+      <div class="page-name">{{ 'Brand' | translate }}</div>
+      <div class="sign-in-butt">
+        <button mat-raised-button (click)="socialSignIn()">{{ 'sign_in' | translate }}</button>
       </div>
     </div>
   </div>

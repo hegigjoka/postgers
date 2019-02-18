@@ -5,13 +5,14 @@ import {RequestHolidayModel} from '../models/requests-models/request-holiday.mod
 import {RequestMissionModel} from '../models/requests-models/request-mission.model';
 import {RequestMissingBadgeModel} from '../models/requests-models/request-missing-badge.model';
 import {RequestSubstituteModel} from '../models/requests-models/request-substitute.model';
+import {HrPermission} from '../permissions/hr-permission';
 
 @Injectable()
 export class RequestsService {
   // PATHS----------------------------------------------------------------------------------------------------------------------------------
   urlPath = 'svc/hr/employee';
 
-  constructor(private http: Http) {}
+  constructor(public permissions: HrPermission, private http: Http) {}
 
   getTableOptions(type?: string) {
     const header = new Headers({
@@ -21,54 +22,57 @@ export class RequestsService {
     });
     if (type === 'extraHours') {
       return this.http.options(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/extraHours`,
         {headers: header});
     } else if (type === 'holidays') {
       return this.http.options(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays`,
         {headers: header});
     } else if (type === 'mission') {
       return this.http.options(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missions`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/missions`,
         {headers: header});
     } else if (type === 'missingBadge') {
       return this.http.options(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/missingBadge`,
         {headers: header});
     } else if (type === 'subHoly') {
       return this.http.options(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/substitutions`,
         {headers: header});
     }
     return this.http.options(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests`,
       {headers: header});
   }
 
-  getRequestsList(pageNo: number, pageSize: number, type?: string, reqType?: string, status?: string) {
+  getRequestsList(pageNo: number, pageSize: number, type?: string, date?: string, reqType?: string, status?: string) {
     const header = new Headers({
       'Authorization': localStorage.getItem('EmpAuthToken'),
       'Accept': 'application/json',
       'Accept-Language': localStorage.getItem('EmpLang')
     });
-    let filter = 'paramBean={pageNo:' + pageNo + ',pageSize:' + pageSize + ',requestTypeId:"' + reqType + '",status:"' + status + '",type:"' + type + '",fillFieldLabels:true}';
+    let filter = `paramBean={pageNo:${pageNo},pageSize:${pageSize},validationDate:{min:'${date ? date.split('|')[0] : ''}',max:'${date ? date.split('|')[1] : ''}'},requestTypeId:'${reqType}',status:'${status}',type:'${type}',fillFieldLabels:true}`;
+    if (date === '|' ) {
+      filter = filter.split(/,validationDate:{min:'',max:''}/)[0] + filter.split(/,validationDate:{min:'',max:''}/)[1];
+    }
     if (type === undefined) {
-      filter = filter.split(/,type:"undefined"/)[0] + filter.split(/,type:"undefined"/)[1];
+      filter = filter.split(/,type:'undefined'/)[0] + filter.split(/,type:'undefined'/)[1];
     } else if (type === '') {
-      filter = filter.split(/,type:""/)[0] + filter.split(/,type:""/)[1];
+      filter = filter.split(/,type:''/)[0] + filter.split(/,type:''/)[1];
     }
     if (reqType === undefined) {
-      filter = filter.split(/,requestTypeId:"undefined"/)[0] + filter.split(/,requestTypeId:"undefined"/)[1];
+      filter = filter.split(/,requestTypeId:'undefined'/)[0] + filter.split(/,requestTypeId:'undefined'/)[1];
     } else if (reqType === '') {
-      filter = filter.split(/,requestTypeId:""/)[0] + filter.split(/,requestTypeId:""/)[1];
+      filter = filter.split(/,requestTypeId:''/)[0] + filter.split(/,requestTypeId:''/)[1];
     }
     if (status === undefined) {
-      filter = filter.split(/,status:"undefined"/)[0] + filter.split(/,status:"undefined"/)[1];
+      filter = filter.split(/,status:'undefined'/)[0] + filter.split(/,status:'undefined'/)[1];
     } else if (status === '') {
-      filter = filter.split(/,status:""/)[0] + filter.split(/,status:""/)[1];
+      filter = filter.split(/,status:''/)[0] + filter.split(/,status:''/)[1];
     }
     return this.http.get(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests?${filter}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests?${filter}`,
       {headers: header});
   }
 
@@ -83,7 +87,7 @@ export class RequestsService {
     });
     const filter = 'paramBean={fillFieldLabels:true}';
     return this.http.get(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}?${filter}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/extraHours/${reqId}?${filter}`,
       {headers: header});
   }
 
@@ -96,7 +100,7 @@ export class RequestsService {
       'Content-Type': 'application/json'
     });
     return this.http.post(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/new`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/extraHours/new`,
       {
         countHD: xHRequest.countHD,
         employeeNotes: xHRequest.employeeNotes,
@@ -118,7 +122,7 @@ export class RequestsService {
     });
     if (type === 'approve') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/extraHours/${reqId}`,
         {
           id: reqId,
           approvementId: 'POOL00000000044',
@@ -128,7 +132,7 @@ export class RequestsService {
       );
     } else if (type === 'deny') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/extraHours/${reqId}`,
         {
           id: reqId,
           approvementId: 'POOL00000000045',
@@ -138,7 +142,7 @@ export class RequestsService {
       );
     } else if (type === 'authorize') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/extraHours/${reqId}`,
         {
           id: reqId,
           authorizationId: 'POOL00000000041',
@@ -149,7 +153,7 @@ export class RequestsService {
       );
     } else {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/extraHours/${reqId}`,
         {
           id: reqId,
           authorizationId: 'POOL00000000042',
@@ -169,7 +173,7 @@ export class RequestsService {
       'Accept-Language': localStorage.getItem('EmpLang')
     });
     return this.http.delete(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/extraHours/${reqId}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/extraHours/${reqId}`,
       {headers: header});
   }
 
@@ -184,7 +188,7 @@ export class RequestsService {
     });
     const filter = 'paramBean={fillFieldLabels:true}';
     return this.http.get(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/${reqId}?${filter}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays/${reqId}?${filter}`,
       {headers: header});
   }
 
@@ -197,7 +201,7 @@ export class RequestsService {
       'Content-Type': 'application/json'
     });
     return this.http.post(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/new`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays/new`,
       {
         countHD: hRequest.countHD,
         employeeNotes: hRequest.employeeNotes,
@@ -220,7 +224,7 @@ export class RequestsService {
     });
     if (type === 'approve') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays/${reqId}`,
         {
           id: reqId,
           approvementId: 'POOL00000000044',
@@ -230,7 +234,7 @@ export class RequestsService {
       );
     } else if (type === 'deny') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays/${reqId}`,
         {
           id: reqId,
           approvementId: 'POOL00000000045',
@@ -240,7 +244,7 @@ export class RequestsService {
       );
     } else if (type === 'authorize') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays/${reqId}`,
         {
           id: reqId,
           authorizationId: 'POOL00000000041',
@@ -250,7 +254,7 @@ export class RequestsService {
       );
     } else {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays/${reqId}`,
         {
           id: reqId,
           authorizationId: 'POOL00000000042',
@@ -269,7 +273,7 @@ export class RequestsService {
       'Accept-Language': localStorage.getItem('EmpLang')
     });
     return this.http.delete(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/${reqId}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays/${reqId}`,
       {headers: header});
   }
   // MISSION--------------------------------------------------------------------------------------------------------------------------------
@@ -283,7 +287,7 @@ export class RequestsService {
     });
     const filter = 'paramBean={fillFieldLabels:true}';
     return this.http.get(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missions/${reqId}?${filter}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/missions/${reqId}?${filter}`,
       {headers: header});
   }
 
@@ -296,7 +300,7 @@ export class RequestsService {
       'Content-Type': 'application/json'
     });
     return this.http.post(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missions/new`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/missions/new`,
       {
         employeeNotes: hRequest.employeeNotes,
         employeeId: hRequest.employeeId,
@@ -319,7 +323,7 @@ export class RequestsService {
     });
     if (type === 'approve') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missions/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/missions/${reqId}`,
         {
           id: reqId,
           approvementId: 'POOL00000000044',
@@ -329,7 +333,7 @@ export class RequestsService {
       );
     } else {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missions/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/missions/${reqId}`,
         {
           id: reqId,
           approvementId: 'POOL00000000045',
@@ -348,7 +352,7 @@ export class RequestsService {
       'Accept-Language': localStorage.getItem('EmpLang')
     });
     return this.http.delete(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/holidays/${reqId}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/holidays/${reqId}`,
       {headers: header});
   }
   // BADGE_FAILURE--------------------------------------------------------------------------------------------------------------------------
@@ -362,7 +366,7 @@ export class RequestsService {
     });
     const filter = 'paramBean={fillFieldLabels:true}';
     return this.http.get(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge/${reqId}?${filter}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/missingBadge/${reqId}?${filter}`,
       {headers: header});
   }
 
@@ -375,7 +379,7 @@ export class RequestsService {
       'Content-Type': 'application/json'
     });
     return this.http.post(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge/new`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/missingBadge/new`,
       {
         employeeNotes: mBRequest.employeeNotes,
         employeeId: mBRequest.employeeId,
@@ -395,7 +399,7 @@ export class RequestsService {
       'Accept-Language': localStorage.getItem('EmpLang')
     });
     return this.http.delete(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/missingBadge/${reqId}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/missingBadge/${reqId}`,
       {headers: header});
   }
   // SUBSTITUTED_HOLIDAYS-------------------------------------------------------------------------------------------------------------------
@@ -409,7 +413,7 @@ export class RequestsService {
     });
     const filter = 'paramBean={fillFieldLabels:true}';
     return this.http.get(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}?${filter}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/substitutions/${reqId}?${filter}`,
       {headers: header});
   }
 
@@ -422,7 +426,7 @@ export class RequestsService {
       'Content-Type': 'application/json'
     });
     return this.http.post(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/new`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/substitutions/new`,
       {
         employeeId: sHRequest.employeeId,
         startTimestamp: sHRequest.startTimestamp,
@@ -445,7 +449,7 @@ export class RequestsService {
     });
     if (type === 'approve') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/substitutions/${reqId}`,
         {
           id: reqId,
           approvementId: 'POOL00000000044',
@@ -455,7 +459,7 @@ export class RequestsService {
       );
     } else if (type === 'deny') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/substitutions/${reqId}`,
         {
           id: reqId,
           approvementId: 'POOL00000000045',
@@ -465,7 +469,7 @@ export class RequestsService {
       );
     } else if (type === 'authorize') {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/substitutions/${reqId}`,
         {
           id: reqId,
           authorizationId: 'POOL00000000041',
@@ -475,7 +479,7 @@ export class RequestsService {
       );
     } else {
       return this.http.put(
-        `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+        `${this.urlPath}/${this.permissions.employee.id}/requests/type/substitutions/${reqId}`,
         {
           id: reqId,
           authorizationId: 'POOL00000000042',
@@ -494,7 +498,7 @@ export class RequestsService {
       'Accept-Language': localStorage.getItem('EmpLang')
     });
     return this.http.delete(
-      `${this.urlPath}/${localStorage.getItem('EmpId')}/requests/type/substitutions/${reqId}`,
+      `${this.urlPath}/${this.permissions.employee.id}/requests/type/substitutions/${reqId}`,
       {headers: header});
   }
 }

@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12 header">
-          Mission Request
+          {{'M_header' | translate}}
           <hr>
         </div>
       </div>
@@ -32,16 +32,27 @@
             <input id="missionTypeId"
                    list="missType"
                    type="text"
+                   placeholder="{{'placeholder_req_type' | translate}}"
                    [(ngModel)]="missionTypeInput"
                    (change)="setMTId(missionTypeInput)"
                    formControlName="missionTypeId">
             <br>
             <label for="missionWhere">{{fields?.missionWhere?.fieldLabel}}: </label>
-            <input id="missionWhere" type="text" formControlName="missionWhere">
+            <input id="missionWhere" type="text" placeholder="{{'placeholder_req_place' | translate}}" formControlName="missionWhere">
             <br>
             <label for="startTimestamp">{{fields?.startTimestamp?.fieldLabel}}: </label>
-            <input id="startTimestamp" class="input-mission-date" type="date" min="{{date.toISOString().split('T')[0]}}" formControlName="startDate">
-            <input id="startTimestamp1" class="input-mission-time" type="time" step="1800" formControlName="startTime">
+            <input id="startTimestamp"
+                   class="input-mission-date"
+                   type="date"
+                   min="{{date.toISOString().split('T')[0]}}"
+                   [(ngModel)]="startDate"
+                   formControlName="startDate">
+            <input id="startTimestamp1"
+                   class="input-mission-time"
+                   type="time"
+                   step="1800"
+                   [(ngModel)]="startTime"
+                   formControlName="startTime">
             <br>
             <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
             <input id="stopTimestamp" class="input-mission-date" type="date" min="{{date.toISOString().split('T')[0]}}" formControlName="stopDate">
@@ -53,35 +64,35 @@
             <div class="buttons" *ngIf="!hasSomeField">
               <button class="btn" (click)="insertRequest()" *ngIf="requestForm.valid">
                 <mat-icon class="btn-icon">add_circle</mat-icon>
-                Insert
+                {{'insert' | translate}}
               </button>
               <button class="btn btn-danger" (click)="reset()">
                 <mat-icon class="btn-icon">cancel_presentation</mat-icon>
-                Reset
+                {{'reset' | translate}}
               </button>
             </div>
             <button class="btn btn-danger" (click)="deleteRequest()" *ngIf="isDeletable && allowDeleteRequest">
               <mat-icon class="btn-icon">delete</mat-icon>
-              Delete
+              {{'delete' | translate}}
             </button>
             <div class="buttons" *ngIf="isManager && allowUpdateRequest">
               <button class="btn" (click)="approveOrDeny(1)">
                 <mat-icon class="btn-icon">check_box</mat-icon>
-                Approve
+                {{'approve' | translate}}
               </button>
               <button class="btn btn-danger" (click)="approveOrDeny(0)">
                 <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
-                Deny
+                {{'deny' | translate}}
               </button>
             </div>
             <div class="buttons" *ngIf="proc && allowUpdateRequest">
               <button class="btn" (click)="procReq(1)">
                 <mat-icon class="btn-icon">check</mat-icon>
-                Process
+                {{'process' | translate}}
               </button>
               <button class="btn btn-danger" (click)="procReq(0)">
                 <mat-icon class="btn-icon">close</mat-icon>
-                Don't process
+                {{'decline' | translate}}
               </button>
             </div>
           </form>

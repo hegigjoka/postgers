@@ -35,21 +35,17 @@ export class SignInComponent implements OnInit {
           this.permissions.hrEmployee = response.json().body.data.appPermissions['hr/employee'];
           this.permissions.hrRequests = response.json().body.data.appPermissions['hr/employee/:empId/requests'];
           this.permissions.hrRequestsType = response.json().body.data.appPermissions['hr/employee/:empId/requests/type/:type'];
+          this.permissions.employee.id = response.json().body.data.userAttributes.HR_MODULES__APP.attributeValue;
+          this.permissions.employee.img = response.json().body.data.pictureSrc;
+          this.permissions.employee.fullName = response.json().body.data.fullName;
           this.router.navigate(['hr']);
         } else {
           localStorage.removeItem('EmpAuthToken');
-          localStorage.removeItem('EmpId');
-          localStorage.removeItem('EmpFullName');
-          localStorage.removeItem('EmpLang');
-          localStorage.removeItem('EmpAvatarImg');
           this.router.navigate(['sign-in']);
         }
       },
       () => {
         localStorage.removeItem('EmpAuthToken');
-        localStorage.removeItem('EmpFullName');
-        localStorage.removeItem('EmpLang');
-        localStorage.removeItem('EmpAvatarImg');
         this.router.navigate(['sign-in']);
       });
   }
@@ -70,20 +66,14 @@ export class SignInComponent implements OnInit {
             this.employeeSession = user.json().body.data;
             // clear previews localStorage
             localStorage.removeItem('EmpAuthToken');
-            localStorage.removeItem('EmpId');
-            localStorage.removeItem('EmpFullName');
             localStorage.removeItem('EmpLang');
-            localStorage.removeItem('EmpAvatarImg');
 
             // insert to localStorage new session data
             setTimeout(() => {
 
               // new session data
               localStorage.setItem('EmpAuthToken', this.employeeSession.authToken);
-              localStorage.setItem('EmpId', this.employeeSession.userAttributes.HR_MODULES__APP.attributeValue);
-              localStorage.setItem('EmpFullName', this.employeeSession.fullName);
               localStorage.setItem('EmpLang', this.employeeSession.lang);
-              localStorage.setItem('EmpAvatarImg', this.employeeSession.pictureSrc);
             }, 1000);
 
             // navigate to desired location

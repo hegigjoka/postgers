@@ -18,6 +18,7 @@
 }
 .page-name{
   color: white;
+  margin-top: 4px;
   margin-left: 15px;
   font-family: UniSansSemiBold;
   font-size: 22px;
@@ -32,10 +33,17 @@
   font-family: "Roboto Light";
   font-size: 20px;
 }
+.search-bar:active, .search-bar:focus{
+  background-color: white;
+}
+.search-bar::-webkit-calendar-picker-indicator{
+  display: none;
+}
 .search-icon{
   color: #045BA1;
   position: relative;
-  left: 35px;
+  top: -2px;
+  left: 33px;
   font-size: 29px;
   z-index: 1;
 }
@@ -85,4 +93,9 @@
     display: none;
   }
 }
-
+@media only screen and (max-width: 450px){
+  .emp-cred-container{
+    top: 4px;
+    right: 26px;
+  }
+}

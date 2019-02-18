@@ -9,6 +9,7 @@ import {RequestSubstituteModel} from '../../../models/requests-models/request-su
 import {RequestSubstituteMetadata} from '../../../models/requests-models/request-substitute-metadata';
 import {PersonelRequestService} from '../../../providers/personel-request.service';
 import {HrPermission} from '../../../permissions/hr-permission';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-substituted-holidays-request',
@@ -16,6 +17,9 @@ import {HrPermission} from '../../../permissions/hr-permission';
   styleUrls: ['../new-request.components.css']
 })
 export class SubstitutedHolidaysRequestComponent implements OnInit {
+  // component name
+  cn = {requestType: ''};
+
   fields: RequestSubstituteMetadata;
 
   reqId: string;
@@ -23,6 +27,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
 
   requestForm: FormGroup;
   date: Date = new Date();
+  dtbsub: string;
   subDates = [' '];
   addSubDates = 0;
   hideButton: boolean;
@@ -41,6 +46,7 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   allowDeleteRequest: boolean;
 
   constructor(
+    private translate: TranslateService,
     public permissions: HrPermission,
     private persReqServe: PersonelRequestService,
     private reqServe: RequestsService,
@@ -52,52 +58,71 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getFields();
+    this.cn.requestType = this.translate.instant('SH_header');
+    setTimeout(() => {
+      this.getFields();
+      if (this.permissions.hrRequestsType.allowPut === true) {
+        this.allowUpdateRequest = true;
+      }
+      if (this.permissions.hrRequestsType.allowDelete === true) {
+        this.allowDeleteRequest = true;
+      }
+    }, 600);
     const insertDate = new Date(this.date.valueOf() + 3600000);
     this.requestForm = new FormGroup({
       id: new FormControl(''),
       someLabel: new FormControl(''),
       insertDate: new FormControl(insertDate.toISOString().split('.')[0], Validators.required),
       requestTypeId: new FormControl('POOL00000000082', Validators.required),
-      employeeId: new FormControl(localStorage.getItem('EmpId'), Validators.required),
+      employeeId: new FormControl(this.permissions.employee.fullName, Validators.required),
       officeNameId: new FormControl(''),
       managerId: new FormControl(''),
       directorId: new FormControl(''),
-      date: new FormControl('', Validators.required),
+      date: new FormControl('', [Validators.required, this.dateVal.bind(this)]),
       startTimestamp: new FormControl('', Validators.required),
       stopTimestamp: new FormControl('', Validators.required),
-      countHD: new FormControl(0, Validators.required),
+      countHD: new FormControl(null, Validators.required),
       substitutionDates: new FormControl(''),
-      subDate0: new FormControl(''),
-      subDate1: new FormControl(''),
-      subDate2: new FormControl(''),
-      employeeNotes: new FormControl('No notes...'),
+      subDate0: new FormControl('', [Validators.required, this.subDateVal.bind(this)]),
+      subDate1: new FormControl('', this.subDateVal.bind(this)),
+      subDate2: new FormControl('', this.subDateVal.bind(this)),
+      employeeNotes: new FormControl(''),
       approvementId: new FormControl(''),
       authorizationId: new FormControl(''),
       labelMap: new FormGroup({})
     });
     this.getUrlParams();
-    if (this.permissions.hrRequestsType.allowPut === true) {
-      this.allowUpdateRequest = true;
+  }
+
+  dateVal(control: FormControl): {[key: string]: boolean} {
+    if (control.value < this.date.toISOString().split('T')[0]) {
+      return {'incorrect date': true};
     }
-    if (this.permissions.hrRequestsType.allowDelete === true) {
-      this.allowDeleteRequest = true;
+    return null;
+  }
+
+  subDateVal(control: FormControl): {[key: string]: boolean} {
+    if (control.value <= this.dtbsub) {
+      return {'incorrect sub date 0': true};
     }
+    return null;
   }
 
   getUrlParams() {
     this.route.params.subscribe((requestId: Params) => {
       this.reqId = requestId['reqId'];
     });
-
     if (this.reqId === 'new') {
       this.hasSomeField = false;
       this.hasEmployeeField = false;
     } else {
+      this.hideButton = true;
       this.hasSomeField = true;
       this.hasEmployeeField = true;
       this.requestForm.disable();
-      this.getSHrequest();
+      setTimeout(() => {
+        this.getSHrequest();
+      }, 600);
     }
   }
 
@@ -148,18 +173,19 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
           if (this.router.url.match(/\/hr\/request-management/) && this.request.processedId === 'POOL00000000088') {
             this.proc = true;
           }
-        } else if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === localStorage.getItem('EmpId')) {
+        } else if (this.request.approvementId === 'POOL00000000043' && this.request.employeeId === this.permissions.employee.id) {
           this.isDeletable = true;
         }
       }
 
-      if (this.request.employeeId === localStorage.getItem('EmpId')) {
+      if (this.request.employeeId === this.permissions.employee.id) {
         this.hasEmployeeField = false;
       }
-      if (localStorage.getItem('EmpId') === this.request.managerId && this.request.approvementId === 'POOL00000000043') {
+      if (this.permissions.employee.id === this.request.managerId && this.request.approvementId === 'POOL00000000043') {
         this.isManager = true;
       }
-      if (localStorage.getItem('EmpId') === this.request.directorId && this.request.approvementId === 'POOL00000000044' && this.request.authorizationId !== 'POOL00000000041') {
+      if (this.permissions.employee.id === this.request.directorId && this.request.authorizationId !== 'POOL00000000041') {
+        this.isManager = false;
         this.isDirector = true;
       }
     });
@@ -200,17 +226,25 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
     this.reqServe.insertSubHolyRequest(this.request).subscribe(
       (status) => {
         if (status.json().status.code === 'STATUS_OK') {
-          this.chip.open('Substituted Holidays request is sent successfully!', null, {
+          this.chip.open(this.translate.instant('requests_insert_tag', this.cn), null, {
             duration: 5000,
             verticalPosition: 'bottom',
             horizontalPosition: 'left',
             panelClass: ['success-chip']
           });
           this.loc.back();
+        } else {
+          this.chip.open(this.translate.instant('requests_not_insert_tag', this.cn), null, {
+            duration: 5000,
+            verticalPosition: 'bottom',
+            horizontalPosition: 'left',
+            panelClass: ['error-chip']
+          });
+          this.reset();
         }
       },
       () => {
-        this.chip.open('Substituted Holidays request isn\'t sent, sorry!', null, {
+        this.chip.open(this.translate.instant('requests_not_insert_tag', this.cn), null, {
           duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
@@ -223,73 +257,35 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
 
   // delete pending request
   deleteRequest() {
-    const confText = 'Are you sure that you want to delete this pending substituted holidays request ?';
+    const confText = this.translate.instant('delete_conf', this.cn);
     const confType = 'del';
     const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
       data: {text: confText, conf: confType, type: confType}
     });
     confDlg.afterClosed().subscribe((resuelt) => {
-      this.confirmation = resuelt;
-      if (this.confirmation === true) {
-        this.reqServe.deleteSubHolyRequest(this.reqId).subscribe(
-          (status) => {
-            if (status.json().status.code === 'STATUS_OK') {
-              this.chip.open('Substituted Holidays request is deleted successfully!', null, {
-                duration: 5000,
-                verticalPosition: 'bottom',
-                horizontalPosition: 'left',
-                panelClass: ['success-chip']
-              });
-              this.loc.back();
-            }
-          },
-          () => {
-            this.chip.open('Substituted Holidays request can\'t be deleted, sorry!', null, {
-              duration: 5000,
-              verticalPosition: 'bottom',
-              horizontalPosition: 'left',
-              panelClass: ['error-chip']
-            });
-          }
-        );
-      } else {
-        this.loc.back();
-      }
-    });
-  }
-
-  // Reset Request Form
-  reset() {
-    this.requestForm.controls['stopTimestamp'].setValue('');
-    this.requestForm.controls['startTimestamp'].setValue('');
-    this.requestForm.controls['countHD'].setValue('');
-    this.requestForm.controls['employeeNotes'].setValue('');
-  }
-
-  // approve or deny request
-  approveOrDeny(type: number) {
-    const confType = 'manager';
-    if (type === 1) {
-      const confText = 'Are you shure that you want to APPROVE this request ?';
-      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
-        data: {text: confText, conf: this.confirmation, type: confType}
-      });
-      confDlg.afterClosed().subscribe((result) => {
-        if (result.split('|')[0] === 'true') {
-          this.reqServe.managerNdirectorDecisionSubHolyRequest('approve', this.reqId, result.split('|')[1]).subscribe(
-            (response) => {
-              if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Substituted Holidays request is APPROVED!', null, {
+      if (resuelt !== undefined) {
+        if (resuelt === true) {
+          this.reqServe.deleteSubHolyRequest(this.reqId).subscribe(
+            (status) => {
+              if (status.json().status.code === 'STATUS_OK') {
+                this.chip.open(this.translate.instant('requests_delete_tag', this.cn), null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
                   panelClass: ['success-chip']
                 });
                 this.loc.back();
+              } else {
+                this.chip.open(this.translate.instant('requests_not_delete_tag', this.cn), null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['error-chip']
+                });
               }
             },
             () => {
-              this.chip.open('Error, substituted holidays request isn\'t approved!', null, {
+              this.chip.open(this.translate.instant('requests_not_delete_tag', this.cn), null, {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
@@ -297,30 +293,57 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
               });
             }
           );
+        } else {
+          this.loc.back();
         }
-      });
-    } else {
-      const confText = 'Are you shure that you want to DENY this request ?';
+      }
+    });
+  }
+
+  // Reset Request Form
+  reset() {
+    this.requestForm.controls['date'].setValue('');
+    this.requestForm.controls['stopTimestamp'].setValue('');
+    this.requestForm.controls['startTimestamp'].setValue('');
+    this.requestForm.controls['countHD'].setValue('');
+    this.requestForm.controls['subDate0'].setValue('');
+    this.requestForm.controls['subDate1'].setValue('');
+    this.requestForm.controls['subDate2'].setValue('');
+    this.requestForm.controls['employeeNotes'].setValue('');
+  }
+
+  // approve or deny request
+  approveOrDeny(type: number) {
+    const confType = 'manager';
+    if (type === 1) {
+      const confText = this.translate.instant('approve_conf', this.cn);
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
-      confDlg.afterClosed().subscribe(
-        (result) => {
+      confDlg.afterClosed().subscribe((result) => {
+        if (result !== undefined) {
           if (result.split('|')[0] === 'true') {
-            this.reqServe.managerNdirectorDecisionSubHolyRequest('deny', this.reqId, result.split('|')[1]).subscribe(
+            this.reqServe.managerNdirectorDecisionSubHolyRequest('approve', this.reqId, result.split('|')[1]).subscribe(
               (response) => {
                 if (response.json().status.code === 'STATUS_OK') {
-                  this.chip.open('Substituted Holidays request is DENIED!', null, {
+                  this.chip.open(this.translate.instant('requests_approve_tag', this.cn), null, {
                     duration: 5000,
                     verticalPosition: 'bottom',
                     horizontalPosition: 'left',
                     panelClass: ['success-chip']
                   });
                   this.loc.back();
+                } else {
+                  this.chip.open(this.translate.instant('requests_not_approve_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['error-chip']
+                  });
                 }
               },
               () => {
-                this.chip.open('Error, substituted holidays request isn\'t denied!', null, {
+                this.chip.open(this.translate.instant('requests_not_approve_tag', this.cn), null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
@@ -328,6 +351,47 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
                 });
               }
             );
+          }
+        }
+      });
+    } else {
+      const confText = this.translate.instant('deny_conf', this.cn);
+      const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
+        data: {text: confText, conf: this.confirmation, type: confType}
+      });
+      confDlg.afterClosed().subscribe(
+        (result) => {
+          if (result !== undefined) {
+            if (result.split('|')[0] === 'true') {
+              this.reqServe.managerNdirectorDecisionSubHolyRequest('deny', this.reqId, result.split('|')[1]).subscribe(
+                (response) => {
+                  if (response.json().status.code === 'STATUS_OK') {
+                    this.chip.open(this.translate.instant('requests_deny_tag', this.cn), null, {
+                      duration: 5000,
+                      verticalPosition: 'bottom',
+                      horizontalPosition: 'left',
+                      panelClass: ['success-chip']
+                    });
+                    this.loc.back();
+                  } else {
+                    this.chip.open(this.translate.instant('requests_not_deny_tag', this.cn), null, {
+                      duration: 5000,
+                      verticalPosition: 'bottom',
+                      horizontalPosition: 'left',
+                      panelClass: ['error-chip']
+                    });
+                  }
+                },
+                () => {
+                  this.chip.open(this.translate.instant('requests_not_deny_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['error-chip']
+                  });
+                }
+              );
+            }
           }
         }
       );
@@ -338,63 +402,81 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   authorizeOrNotAuthorize(type: number) {
     const confType = 'director';
     if (type === 1) {
-      const confText = 'Are you sure that you want to AUTHORIZE this request ?';
+      const confText = this.translate.instant('authorize_conf', this.cn);
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
-        if (result.split('|')[0] === 'true') {
-          this.reqServe.managerNdirectorDecisionSubHolyRequest('authorize', this.reqId, result.split('|')[1]).subscribe(
-            (response) => {
-              if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Substituted Holidays request is AUTHORIZED!', null, {
+        if (result !== undefined) {
+          if (result.split('|')[0] === 'true') {
+            this.reqServe.managerNdirectorDecisionSubHolyRequest('authorize', this.reqId, result.split('|')[1]).subscribe(
+              (response) => {
+                if (response.json().status.code === 'STATUS_OK') {
+                  this.chip.open(this.translate.instant('requests_authorize_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['success-chip']
+                  });
+                  this.loc.back();
+                } else {
+                  this.chip.open(this.translate.instant('requests_not_authorize_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['error-chip']
+                  });
+                }
+              },
+              () => {
+                this.chip.open(this.translate.instant('requests_not_authorize_tag', this.cn), null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
-                  panelClass: ['success-chip']
+                  panelClass: ['error-chip']
                 });
-                this.loc.back();
               }
-            },
-            () => {
-              this.chip.open('Error, substituted holidays request isn\'t authorized!', null, {
-                duration: 5000,
-                verticalPosition: 'bottom',
-                horizontalPosition: 'left',
-                panelClass: ['error-chip']
-              });
-            }
-          );
+            );
+          }
         }
       });
     } else {
-      const confText = 'Are you sure that you want to NOT AUTHORIZE this request ?';
+      const confText = this.translate.instant('not_authorize_conf', this.cn);
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
-        if (result.split('|')[0] === 'true') {
-          this.reqServe.managerNdirectorDecisionSubHolyRequest('notAuthorize', this.reqId, result.split('|')[1]).subscribe(
-            (response) => {
-              if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Substituted Holidays request is NOT AUTHORIZED!', null, {
+        if (result !== undefined) {
+          if (result.split('|')[0] === 'true') {
+            this.reqServe.managerNdirectorDecisionSubHolyRequest('notAuthorize', this.reqId, result.split('|')[1]).subscribe(
+              (response) => {
+                if (response.json().status.code === 'STATUS_OK') {
+                  this.chip.open(this.translate.instant('requests_not_auth_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['success-chip']
+                  });
+                  this.loc.back();
+                } else {
+                  this.chip.open(this.translate.instant('requests_error_not_authorize_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['error-chip']
+                  });
+                }
+              },
+              () => {
+                this.chip.open(this.translate.instant('requests_error_not_authorize_tag', this.cn), null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
-                  panelClass: ['success-chip']
+                  panelClass: ['error-chip']
                 });
-                this.loc.back();
               }
-            },
-            () => {
-              this.chip.open('Error while not authorizing this request!', null, {
-                duration: 5000,
-                verticalPosition: 'bottom',
-                horizontalPosition: 'left',
-                panelClass: ['error-chip']
-              });
-            }
-          );
+            );
+          }
         }
       });
     }
@@ -404,63 +486,81 @@ export class SubstitutedHolidaysRequestComponent implements OnInit {
   procReq (type: number) {
     const confType = 'hrOffice';
     if (type === 1) {
-      const confText = 'Are you sure to PROCESS this badge failure request ?';
+      const confText = this.translate.instant('process_conf', this.cn);
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
-        if (result === true) {
-          this.persReqServe.patchPersonelRequests(this.reqId, 'substitutions', 'POOL00000000090').subscribe(
-            (response) => {
-              if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Request processed successfully!', null, {
+        if (result !== undefined) {
+          if (result === true) {
+            this.persReqServe.patchPersonelRequests(this.reqId, 'substitutions', 'POOL00000000090').subscribe(
+              (response) => {
+                if (response.json().status.code === 'STATUS_OK') {
+                  this.chip.open(this.translate.instant('requests_process_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['success-chip']
+                  });
+                  this.loc.back();
+                } else {
+                  this.chip.open(this.translate.instant('requests_not_process_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['error-chip']
+                  });
+                }
+              },
+              () => {
+                this.chip.open(this.translate.instant('requests_not_process_tag', this.cn), null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
-                  panelClass: ['success-chip']
+                  panelClass: ['error-chip']
                 });
-                this.loc.back();
               }
-            },
-            () => {
-              this.chip.open('Request isn\'t processed successfully!', null, {
-                duration: 5000,
-                verticalPosition: 'bottom',
-                horizontalPosition: 'left',
-                panelClass: ['error-chip']
-              });
-            }
-          );
+            );
+          }
         }
       });
     } else {
-      const confText = 'Are you sure to DECLINE this badge failure request ?';
+      const confText = this.translate.instant('decline_conf', this.cn);
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
-        if (result === true) {
-          this.persReqServe.patchPersonelRequests(this.reqId, 'substitutions', 'POOL00000000089').subscribe(
-            (response) => {
-              if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Request declined successfully!', null, {
+        if (result !== undefined) {
+          if (result === true) {
+            this.persReqServe.patchPersonelRequests(this.reqId, 'substitutions', 'POOL00000000089').subscribe(
+              (response) => {
+                if (response.json().status.code === 'STATUS_OK') {
+                  this.chip.open(this.translate.instant('requests_decline_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['success-chip']
+                  });
+                  this.loc.back();
+                } else {
+                  this.chip.open(this.translate.instant('requests_not_decline_tag', this.cn), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['error-chip']
+                  });
+                }
+              },
+              () => {
+                this.chip.open(this.translate.instant('requests_not_decline_tag', this.cn), null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
-                  panelClass: ['success-chip']
+                  panelClass: ['error-chip']
                 });
-                this.loc.back();
               }
-            },
-            () => {
-              this.chip.open('Request isn\'t declined successfully!', null, {
-                duration: 5000,
-                verticalPosition: 'bottom',
-                horizontalPosition: 'left',
-                panelClass: ['error-chip']
-              });
-            }
-          );
+            );
+          }
         }
       });
     }

@@ -17,31 +17,55 @@
     <div class="col-12 header-div">
       <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-12">
-          <div class="header" (click)="refresh()">
-            Requests Management
+          <div class="header" (click)="getRequests('refresh')">
+            {{"req_header" | translate}}
           </div>
         </div>
         <div class="col-lg-9 col-md-9 col-sm-12">
           <div class="row">
-            <div>
-              <mat-icon class="filter-icons">filter_list</mat-icon>
+            <div [matTooltip]="'tooltip_for_sub_dates' | translate">
+              <mat-icon class="filter-icons" [ngClass]="{'disabled-filter': disableSubs}">filter_list</mat-icon>
               <input class="hr-filter"
+                     placeholder="{{'req_sub_month_year' | translate}}"
+                     [disabled]="disableSubs"
+                     [(ngModel)]="selectedYear"
+                     matInput [matDatepicker]="monthYear"
+                     [ngClass]="{'disabled-filter': disableSubs}">
+              <mat-datepicker-toggle matSuffix [for]="monthYear" [disabled]="disableSubs"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('sub-date-filter')" *ngIf="selectedYear !== ''">cancel</mat-icon>
+              <mat-datepicker touchUi
+                              startView="multi-year"
+                              (yearSelected)="year($event)"
+                              (monthSelected)="month($event)"
+                              #monthYear [opened]="myTrigger">
+              </mat-datepicker>
+            </div>
+            <div>
+              <mat-icon class="filter-icons" [ngClass]="{'disabled-filter': disableVals}">filter_list</mat-icon>
+              <input class="hr-filter"
+                     [disabled]="disableVals"
+                     [(ngModel)]="startAuthDate"
                      matInput [matDatepicker]="start"
-                     placeholder="from..."
-                     [(ngModel)]="startAuthDate">
-              <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
-              <mat-icon class="clear-filter filter-date" (click)="clearFilter('start-date-filter')" *ngIf="startAuthDate !== null">cancel</mat-icon>
+                     placeholder="{{'req_from' | translate}}"
+                     [ngClass]="{'disabled-filter': disableVals}"
+                     (dateChange)="setFromDate(startAuthDate, $event)">
+              <mat-datepicker-toggle matSuffix [for]="start" [disabled]="disableVals"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('start-date-filter')" *ngIf="startAuthDate !== ''">cancel</mat-icon>
               <mat-datepicker touchUi #start></mat-datepicker>
             </div>
             <div>
-              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <mat-icon class="filter-icons" [ngClass]="{'disabled-filter': disableVals}">filter_list</mat-icon>
               <input class="hr-filter"
+                     [value]="endAuthDate"
+                     [disabled]="disableVals"
+                     [(ngModel)]="endAuthDate"
                      matInput [matDatepicker]="stop"
-                     placeholder="...to"
-                     [(ngModel)]="endAuthDate">
-              <mat-datepicker-toggle matSuffix [for]="stop"></mat-datepicker-toggle>
-              <mat-icon class="clear-filter filter-date" (click)="clearFilter('stop-date-filter')" *ngIf="endAuthDate !== null">cancel</mat-icon>
-              <mat-datepicker touchUi #stop></mat-datepicker>
+                     placeholder="{{'req_to' | translate}}"
+                     [ngClass]="{'disabled-filter': disableVals}"
+                     (dateChange)="setToDate(endAuthDate, $event)">
+              <mat-datepicker-toggle matSuffix [for]="stop" [disabled]="disableVals"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('stop-date-filter')" *ngIf="endAuthDate !== ''">cancel</mat-icon>
+              <mat-datepicker touchUi #stop [opened]="trigger"></mat-datepicker>
             </div>
             <div>
               <mat-icon class="filter-icons">filter_list</mat-icon>
@@ -50,7 +74,7 @@
                      [(ngModel)]="employeeInput"
                      (keyup)="getEmployee()"
                      (change)="setDERPId(employeeInput, 'empId')"
-                     placeholder="Employee"
+                     placeholder="{{'req_employee' | translate}}"
                      class="hr-filter">
               <mat-icon class="clear-filter req-filter" (click)="clearFilter('emp-filter')" *ngIf="employeeInput?.length > 0">cancel</mat-icon>
             </div>
@@ -60,7 +84,7 @@
                      list="reqTypes"
                      [(ngModel)]="requestTypeInput"
                      (change)="setDERPId(requestTypeInput, 'reqType')"
-                     placeholder="Requests Type"
+                     placeholder="{{'req_request_type' | translate}}"
                      class="hr-filter">
               <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
             </div>
@@ -70,7 +94,7 @@
                      list="process"
                      [(ngModel)]="processedInput"
                      (change)="setDERPId(processedInput, 'process')"
-                     placeholder="Processed Type"
+                     placeholder="{{'req_process_type' | translate}}"
                      class="hr-filter">
               <mat-icon class="clear-filter req-filter" (click)="clearFilter('process-filter')" *ngIf="processedInput?.length > 0">cancel</mat-icon>
             </div>
@@ -84,22 +108,22 @@
         <thead>
         <tr>
           <th>{{fields?.requestTypeId?.fieldLabel}}</th>
-          <th>{{fields?.insertDate?.fieldLabel}}</th>
-          <th>{{fields?.expireDate?.fieldLabel}}</th>
-          <th>{{fields?.validationDate?.fieldLabel}}</th>
-          <th [ngClass]="{'no-employee': reqType === 'me'}">Employee</th>
-          <th>{{fields?.employeeNotes?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.insertDate?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.expireDate?.fieldLabel}}</th>
+          <th class="smaller-display">{{fields?.validationDate?.fieldLabel}}</th>
+          <th>{{"req_employee" | translate}}</th>
+          <th class="small-display">{{fields?.employeeNotes?.fieldLabel}}</th>
           <th>{{fields?.processedId?.fieldLabel}}</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.labelMap?.requestTypeId)">
+        <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.requestTypeId)">
           <td>{{request?.labelMap?.requestTypeId | multiPurposePipe: 'hasValue'}}</td>
-          <td>{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
-          <td>{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
-          <td>{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
-          <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
-          <td>{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
+          <td class="small-display">{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td class="small-display">{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td class="smaller-display">{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td>{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
+          <td class="small-display">{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
           <td
             [matTooltip]="request?.directorNotes ? request?.directorNotes : 'No notes available...'">
             {{request?.labelMap?.processedId | multiPurposePipe: 'hasValue'}}

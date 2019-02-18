@@ -24,6 +24,8 @@
     "@angular/router": "^6.1.0",
     "@auth0/angular-jwt": "^2.1.0",
     "@ngx-pwa/local-storage": "^6.2.2",
+    "@ngx-translate/core": "^11.0.1",
+    "@ngx-translate/http-loader": "^4.0.0",
     "angular-6-social-login": "^1.1.1",
     "bootstrap": "^4.2.1",
     "core-js": "^2.5.4",

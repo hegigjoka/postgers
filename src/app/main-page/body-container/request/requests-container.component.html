@@ -13,7 +13,7 @@
 
     <div class="col-12 header-div">
       <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="col-lg-3 col-md-3 col-sm-12">
           <div #dorpdown class="dropdown">
             <h2 class="dropdown-toggle"
                 id="requestCategory"
@@ -24,26 +24,49 @@
               {{title}}
             </h2>
             <div class="dropdown-menu" aria-labelledby="requestCategory">
-              <a class="dropdown-item" (click)="onlyMR()">My Requests</a>
+              <a class="dropdown-item" (click)="onlyMR()">{{MyLabel}}</a>
               <a class="dropdown-item" (click)="onlyPA()">
             <span [matBadge]="badge ? badge : ''"
                   matBadgeOverlap="false"
                   matBadgeSize="medium">
-              Pending Action
+              {{ActionLabel}}
             </span>
               </a>
             </div>
           </div>
         </div>
-        <div class="col-lg-8 col-md-8 col-sm-12">
+        <div class="col-lg-9 col-md-9 col-sm-12">
           <div class="row">
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input class="hr-filter"
+                     [(ngModel)]="startAuthDate"
+                     matInput [matDatepicker]="start"
+                     placeholder="{{'req_from' | translate}}"
+                     (dateChange)="setFromDate(startAuthDate, $event)">
+              <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('start-date-filter')" *ngIf="startAuthDate !== ''">cancel</mat-icon>
+              <mat-datepicker touchUi #start></mat-datepicker>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input class="hr-filter"
+                     [value]="endAuthDate"
+                     [(ngModel)]="endAuthDate"
+                     matInput [matDatepicker]="stop"
+                     placeholder="{{'req_to' | translate}}"
+                     (dateChange)="setToDate(endAuthDate, $event)">
+              <mat-datepicker-toggle matSuffix [for]="stop"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('stop-date-filter')" *ngIf="endAuthDate !== ''">cancel</mat-icon>
+              <mat-datepicker touchUi #stop [opened]="trigger"></mat-datepicker>
+            </div>
             <div>
               <mat-icon class="filter-icons">filter_list</mat-icon>
               <input type="text"
                      list="reqTypes"
                      [(ngModel)]="requestTypeInput"
                      (change)="setTAId(requestTypeInput, 'reqType')"
-                     placeholder="Requests Type"
+                     placeholder="{{'req_request_type' | translate}}"
                      class="hr-filter">
               <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
             </div>
@@ -53,7 +76,7 @@
                      list="statTypes"
                      [(ngModel)]="statusInput"
                      (change)="setTAId(statusInput, 'statusType')"
-                     placeholder="Status Type"
+                     placeholder="{{'req_status_type' | translate}}"
                      class="hr-filter">
               <mat-icon class="clear-filter req-filter" (click)="clearFilter('status-filter')" *ngIf="statusInput?.length > 0">cancel</mat-icon>
             </div>
@@ -69,14 +92,14 @@
           <th class="small-display">{{fields?.insertDate?.fieldLabel}}</th>
           <th class="small-display">{{fields?.expireDate?.fieldLabel}}</th>
           <th class="small-display">{{fields?.validationDate?.fieldLabel}}</th>
-          <th [ngClass]="{'no-employee': reqType === 'me'}">Employee</th>
+          <th [ngClass]="{'no-employee': reqType === 'me'}">{{"req_employee" | translate}}</th>
           <th class="small-display">{{fields?.employeeNotes?.fieldLabel}}</th>
           <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
           <th>{{fields?.status?.fieldLabel}}</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.labelMap?.requestTypeId)">
+        <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.requestTypeId)">
           <td>{{request?.labelMap?.requestTypeId | multiPurposePipe: 'hasValue'}}</td>
           <td class="small-display">{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
           <td class="small-display">{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
@@ -116,17 +139,17 @@
       </table>
       <div class="total-records">( {{requests?.totalRecords}} )</div>
     </div>
-    <div class="new-request" *ngIf="allowNewRequest">
-      <div class="new-sub" (click)="openRequest('new', 'Substituted Holidays')">S</div>
-      <div class="new-sub-banner">Substituted Holidays</div>
-      <div class="new-mt" (click)="openRequest('new', 'Badge Fail')">BF</div>
-      <div class="new-mt-banner">Badge Failure</div>
-      <div class="new-mission" (click)="openRequest('new', 'Mission')">M</div>
-      <div class="new-mission-banner">Mission</div>
-      <div class="new-holiday" (click)="openRequest('new', 'Holiday and Permission')">H</div>
-      <div class="new-holiday-banner">Holiday and Permission</div>
-      <div class="new-xh" (click)="openRequest('new', 'Extra Hours')">xH</div>
-      <div class="new-xh-banner">Extra Hours</div>
+    <div class="new-request" *ngIf="allowNewRequest && reqType === 'me'">
+      <div class="new-sub" (click)="openRequest('new', 'POOL00000000082')">S</div>
+      <div class="new-sub-banner">{{'SH_header' | translate}}</div>
+      <div class="new-mt" (click)="openRequest('new', 'POOL00000000080')">BF</div>
+      <div class="new-mt-banner">{{'BF_header' | translate}}</div>
+      <div class="new-mission" (click)="openRequest('new', 'POOL00000000078')">M</div>
+      <div class="new-mission-banner">{{'M_header' | translate}}</div>
+      <div class="new-holiday" (click)="openRequest('new', 'POOL00000000079')">H</div>
+      <div class="new-holiday-banner">{{'HP_header' | translate}}</div>
+      <div class="new-xh" (click)="openRequest('new', 'POOL00000000081')">xH</div>
+      <div class="new-xh-banner">{{'xH_header' | translate}}</div>
       <div class="new">+</div>
     </div>
   </mat-drawer-content>

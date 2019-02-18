@@ -3,26 +3,50 @@
     <app-side-menu (fireEvent)="backing($event)"></app-side-menu>
   </mat-drawer>
   <mat-drawer-content class="container-fluid">
+    <datalist id="filter">
+      <option *ngFor="let searches of searchTypes" [value]="searches"></option>
+      <option *ngFor="let startus of statusType" [value]="startus?.someLabel"></option>
+      <option *ngFor="let type of requestType" [value]="type?.someLabel"></option>
+      <option *ngFor="let fiter of hrType" [value]="fiter"></option>
+      <option *ngFor="let hrProcess of hrProcessType" [value]="hrProcess?.someLabel"></option>
+      <option *ngFor="let hrType of hrRequestType" [value]="hrType?.someLabel"></option>
+    </datalist>
     <div class="row top-menu-style">
-      <div class="col-lg-2 col-md-4 col-sm-10 emp-brand-menu">
+      <div class="col-lg-3 col-md-4 col-sm-10 emp-brand-menu">
         <mat-icon class="menu-icon" (click)="iconToggle()">menu</mat-icon>
-        <div class="page-name" id="main">Employee Requests</div>
+        <div class="page-name" id="main">{{ "Brand" | translate }}</div>
       </div>
-      <div class="col-lg-6 col-md-4 emp-global-search">
+      <div class="col-lg-5 col-md-4 emp-global-search">
         <mat-icon class="search-icon">search</mat-icon>
-        <input class="search-bar" type="search" [(ngModel)]="search" [placeholder]="'Search...'">
+        <input class="search-bar"
+               type="text"
+               list="filter"
+               [(ngModel)]="search"
+               (keyup)="onKey(search)"
+               (change)="onEnter(search)"
+               placeholder="{{'search_bar' | translate}}">
       </div>
       <div class="emp-cred-container" *ngIf="sideNav !== 'open'">
-        <ngx-avatar *ngIf="!avatarOrPic()" class="avatar" [name]="'Hegi Gjoka'" [size]="'46'" bgColor="white" fgColor="#045BA1"></ngx-avatar>
-        <img *ngIf="avatarOrPic()" src="{{avatar}}" class="img-fluid avatar-img">
+        <ngx-avatar *ngIf="!avatarOrPic()"
+                    (click)="iconToggle()"
+                    class="avatar"
+                    [name]="setCreds('employee')"
+                    [size]="'46'"
+                    bgColor="white"
+                    fgColor="#045BA1">
+        </ngx-avatar>
+        <img *ngIf="avatarOrPic()"
+             (click)="iconToggle()"
+             src="{{avatar}}"
+             class="img-fluid avatar-img">
         <div class="office-n-employee">
           <div>{{setCreds('office')}}</div>
           <div>{{setCreds('employee')}}</div>
         </div>
       </div>
     </div>
-    <div style="height: 92.5%;" class="row">
-      <router-outlet (activate)="searchingFunc()"></router-outlet>
+    <div class="row panel-contents">
+      <router-outlet></router-outlet>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>

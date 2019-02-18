@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12 header">
-          Holiday and Permission Request
+          {{'HP_header' | translate}}
           <hr>
         </div>
       </div>
@@ -35,21 +35,22 @@
             <input id="holidayTypeId"
                    list="holyType"
                    type="text"
+                   placeholder="{{'placeholder_req_type' | translate}}"
                    [(ngModel)]="holidayTypeInput"
                    (change)="setHTId(holidayTypeInput)"
                    formControlName="holidayTypeId">
             <br>
             <label for="startTimestamp">{{fields?.startTimestamp?.fieldLabel}}: </label>
-            <input id="startTimestamp" type="date" min="{{date.toISOString().split('T')[0]}}" formControlName="startTimestamp">
+            <input id="startTimestamp" type="date" min="{{date.toISOString().split('T')[0]}}" [(ngModel)]="startDate" formControlName="startTimestamp">
             <br>
             <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
             <input id="stopTimestamp" type="date" min="{{date.toISOString().split('T')[0]}}" formControlName="stopTimestamp">
             <br>
             <label for="countHD">{{fields?.countHD?.fieldLabel}}: </label>
-            <input id="countHD" type="number" formControlName="countHD">
+            <input id="countHD" type="number" placeholder="{{'placeholder_req_duration_days' | translate}}" formControlName="countHD">
             <br>
             <label for="employeeNotes">{{fields?.employeeNotes?.fieldLabel}}: </label>
-            <textarea id="employeeNotes" type="text" formControlName="employeeNotes"></textarea>
+            <textarea id="employeeNotes" type="text" placeholder="{{'placeholder_req_notes' | translate}}" formControlName="employeeNotes"></textarea>
             <br>
             <label for="approvementId" *ngIf="hasSomeField && displayApprove">{{fields?.approvementId?.fieldLabel}}: </label>
             <input id="approvementId" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
@@ -60,45 +61,45 @@
             <div class="buttons" *ngIf="!hasSomeField">
               <button class="btn" (click)="insertRequest()" *ngIf="requestForm.valid">
                 <mat-icon class="btn-icon">add_circle</mat-icon>
-                Insert
+                {{'insert' | translate}}
               </button>
               <button class="btn btn-danger" (click)="reset()">
                 <mat-icon class="btn-icon">cancel_presentation</mat-icon>
-                Reset
+                {{'reset' | translate}}
               </button>
             </div>
             <button class="btn btn-danger" (click)="deleteRequest()" *ngIf="isDeletable && allowDeleteRequest">
               <mat-icon class="btn-icon">delete</mat-icon>
-              Delete
+              {{'delete' | translate}}
             </button>
             <div class="buttons" *ngIf="isManager && allowUpdateRequest">
               <button class="btn" (click)="approveOrDeny(1)">
                 <mat-icon class="btn-icon">check_box</mat-icon>
-                Approve
+                {{'approve' | translate}}
               </button>
               <button class="btn btn-danger" (click)="approveOrDeny(0)">
                 <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
-                Deny
+                {{'deny' | translate}}
               </button>
             </div>
             <div class="buttons" *ngIf="isDirector && allowUpdateRequest">
               <button class="btn" (click)="authorizeOrNotAuthorize(1)">
                 <mat-icon class="btn-icon">check_box</mat-icon>
-                Authorize
+                {{'authorize' | translate}}
               </button>
               <button class="btn btn-danger" (click)="authorizeOrNotAuthorize(0)">
                 <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
-                Not Authorize
+                {{'not_authorize' | translate}}
               </button>
             </div>
             <div class="buttons" *ngIf="proc && allowUpdateRequest">
               <button class="btn" (click)="procReq(1)">
                 <mat-icon class="btn-icon">check</mat-icon>
-                Process
+                {{'process' | translate}}
               </button>
               <button class="btn btn-danger" (click)="procReq(0)">
                 <mat-icon class="btn-icon">close</mat-icon>
-                Don't process
+                {{'decline' | translate}}
               </button>
             </div>
           </form>

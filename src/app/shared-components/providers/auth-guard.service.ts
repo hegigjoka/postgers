@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import {Router, CanActivate, CanActivateChild} from '@angular/router';
+import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import {Observable} from 'rxjs';
+import {EmployeeService} from './employee.service';
 
 @Injectable()
-export class AuthGuardService implements CanActivate, CanActivateChild {
+export class AuthGuardService implements CanActivate {
   authToken: string;
 
-  constructor( public router: Router) {}
+  constructor(private empServe: EmployeeService,public router: Router) {}
 
-  canActivate(): any {
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     this.authToken = localStorage.getItem('EmpAuthToken');
     if (!this.authToken) {
       this.router.navigate(['sign-in']);
@@ -15,8 +17,5 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
     } else {
       return true;
     }
-  }
-  canActivateChild(): any {
-    return this.canActivate();
   }
 }

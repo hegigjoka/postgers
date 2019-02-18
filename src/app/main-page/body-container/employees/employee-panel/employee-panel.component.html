@@ -21,7 +21,7 @@
       <div class="row">
         <!--Header-->
         <div class="col-lg-3 col-md-3 col-sm-12">
-          <div class="header" (click)="getEmployees('refresh')">Manage Employees</div>
+          <div class="header" (click)="getEmployees('refresh')">{{"emp_header" | translate}}</div>
         </div>
 
         <!--Filters-->
@@ -32,7 +32,7 @@
               <input type="text"
                      (keyup)="setFirstNLast()"
                      [(ngModel)]="someLabelFilter"
-                     placeholder="Employees"
+                     placeholder="{{'emp_employee' | translate}}"
                      class="employee-filter">
               <mat-icon class="clear-filter emp-name" (click)="clearFilter(1)" *ngIf="someLabelFilter.length > 0">cancel</mat-icon>
             </div>
@@ -43,7 +43,7 @@
                      (keyup)="getOfficesDataList()"
                      (change)="setMDOId(officeFilter, 'office')"
                      [(ngModel)]="officeFilter"
-                     placeholder="Offices"
+                     placeholder="{{'emp_offices' | translate}}"
                      class="employee-filter">
               <mat-icon class="clear-filter" (click)="clearFilter(2)" *ngIf="officeFilter.length > 0">cancel</mat-icon>
             </div>
@@ -54,7 +54,7 @@
                      (keyup)="getManagerDataList()"
                      (change)="setMDOId(managerFilter, 'manager')"
                      [(ngModel)]="managerFilter"
-                     placeholder="Managers"
+                     placeholder="{{'emp_manager' | translate}}"
                      class="employee-filter">
               <mat-icon class="clear-filter" (click)="clearFilter(3)" *ngIf="managerFilter.length > 0">cancel</mat-icon>
             </div>
@@ -65,7 +65,7 @@
                      (keyup)="getDirectorDataList()"
                      (change)="setMDOId(directorFilter, 'director')"
                      [(ngModel)]="directorFilter"
-                     placeholder="Directors"
+                     placeholder="{{'emp_director' | translate}}"
                      class="employee-filter">
               <mat-icon class="clear-filter" (click)="clearFilter(4)" *ngIf="directorFilter.length > 0">cancel</mat-icon>
             </div>
@@ -80,13 +80,13 @@
       <table class="table table-striped">
         <thead>
         <tr>
-          <th>Employee</th>
+          <th>{{"emp_employee" | translate}}</th>
           <th class="small-display">{{tableFields?.birthdate?.fieldLabel}}</th>
           <th class="small-display">{{tableFields?.email?.fieldLabel}}</th>
           <th>{{tableFields?.officeName?.fieldLabel}}</th>
-          <th>Manager</th>
+          <th>{{"emp_manager" | translate}}</th>
           <th class="small-display">{{tableFields?.managerEmail?.fieldLabel}}</th>
-          <th>Director</th>
+          <th>{{"emp_director" | translate}}</th>
           <th class="small-display">{{tableFields?.directorEmail?.fieldLabel}}</th>
         </tr>
         </thead>

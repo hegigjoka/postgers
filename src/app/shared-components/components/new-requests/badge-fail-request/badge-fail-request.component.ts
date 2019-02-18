@@ -10,6 +10,8 @@ import {RequestMissingBadgeMetadata} from '../../../models/requests-models/reque
 import {RequestMissingBadgeModel} from '../../../models/requests-models/request-missing-badge.model';
 import {PersonelRequestService} from '../../../providers/personel-request.service';
 import {HrPermission} from '../../../permissions/hr-permission';
+import { TranslateService } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-badge-fail-request',
@@ -17,6 +19,9 @@ import {HrPermission} from '../../../permissions/hr-permission';
   styleUrls: ['../new-request.components.css']
 })
 export class BadgeFailRequestComponent implements OnInit {
+  // component name
+  cN = {requestType: ''};
+
   fields: RequestMissingBadgeMetadata;
 
   missingBadgeTypes: AbstractModel[];
@@ -28,6 +33,7 @@ export class BadgeFailRequestComponent implements OnInit {
 
   requestForm: FormGroup;
   date: Date = new Date();
+  startTime: string;
 
   hasSomeField: boolean;
   hasEmployeeField: boolean;
@@ -39,6 +45,7 @@ export class BadgeFailRequestComponent implements OnInit {
   allowDeleteRequest: boolean;
 
   constructor(
+    private translate: TranslateService,
     public permissions: HrPermission,
     private persReqServe: PersonelRequestService,
     private reqServe: RequestsService,
@@ -50,7 +57,16 @@ export class BadgeFailRequestComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getFields();
+    this.cN.requestType = this.translate.instant('BF_header');
+    setTimeout(() => {
+      this.getFields();
+      if (this.permissions.hrRequestsType.allowPut === true) {
+        this.allowUpdateRequest = true;
+      }
+      if (this.permissions.hrRequestsType.allowDelete === true) {
+        this.allowDeleteRequest = true;
+      }
+    }, 600);
     const insertDate = new Date(this.date.valueOf() + 3600000);
     this.requestForm = new FormGroup({
       id: new FormControl(''),
@@ -58,20 +74,27 @@ export class BadgeFailRequestComponent implements OnInit {
       insertDate: new FormControl(insertDate.toISOString().split('.')[0], Validators.required),
       requestTypeId: new FormControl('POOL00000000080', Validators.required),
       badgeFailTypeId: new FormControl('', Validators.required),
-      employeeId: new FormControl(localStorage.getItem('EmpId'), Validators.required),
+      employeeId: new FormControl(this.permissions.employee.fullName, Validators.required),
       officeNameId: new FormControl(''),
-      date: new FormControl(this.date.toISOString().split('T')[0], Validators.required),
+      date: new FormControl(this.date.toISOString().split('T')[0], [Validators.required, this.dateVal.bind(this)]),
       startTimestamp: new FormControl('', Validators.required),
-      stopTimestamp: new FormControl('', Validators.required),
+      stopTimestamp: new FormControl('', [Validators.required, this.stopTimeVal.bind(this)]),
       labelMap: new FormGroup({})
     });
     this.getUrlParams();
-    if (this.permissions.hrRequestsType.allowPut === true) {
-      this.allowUpdateRequest = true;
+  }
+
+  dateVal(control: FormControl): {[key: string]: boolean} {
+    if (control.value < this.date.toISOString().split('T')[0]) {
+      return {'incorrect date': true};
     }
-    if (this.permissions.hrRequestsType.allowDelete === true) {
-      this.allowDeleteRequest = true;
+    return null;
+  }
+  stopTimeVal(control: FormControl): {[key: string]: boolean} {
+    if (this.startTime >= control.value) {
+      return {'incorrect stop time': true};
     }
+    return null;
   }
 
   getUrlParams() {
@@ -87,7 +110,9 @@ export class BadgeFailRequestComponent implements OnInit {
       this.hasSomeField = true;
       this.hasEmployeeField = true;
       this.requestForm.disable();
-      this.getMBrequest();
+      setTimeout(() => {
+        this.getMBrequest();
+      }, 600);
     }
   }
 
@@ -131,7 +156,7 @@ export class BadgeFailRequestComponent implements OnInit {
           this.proc = true;
         }
       }
-      if (this.request.employeeId === localStorage.getItem('EmpId')) {
+      if (this.request.employeeId === this.permissions.employee.id) {
         this.hasEmployeeField = false;
       }
     });
@@ -154,17 +179,25 @@ export class BadgeFailRequestComponent implements OnInit {
     this.reqServe.insertMissingBadgeRequest(this.request).subscribe(
       (status) => {
         if (status.json().status.code === 'STATUS_OK') {
-          this.chip.open('Badge failure request is sent successfully!', null, {
+          this.chip.open(this.translate.instant('requests_insert_tag', this.cN), null, {
             duration: 5000,
             verticalPosition: 'bottom',
             horizontalPosition: 'left',
             panelClass: ['success-chip']
           });
           this.loc.back();
+        } else {
+          this.chip.open(this.translate.instant('requests_not_insert_tag', this.cN), null, {
+            duration: 5000,
+            verticalPosition: 'bottom',
+            horizontalPosition: 'left',
+            panelClass: ['error-chip']
+          });
+          this.reset();
         }
       },
       () => {
-        this.chip.open('Badge failure request isn\'t sent, sorry!', null, {
+        this.chip.open(this.translate.instant('requests_not_insert_tag', this.cN), null, {
           duration: 5000,
           verticalPosition: 'bottom',
           horizontalPosition: 'left',
@@ -177,37 +210,45 @@ export class BadgeFailRequestComponent implements OnInit {
 
   // delete pending request
   deleteRequest() {
-    const confText = 'Are you sure that you want to delete this pending badge failure request ?';
+    const confText = this.translate.instant('delete_conf', this.cN);
     const confType = 'del';
     const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
       data: {text: confText, conf: confType, type: confType}
     });
-    confDlg.afterClosed().subscribe((resuelt) => {
-      this.confirmation = resuelt;
-      if (this.confirmation === true) {
-        this.reqServe.deleteMissingBadgeRequest(this.reqId).subscribe(
-          (status) => {
-            if (status.json().status.code === 'STATUS_OK') {
-              this.chip.open('Badge failure request is deleted successfully!', null, {
+    confDlg.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+        if (result === true) {
+          this.reqServe.deleteMissingBadgeRequest(this.reqId).subscribe(
+            (status) => {
+              if (status.json().status.code === 'STATUS_OK') {
+                this.chip.open(this.translate.instant('requests_delete_tag', this.cN), null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['success-chip']
+                });
+                this.loc.back();
+              } else {
+                this.chip.open(this.translate.instant('requests_not_delete_tag', this.cN), null, {
+                  duration: 5000,
+                  verticalPosition: 'bottom',
+                  horizontalPosition: 'left',
+                  panelClass: ['error-chip']
+                });
+              }
+            },
+            () => {
+              this.chip.open(this.translate.instant('requests_not_delete_tag', this.cN), null, {
                 duration: 5000,
                 verticalPosition: 'bottom',
                 horizontalPosition: 'left',
-                panelClass: ['success-chip']
+                panelClass: ['error-chip']
               });
-              this.loc.back();
             }
-          },
-          () => {
-            this.chip.open('Badge failure request can\'t be deleted, sorry!', null, {
-              duration: 5000,
-              verticalPosition: 'bottom',
-              horizontalPosition: 'left',
-              panelClass: ['error-chip']
-            });
-          }
-        );
-      } else {
-        this.loc.back();
+          );
+        } else {
+          this.loc.back();
+        }
       }
     });
   }
@@ -224,63 +265,81 @@ export class BadgeFailRequestComponent implements OnInit {
   procReq (type: number) {
     const confType = 'hrOffice';
     if (type === 1) {
-      const confText = 'Are you sure to PROCESS this badge failure request ?';
+      const confText = this.translate.instant('process_conf', this.cN);
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
-        if (result === true) {
-          this.persReqServe.patchPersonelRequests(this.reqId, 'missingBadge', 'POOL00000000090').subscribe(
-            (response) => {
-              if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Request processed successfully!', null, {
+        if (result !== undefined) {
+          if (result === true) {
+            this.persReqServe.patchPersonelRequests(this.reqId, 'missingBadge', 'POOL00000000090').subscribe(
+              (response) => {
+                if (response.json().status.code === 'STATUS_OK') {
+                  this.chip.open(this.translate.instant('requests_process_tag', this.cN), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['success-chip']
+                  });
+                  this.loc.back();
+                } else {
+                  this.chip.open(this.translate.instant('requests_not_process_tag', this.cN), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['error-chip']
+                  });
+                }
+              },
+              () => {
+                this.chip.open(this.translate.instant('requests_not_process_tag', this.cN), null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
-                  panelClass: ['success-chip']
+                  panelClass: ['error-chip']
                 });
-                this.loc.back();
               }
-            },
-            () => {
-              this.chip.open('Request isn\'t processed successfully!', null, {
-                duration: 5000,
-                verticalPosition: 'bottom',
-                horizontalPosition: 'left',
-                panelClass: ['error-chip']
-              });
-            }
-          );
+            );
+          }
         }
       });
     } else {
-      const confText = 'Are you sure to DECLINE this badge failure request ?';
+      const confText = this.translate.instant('decline_conf', this.cN);
       const confDlg = this.confirmDialog.open(ConfirmDialogComponent, {
         data: {text: confText, conf: this.confirmation, type: confType}
       });
       confDlg.afterClosed().subscribe((result) => {
-        if (result === true) {
-          this.persReqServe.patchPersonelRequests(this.reqId, 'missingBadge', 'POOL00000000089').subscribe(
-            (response) => {
-              if (response.json().status.code === 'STATUS_OK') {
-                this.chip.open('Request declined successfully!', null, {
+        if (result !== undefined) {
+          if (result === true) {
+            this.persReqServe.patchPersonelRequests(this.reqId, 'missingBadge', 'POOL00000000089').subscribe(
+              (response) => {
+                if (response.json().status.code === 'STATUS_OK') {
+                  this.chip.open(this.translate.instant('requests_decline_tag', this.cN), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['success-chip']
+                  });
+                  this.loc.back();
+                } else {
+                  this.chip.open(this.translate.instant('requests_not_decline_tag', this.cN), null, {
+                    duration: 5000,
+                    verticalPosition: 'bottom',
+                    horizontalPosition: 'left',
+                    panelClass: ['error-chip']
+                  });
+                }
+              },
+              () => {
+                this.chip.open(this.translate.instant('requests_not_decline_tag', this.cN), null, {
                   duration: 5000,
                   verticalPosition: 'bottom',
                   horizontalPosition: 'left',
-                  panelClass: ['success-chip']
+                  panelClass: ['error-chip']
                 });
-                this.loc.back();
               }
-            },
-            () => {
-              this.chip.open('Request isn\'t declined successfully!', null, {
-                duration: 5000,
-                verticalPosition: 'bottom',
-                horizontalPosition: 'left',
-                panelClass: ['error-chip']
-              });
-            }
-          );
+            );
+          }
         }
       });
     }
