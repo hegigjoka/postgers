@@ -9,29 +9,32 @@
   margin-top: 18px;
   margin-right: 140px;
 }
-
-.emp, .req, .logout{
+/deep/.mat-badge-content{
+  background-color: #cd0022;
+  color: white;
+}
+.emp, .req, .pers, .calendar, .lang, .logout{
   padding-top: 5px;
   padding-bottom: 5px;
   border-top-right-radius: 80px;
   border-bottom-right-radius: 80px;
 }
-.emp:hover, .req:hover{
+.emp:hover, .req:hover, .pers:hover, .calendar:hover, .lang:hover{
   background-color: #045BA1;
 }
-.emp:hover > .emp-icon, .req:hover > .req-icon{
+.emp:hover > .emp-icon, .req:hover > .req-icon, .pers:hover > .pers-icon, .calendar:hover > .calendar-icon, .lang:hover > .lang-icon{
   color: white;
 }
-.emp:hover > .emp-desc{
+.emp:hover > .emp-desc, .pers:hover > .pers-desc, .calendar:hover > .calendar-desc, .lang:hover > .lang-desc{
   font-family: "Roboto Light";
   color: white;
 }
-.req:hover > .req-desc, .req:hover > .req-type{
+.req:hover > .req-desc, .req:hover > .req-type, .lang:hover > .lang-desc, .lang:hover > .lang-type{
   font-family: "Roboto Light";
   color: white;
   display: block;
 }
-.emp-icon, .req-icon, .logout-icon{
+.emp-icon, .req-icon, .pers-icon, .calendar-icon, .lang-icon, .logout-icon{
   margin-left: 15px;
   color: #045BA1;
   font-size: 30px;
@@ -40,15 +43,16 @@
   height: unset;
   cursor: pointer;
 }
-.emp-desc, .req-desc, .logout-desc{
+.emp-desc, .req-desc, .pers-desc, .calendar-desc, .lang-desc, .logout-desc{
   font-family: "Roboto Thin";
+  min-width: 100px;
   color: #045BA1;
   font-size: 18px;
   margin-top: 4px;
   margin-left: 10px;
   cursor: pointer;
 }
-.req-type{
+.req-type, .lang-type{
   display: none;
   color: white;
   font-family: "Roboto Light";

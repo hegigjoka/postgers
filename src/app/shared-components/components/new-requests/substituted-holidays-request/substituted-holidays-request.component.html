@@ -1,0 +1,108 @@
+<div class="container bcg-emp-menu">
+  <div class="row emp-menu">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 header">
+          {{'SH_header' | translate}}
+          <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 forms">
+          <!--Editing Employee Or Inserting Employee Form-->
+          <form [formGroup]="requestForm">
+            <div class="form-section" *ngIf="hasSomeField">Employee Info</div>
+            <hr *ngIf="hasSomeField">
+            <label for="employeeId" *ngIf="hasEmployeeField">{{fields?.employeeId?.fieldLabel}}: </label>
+            <input id="employeeId" type="text" formControlName="employeeId" *ngIf="hasEmployeeField">
+            <br *ngIf="hasEmployeeField">
+            <label for="officeNameId" *ngIf="hasSomeField">{{fields?.officeNameId?.fieldLabel}}: </label>
+            <input id="officeNameId" type="text" formControlName="officeNameId" *ngIf="hasSomeField">
+            <br *ngIf="hasSomeField">
+            <label for="managerId" *ngIf="hasSomeField">{{fields?.managerId?.fieldLabel}}: </label>
+            <input id="managerId" type="text" formControlName="managerId" *ngIf="hasSomeField">
+            <br *ngIf="hasSomeField">
+            <label for="directorId" *ngIf="hasSomeField">{{fields?.directorId?.fieldLabel}}: </label>
+            <input id="directorId" type="text" formControlName="directorId" *ngIf="hasSomeField">
+            <br *ngIf="hasSomeField">
+            <div class="form-section" *ngIf="hasSomeField">Request Info</div>
+            <hr *ngIf="hasSomeField">
+            <label for="date">{{'req_date_label' | translate}}</label>
+            <input id="date" type="date" min="{{date.toISOString().split('T')[0]}}" [(ngModel)]="dtbsub" formControlName="date">
+            <br>
+            <label for="startTimestamp">{{fields?.startTimestamp?.fieldLabel}}: </label>
+            <input id="startTimestamp" type="time" step="1800" formControlName="startTimestamp">
+            <br>
+            <label for="stopTimestamp">{{fields?.stopTimestamp?.fieldLabel}}: </label>
+            <input id="stopTimestamp" type="time" step="1800" formControlName="stopTimestamp">
+            <br>
+            <label for="countHD">{{fields?.countHD?.fieldLabel}}: </label>
+            <input id="countHD" type="number" placeholder="{{'placeholder_req_duration' | translate}}" formControlName="countHD">
+            <br>
+            <div class="sub-dates" *ngFor="let sd of subDates;let i = index">
+              <label [for]="'subDate' + i">{{'req_sub_date_label' | translate}} {{i+1}}: </label>
+              <input [id]="'subDate' + i" type="date" min="{{date.toISOString().split('T')[0]}}" [formControlName]="'subDate' + i">
+              <mat-icon *ngIf="i === 0 && !hideButton" (click)="newDate()">control_point</mat-icon>
+              <br>
+            </div>
+            <label for="employeeNotes">{{fields?.employeeNotes?.fieldLabel}}: </label>
+            <textarea id="employeeNotes" type="text" placeholder="{{'placeholder_req_notes' | translate}}" formControlName="employeeNotes"></textarea>
+            <br>
+            <label for="approvementId" *ngIf="hasSomeField && displayApprove">{{fields?.approvementId?.fieldLabel}}: </label>
+            <input id="approvementId" type="text" formControlName="approvementId" *ngIf="hasSomeField && displayApprove">
+            <br *ngIf="hasSomeField && displayApprove">
+            <label for="authorizationId" *ngIf="hasSomeField && displayAuth">{{fields?.authorizationId?.fieldLabel}}: </label>
+            <input id="authorizationId" type="text" formControlName="authorizationId" *ngIf="hasSomeField && displayAuth">
+            <br *ngIf="hasSomeField && displayAuth">
+            <div class="buttons" *ngIf="!hasSomeField">
+              <button class="btn" (click)="insertRequest()" *ngIf="requestForm.valid">
+                <mat-icon class="btn-icon">add_circle</mat-icon>
+                {{'insert' | translate}}
+              </button>
+              <button class="btn btn-danger" (click)="reset()">
+                <mat-icon class="btn-icon">cancel_presentation</mat-icon>
+                {{'reset' | translate}}
+              </button>
+            </div>
+            <button class="btn btn-danger" (click)="deleteRequest()" *ngIf="isDeletable && allowDeleteRequest">
+              <mat-icon class="btn-icon">delete</mat-icon>
+              {{'delete' | translate}}
+            </button>
+            <div class="buttons" *ngIf="isManager && allowUpdateRequest">
+              <button class="btn" (click)="approveOrDeny(1)">
+                <mat-icon class="btn-icon">check_box</mat-icon>
+                {{'approve' | translate}}
+              </button>
+              <button class="btn btn-danger" (click)="approveOrDeny(0)">
+                <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
+                {{'deny' | translate}}
+              </button>
+            </div>
+            <div class="buttons" *ngIf="isDirector && allowUpdateRequest">
+              <button class="btn" (click)="authorizeOrNotAuthorize(1)">
+                <mat-icon class="btn-icon">check_box</mat-icon>
+                {{'authorize' | translate}}
+              </button>
+              <button class="btn btn-danger" (click)="authorizeOrNotAuthorize(0)">
+                <mat-icon class="btn-icon">indeterminate_check_box</mat-icon>
+                {{'not_authorize' | translate}}
+              </button>
+            </div>
+            <div class="buttons" *ngIf="proc && allowUpdateRequest">
+              <button class="btn" (click)="procReq(1)">
+                <mat-icon class="btn-icon">check</mat-icon>
+                {{'process' | translate}}
+              </button>
+              <button class="btn btn-danger" (click)="procReq(0)">
+                <mat-icon class="btn-icon">close</mat-icon>
+                {{'decline' | translate}}
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

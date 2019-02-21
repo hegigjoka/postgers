@@ -1,15 +1,9 @@
 .top-menu-style{
   background-color: #045BA1;
+  padding: 10px;
 }
 .side-menu-drawer{
-  width: 280px;
-}
-.menu-row{
-  padding: 10px 0 10px 15px;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  width: 240px;
 }
 .menu-icon{
   color: white;
@@ -18,38 +12,45 @@
   font-size: 36px;
   cursor: pointer;
 }
+.menu-icon /deep/.mat-badge-content{
+  background-color: white;
+  color: #045BA1;
+}
 .page-name{
   color: white;
+  margin-top: 4px;
   margin-left: 15px;
-  font-family: "Roboto Black";
+  font-family: UniSansSemiBold;
   font-size: 22px;
 }
 .search-bar{
   border-radius: 8px;
   border: none;
   height: 40px;
+  width: 94%;
   color: #045BA1;
   padding: 6px 0 6px 45px;
   font-family: "Roboto Light";
   font-size: 20px;
-  margin-left: 25px;
+}
+.search-bar:active, .search-bar:focus{
+  background-color: white;
+}
+.search-bar::-webkit-calendar-picker-indicator{
+  display: none;
 }
 .search-icon{
   color: #045BA1;
-  position: absolute;
-  left: 48px;
-  top: 20px;
+  position: relative;
+  top: -2px;
+  left: 33px;
   font-size: 29px;
   z-index: 1;
 }
 ::placeholder{
   color: #045BA1;
 }
-.avatar{
-  margin-left: 100px;
-}
 .avatar-img{
-  margin-left: 100px;
   height: 48px;
   width: 48px;
   border-radius: 50%;
@@ -67,4 +68,34 @@
 .to-menu{
   transition: 600ms;
   transform: rotate(-360deg);
+}
+.emp-brand-menu, .emp-global-search, .emp-cred-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.emp-brand-menu{
+
+}
+.emp-global-search{
+
+}
+.emp-cred-container{
+  position: fixed;
+  right: 35px;
+  top: 6px;
+}
+@media only screen and (max-width: 890px) {
+  .emp-global-search{
+    display: none;
+  }
+  .office-n-employee{
+    display: none;
+  }
+}
+@media only screen and (max-width: 450px){
+  .emp-cred-container{
+    top: 4px;
+    right: 26px;
+  }
 }

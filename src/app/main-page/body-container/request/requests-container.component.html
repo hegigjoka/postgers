@@ -1,0 +1,156 @@
+<mat-drawer-container [hasBackdrop]="true" (backdropClick)="backing()">
+  <mat-drawer class="drawer-request" #request position="end">
+    <router-outlet (deactivate)="updating()"></router-outlet>
+  </mat-drawer>
+  <mat-drawer-content>
+
+    <datalist id="reqTypes">
+      <option *ngFor="let request of requestTypes" [value]="request?.someLabel"></option>
+    </datalist>
+    <datalist id="statTypes">
+      <option *ngFor="let status of statusTypes" [value]="status?.someLabel"></option>
+    </datalist>
+
+    <div class="col-12 header-div">
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12">
+          <div #dorpdown class="dropdown">
+            <h2 class="dropdown-toggle"
+                id="requestCategory"
+                data-toggle="dropdown"
+                [matBadge]="showBadgeDD && badge ? badge : ''"
+                matBadgePosition="before"
+                (click)="showBadge()">
+              {{title}}
+            </h2>
+            <div class="dropdown-menu" aria-labelledby="requestCategory">
+              <a class="dropdown-item" (click)="onlyMR()">{{MyLabel}}</a>
+              <a class="dropdown-item" (click)="onlyPA()">
+            <span [matBadge]="badge ? badge : ''"
+                  matBadgeOverlap="false"
+                  matBadgeSize="medium">
+              {{ActionLabel}}
+            </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-12">
+          <div class="row">
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input class="hr-filter"
+                     [(ngModel)]="startAuthDate"
+                     matInput [matDatepicker]="start"
+                     placeholder="{{'req_from' | translate}}"
+                     (dateChange)="setFromDate(startAuthDate, $event)">
+              <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('start-date-filter')" *ngIf="startAuthDate !== ''">cancel</mat-icon>
+              <mat-datepicker touchUi #start></mat-datepicker>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input class="hr-filter"
+                     [value]="endAuthDate"
+                     [(ngModel)]="endAuthDate"
+                     matInput [matDatepicker]="stop"
+                     placeholder="{{'req_to' | translate}}"
+                     (dateChange)="setToDate(endAuthDate, $event)">
+              <mat-datepicker-toggle matSuffix [for]="stop"></mat-datepicker-toggle>
+              <mat-icon class="clear-filter filter-date" (click)="clearFilter('stop-date-filter')" *ngIf="endAuthDate !== ''">cancel</mat-icon>
+              <mat-datepicker touchUi #stop [opened]="trigger"></mat-datepicker>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="reqTypes"
+                     [(ngModel)]="requestTypeInput"
+                     (change)="setTAId(requestTypeInput, 'reqType')"
+                     placeholder="{{'req_request_type' | translate}}"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('req-filter')" *ngIf="requestTypeInput?.length > 0">cancel</mat-icon>
+            </div>
+            <div>
+              <mat-icon class="filter-icons">filter_list</mat-icon>
+              <input type="text"
+                     list="statTypes"
+                     [(ngModel)]="statusInput"
+                     (change)="setTAId(statusInput, 'statusType')"
+                     placeholder="{{'req_status_type' | translate}}"
+                     class="hr-filter">
+              <mat-icon class="clear-filter req-filter" (click)="clearFilter('status-filter')" *ngIf="statusInput?.length > 0">cancel</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>{{fields?.requestTypeId?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.insertDate?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.expireDate?.fieldLabel}}</th>
+          <th class="small-display">{{fields?.validationDate?.fieldLabel}}</th>
+          <th [ngClass]="{'no-employee': reqType === 'me'}">{{"req_employee" | translate}}</th>
+          <th class="small-display">{{fields?.employeeNotes?.fieldLabel}}</th>
+          <th>{{fields?.pendingActionFrom?.fieldLabel}}</th>
+          <th>{{fields?.status?.fieldLabel}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let request of requests?.list" class="tuple" (click)="openRequest(request?.id, request?.requestTypeId)">
+          <td>{{request?.labelMap?.requestTypeId | multiPurposePipe: 'hasValue'}}</td>
+          <td class="small-display">{{request?.insertDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td class="small-display">{{request?.expireDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td class="small-display">{{request?.validationDate | multiPurposePipe: 'hasDateValue' | date: 'medium'}}</td>
+          <td [ngClass]="{'no-employee': reqType === 'me'}">{{request?.labelMap?.employeeId | multiPurposePipe: 'hasValue'}}</td>
+          <td class="small-display">{{request?.employeeNotes | multiPurposePipe: 'hasValue' | multiPurposePipe: 'longNote'}}</td>
+          <td>{{request?.labelMap?.pendingActionFrom | multiPurposePipe: 'hasValue'}}</td>
+          <td
+            [matTooltip]="request?.directorNotes ? request?.directorNotes : request?.managerNotes ? request?.managerNotes : 'No notes available...'">
+            {{request?.labelMap?.status | multiPurposePipe: 'hasValue'}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 paginate">
+      <table border="0">
+        <tr>
+          <td>
+            <mat-icon class="prev" (click)="pages(-10, requests?.totalPages)">first_page</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="prev" (click)="pages(-1, requests?.totalPages)">chevron_left</mat-icon>
+          </td>
+          <td>
+            <div class="page-number">
+              {{paginate}} of {{requests?.totalPages}}
+            </div>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(1, requests?.totalPages)">chevron_right</mat-icon>
+          </td>
+          <td>
+            <mat-icon class="next" (click)="pages(10, requests?.totalPages)">last_page</mat-icon>
+          </td>
+        </tr>
+      </table>
+      <div class="total-records">( {{requests?.totalRecords}} )</div>
+    </div>
+    <div class="new-request" *ngIf="allowNewRequest && reqType === 'me'">
+      <div class="new-sub" (click)="openRequest('new', 'POOL00000000082')">S</div>
+      <div class="new-sub-banner">{{'SH_header' | translate}}</div>
+      <div class="new-mt" (click)="openRequest('new', 'POOL00000000080')">BF</div>
+      <div class="new-mt-banner">{{'BF_header' | translate}}</div>
+      <div class="new-mission" (click)="openRequest('new', 'POOL00000000078')">M</div>
+      <div class="new-mission-banner">{{'M_header' | translate}}</div>
+      <div class="new-holiday" (click)="openRequest('new', 'POOL00000000079')">H</div>
+      <div class="new-holiday-banner">{{'HP_header' | translate}}</div>
+      <div class="new-xh" (click)="openRequest('new', 'POOL00000000081')">xH</div>
+      <div class="new-xh-banner">{{'xH_header' | translate}}</div>
+      <div class="new">+</div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

@@ -1,0 +1,368 @@
+.header-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.header-div .row{
+  width: 102%;
+}
+.filter-icons{
+  color: #045BA1;
+  position: relative;
+  left: 44px;
+  top: 6px;
+}
+.clear-filter{
+  color: #045BA1;
+  position: relative;
+  left: -30px;
+  top: 3px;
+  font-size: 16px;
+}
+.req-filter{
+  left: -40px;
+}
+.filter-date{
+  left: -44px;
+}
+mat-datepicker-toggle{
+  color: #045BA1;
+  position: relative;
+  left: -30px;
+  margin-right: -36px;
+}
+mat-datepicker-toggle /deep/button:focus{
+  outline: none;
+}
+/deep/.mat-calendar-header{
+  background-color: #045BA1;
+  color: white;
+}
+/deep/.mat-datepicker-content .mat-calendar-previous-button,
+/deep/.mat-datepicker-content .mat-calendar-next-button{
+  color: white;
+}
+/deep/.mat-calendar-arrow{
+  border-top-color: white;
+}
+/deep/.mat-calendar-body-today:not(.mat-calendar-body-selected){
+  border: 2px solid #045BA1;
+}
+/deep/.mat-calendar-body-selected{
+  color: white!important;
+  background-color: #045BA1;
+}
+/deep/.mat-calendar-body-cell-content,
+/deep/.mat-calendar-table-header,
+/deep/.mat-calendar-body-label{
+  color: #045BA1;
+}
+.hr-filter{
+  margin-left: 15px;
+  margin-top: 20px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid #045BA1;
+  background-color: transparent;
+  padding: 4px 2px 4px 34px;
+  height: 40px;
+  width: 190px;
+  font-family: "Roboto Medium";
+  color: #045BA1;
+  font-size: 16px;
+}
+::placeholder{
+  color: #045BA1;
+}
+.dropdown{
+  font-family: "Roboto Medium";
+  font-size: 20px;
+  color: #045BA1;
+  cursor: pointer;
+  padding-top: 18px;
+  margin-left: 36px;
+  width: fit-content;
+}
+.dropdown-item /deep/.mat-badge-content{
+  background-color: #045BA1;
+  color: white;
+}
+.dropdown-menu{
+  min-width: 86%;
+}
+.dropdown-menu > a{
+  color: #045BA1;
+  font-family: "Roboto Light";
+  font-size: 20px;
+}
+/deep/.mat-tab-label{
+  color: #045BA1;
+  font-family: "Roboto Medium";
+  font-size: 25px;
+}
+.table-striped{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+table{
+  margin-top: 38px;
+  border-bottom: 1px solid #045BA1;
+}
+thead > tr{
+  background-color: #045BA1;
+  color: white;
+}
+.tuple:hover{
+  background-color: #045BA1;
+  cursor: pointer;
+}
+.tuple:hover > td{
+  color: white;
+}
+th{
+  font-family: "Roboto Medium";
+  font-size: 17px;
+  padding-left: 40px;
+}
+td{
+  font-family: "Roboto Medium";
+  font-size: 15px;
+  color: #323232;
+}
+.no-employee{
+  display: none;
+}
+.tuple > td{
+  padding-left: 40px;
+}
+
+/*Pagination Buttons*/
+.paginate table{
+  width: 60%;
+  border-bottom: none;
+}
+.paginate td{
+  width: 20%;
+}
+.paginate{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 60px;
+  color: #045BA1;
+}
+.page-number{
+  color: #045BA1;
+  margin-top: -4px;
+  margin-left: -3px;
+}
+.total-records{
+  font-family: "Roboto Light";
+  margin-top: 30px;
+}
+.prev{
+  color: #045BA1;
+  font-size: 35px;
+}
+.next{
+  color: #045BA1;
+  font-size: 35px;
+}
+
+/*New Request*/
+.new-request{
+  border-radius: 28px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 55px;
+}
+.new-request:hover{
+  height: 305px;
+}
+.new{
+  background-color: #045BA1;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 55px;
+  width: 55px;
+  font-size: 32px;
+  font-weight: bold;
+  padding-left: 16.5px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+
+/*New Request Types*/
+.new-xh{
+  display: none;
+  background-color: #323232;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  font-size: 20px;
+  padding-top: 6px;
+  padding-left: 11px;
+  position: fixed;
+  bottom: 90px;
+  right: 35px;
+}
+.new-holiday{
+  display: none;
+  background-color: #323232;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  font-size: 20px;
+  padding-top: 6px;
+  padding-left: 15.5px;
+  position: fixed;
+  bottom: 140px;
+  right: 35px;
+}
+.new-mission{
+  display: none;
+  background-color: #323232;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  font-size: 20px;
+  padding-top: 6px;
+  padding-left: 13.5px;
+  position: fixed;
+  bottom: 190px;
+  right: 35px;
+}
+.new-mt{
+  display: none;
+  background-color: #323232;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  font-size: 20px;
+  padding-top: 7px;
+  padding-left: 12px;
+  position: fixed;
+  bottom: 240px;
+  right: 35px;
+}
+.new-sub{
+  display: none;
+  background-color: #323232;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  font-size: 20px;
+  padding-top: 7px;
+  padding-left: 17px;
+  position: fixed;
+  bottom: 290px;
+  right: 35px;
+}
+
+/*New Request Banners*/
+.new-sub-banner{
+  display: none;
+  font-size: 18px;
+  color: #323232;
+  position: fixed;
+  bottom: 300px;
+  right: 90px;
+}
+.new-mt-banner{
+  display: none;
+  font-size: 18px;
+  color: #323232;
+  position: fixed;
+  bottom: 250px;
+  right: 90px;
+}
+.new-mission-banner{
+  display: none;
+  font-size: 18px;
+  color: #323232;
+  position: fixed;
+  bottom: 200px;
+  right: 90px;
+}
+.new-holiday-banner{
+  display: none;
+  font-size: 18px;
+  color: #323232;
+  position: fixed;
+  bottom: 150px;
+  right: 90px;
+}
+.new-xh-banner{
+  display: none;
+  font-size: 18px;
+  color: #323232;
+  position: fixed;
+  bottom: 100px;
+  right: 90px;
+}
+
+/*New Request Animations*/
+.new-request:hover > .new{
+  transition: 300ms;
+  transform: rotate(45deg);
+  box-shadow: 4px 4px 12px black;
+}
+.new-request:hover > .new-xh, .new-request:hover > .new-xh-banner,
+.new-request:hover > .new-holiday, .new-request:hover > .new-holiday-banner,
+.new-request:hover > .new-mission, .new-request:hover > .new-mission-banner,
+.new-request:hover > .new-mt, .new-request:hover > .new-mt-banner,
+.new-request:hover > .new-sub, .new-request:hover > .new-sub-banner{
+  display: block;
+}
+.new-xh:hover, .new-holiday:hover, .new-mission:hover, .new-mt:hover, .new-sub:hover{
+  transition: 600ms;
+  transform: rotate(360deg);
+  box-shadow: 0 4px 12px black;
+}
+
+@media only screen and (max-width: 890px) {
+  th{
+    font-size: 13px;
+  }
+  td{
+    font-size: 12px;
+  }
+  .prev, .next{
+    font-size: 25px;
+  }
+}
+@media only screen and (max-width: 760px) {
+  .small-display{
+    display: none;
+  }
+  .dropdown{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media only screen and (max-width: 450px){
+  .hr-filter{
+    margin-left: 82px;
+    width: 222px;
+  }
+  .filter-icons{
+    left: 111px;
+  }
+}

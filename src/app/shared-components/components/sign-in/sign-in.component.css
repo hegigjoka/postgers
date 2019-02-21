@@ -1,8 +1,11 @@
 .top-menu-style{
   background-color: #045BA1;
 }
-.menu-row{
-  padding: 15px 0 15px 15px;
+.contents{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px;
 }
 .page-name{
   color: white;
@@ -10,12 +13,12 @@
   font-family: UniSansSemiBold;
   font-size: 25px;
 }
+.sign-in-butt{
+  position: fixed;
+  right: 24px;
+}
 button{
   background-color: white;
   color: #045BA1;
   font-family: UniSansRegular;
-  position: relative;
-  right: 20px;
-  display: block;
-  margin-left: auto;
 }
