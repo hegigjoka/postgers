@@ -53,7 +53,9 @@ export class RequestsService {
       'Accept-Language': localStorage.getItem('EmpLang')
     });
     let filter = `paramBean={pageNo:${pageNo},pageSize:${pageSize},validationDate:{min:'${date ? date.split('|')[0] : ''}',max:'${date ? date.split('|')[1] : ''}'},requestTypeId:'${reqType}',status:'${status}',type:'${type}',fillFieldLabels:true}`;
-    if (date === '|' ) {
+    if (date === '|' || date === '') {
+      filter = filter.split(/,validationDate:{min:'',max:''}/)[0] + filter.split(/,validationDate:{min:'',max:''}/)[1];
+    } else if (date === undefined) {
       filter = filter.split(/,validationDate:{min:'',max:''}/)[0] + filter.split(/,validationDate:{min:'',max:''}/)[1];
     }
     if (type === undefined) {
