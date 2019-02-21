@@ -22,12 +22,12 @@
   src: url("assets/fonts/UniSansLight.ttf") format("opentype");
 }
 
-html, body { height: 100%; }
-
+html, body {
+  height: 100%;
+}
 hr{
   background-color: #045BA1;
 }
-
 app-reuests-container{
   width: 100%;
 }
@@ -36,21 +36,17 @@ app-personel-requests{
 }
 app-employee-panel{
   width: 100%;
-  height: 92.8vh;
 }
 mat-icon{
   cursor: pointer;
 }
 mat-drawer-container{
   width: 100%;
-  height: 92.8vh;
-}
-.drawer-request{
-  background-color: #045BA1!important;
+  height: 100%;
 }
 mat-drawer-content{
   width: 100%;
-  height: 92.8vh;
+  height: 100%;
 }
 app-confirm-dialog{
   position: fixed;
@@ -58,6 +54,25 @@ app-confirm-dialog{
   left: calc(50% - 250px);
   width: 500px;
   z-index: 10;
+}
+
+.top-menu-style{
+  max-height: 6.3%;
+}
+.panel-contents{
+  height: 93.7%;
+}
+@media only screen and (max-height: 650px){
+  .top-menu-style{
+    max-height: 8%;
+  }
+  .panel-contents{
+    height: 92%;
+  }
+}
+
+.drawer-request{
+  background-color: #045BA1!important;
 }
 .btn-info:active, .btn-info:focus, input:active, input:focus{
   background-color: transparent;

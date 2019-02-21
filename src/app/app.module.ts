@@ -25,7 +25,9 @@ import {
   MatSnackBarModule,
   MatTooltipModule,
   MatDatepickerModule,
-  MatNativeDateModule, MatTabsModule, MatBadgeModule,
+  MatNativeDateModule,
+  MatTabsModule,
+  MatBadgeModule,
 } from '@angular/material';
 
 // Google Login Imports
@@ -37,6 +39,7 @@ import {
 } from 'angular-6-social-login';
 import {EmployeeService} from './shared-components/providers/employee.service';
 import {RequestsService} from './shared-components/providers/requests.service';
+import {PersonelRequestService} from './shared-components/providers/personel-request.service';
 import {AuthGuardService as AuthGuard} from './shared-components/providers/auth-guard.service';
 
 // Components
@@ -63,9 +66,18 @@ import { MissionRequestComponent } from './shared-components/components/new-requ
 import {
   SubstitutedHolidaysRequestComponent
 } from './shared-components/components/new-requests/substituted-holidays-request/substituted-holidays-request.component';
-import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
 import { PersonelRequestsComponent } from './main-page/body-container/personel-requests/personel-requests.component';
-import {PersonelRequestService} from './shared-components/providers/personel-request.service';
+import { ConfirmDialogComponent } from './shared-components/components/confirm-dialog/confirm-dialog.component';
+
+// Other Imports
+import {HrPermission} from './shared-components/permissions/hr-permission';
+import {LayoutModule} from '@angular/cdk/layout';
+
+// Translate Imports
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 
 // App Routers
 const EmployeeRoutes: Routes = [
@@ -76,11 +88,12 @@ const EmployeeRoutes: Routes = [
   {
     path: 'hr',
     component: MainPageComponent,
-    canActivateChild: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
       {
         path: ':empId/requests',
         component: RequestsContainerComponent,
+        canActivate: [AuthGuard],
         children: [
           {
             path: 'extra-hours/:reqId',
@@ -127,6 +140,7 @@ const EmployeeRoutes: Routes = [
       {
         path: 'employees',
         component: EmployeePanelComponent,
+        canActivate: [AuthGuard],
         children: [
           {
             path: ':emp',
@@ -141,6 +155,7 @@ const EmployeeRoutes: Routes = [
       {
         path: 'request-management',
         component: PersonelRequestsComponent,
+        canActivate: [AuthGuard],
         children: [
           {
             path: 'extra-hours/:reqId',
@@ -186,6 +201,11 @@ export function getAuthServiceConfigs() {
   return config;
 }
 
+// Translate Service
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -229,7 +249,16 @@ export function getAuthServiceConfigs() {
     MatNativeDateModule,
     MatTabsModule,
     MatBadgeModule,
-    RouterModule.forRoot(EmployeeRoutes)
+    LayoutModule,
+    RouterModule.forRoot(EmployeeRoutes),
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
 
   providers: [
@@ -237,6 +266,7 @@ export function getAuthServiceConfigs() {
     RequestsService,
     PersonelRequestService,
     AuthGuard,
+    HrPermission,
     {
       provide: AuthServiceConfig,
       useFactory: getAuthServiceConfigs

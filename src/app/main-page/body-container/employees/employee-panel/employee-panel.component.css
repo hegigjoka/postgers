@@ -101,6 +101,7 @@ td{
   align-items: center;
   margin-right: auto;
   margin-left: auto;
+  margin-bottom: 60px;
   color: #045BA1;
 }
 .page-number{
@@ -141,3 +142,31 @@ td{
   box-shadow: 0 5px 10px black;
 }
 
+@media only screen and (max-width: 890px) {
+  th{
+    font-size: 13px;
+  }
+  td{
+    font-size: 12px;
+  }
+  .prev, .next{
+    font-size: 25px;
+  }
+}
+@media only screen and (max-width: 760px) {
+  .small-display{
+    display: none;
+  }
+  .header{
+    text-align: center;
+  }
+}
+@media only screen and (max-width: 500px){
+  .employee-filter{
+    margin-left: 76px;
+    width: 265px;
+  }
+  .filter-icons{
+    left: 104px;
+  }
+}

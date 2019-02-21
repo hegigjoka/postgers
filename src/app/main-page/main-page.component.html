@@ -1,35 +1,52 @@
-<mat-drawer-container style="height: 100%" [hasBackdrop]="false">
-  <mat-drawer class="side-menu-drawer" #menu [mode]="'push'" position="start">
-    <app-side-menu></app-side-menu>
+<mat-drawer-container style="height: 100%" [hasBackdrop]="true" (backdropClick)="backing()">
+  <mat-drawer class="side-menu-drawer" #menu [mode]="'over'" position="start">
+    <app-side-menu (fireEvent)="backing($event)"></app-side-menu>
   </mat-drawer>
   <mat-drawer-content class="container-fluid">
+    <datalist id="filter">
+      <option *ngFor="let searches of searchTypes" [value]="searches"></option>
+      <option *ngFor="let startus of statusType" [value]="startus?.someLabel"></option>
+      <option *ngFor="let type of requestType" [value]="type?.someLabel"></option>
+      <option *ngFor="let fiter of hrType" [value]="fiter"></option>
+      <option *ngFor="let hrProcess of hrProcessType" [value]="hrProcess?.someLabel"></option>
+      <option *ngFor="let hrType of hrRequestType" [value]="hrType?.someLabel"></option>
+    </datalist>
     <div class="row top-menu-style">
-      <div style="padding-right: 0" class="col-2">
-        <div class="row menu-row">
-          <mat-icon class="menu-icon" [ngClass]="{'to-x': x, 'to-menu': !x}" (click)="iconToggle()">{{icon}}</mat-icon>
-          <div class="page-name" id="main">Employee Requests</div>
-        </div>
+      <div class="col-lg-3 col-md-4 col-sm-10 emp-brand-menu">
+        <mat-icon class="menu-icon" (click)="iconToggle()">menu</mat-icon>
+        <div class="page-name" id="main">{{ "Brand" | translate }}</div>
       </div>
-      <div class="col-6">
-        <div class="row menu-row">
-          <mat-icon class="search-icon">search</mat-icon>
-          <input class="col-12 search-bar" type="search" [(ngModel)]="search" [placeholder]="'Search...'">
-        </div>
+      <div class="col-lg-5 col-md-4 emp-global-search">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input class="search-bar"
+               type="text"
+               list="filter"
+               [(ngModel)]="search"
+               (keyup)="onKey(search)"
+               (change)="onEnter(search)"
+               placeholder="{{'search_bar' | translate}}">
       </div>
-      <div class="col-2"></div>
-      <div class="col-2">
-        <div class="row menu-row">
-          <ngx-avatar *ngIf="!avatarOrPic()" class="avatar" [name]="'Hegi Gjoka'" [size]="'46'" bgColor="white" fgColor="#045BA1"></ngx-avatar>
-          <img *ngIf="avatarOrPic()" src="{{avatar}}" class="img-fluid avatar-img">
-          <div class="office-n-employee">
-            <div>{{setCreds('office')}}</div>
-            <div>{{setCreds('employee')}}</div>
-          </div>
+      <div class="emp-cred-container" *ngIf="sideNav !== 'open'">
+        <ngx-avatar *ngIf="!avatarOrPic()"
+                    (click)="iconToggle()"
+                    class="avatar"
+                    [name]="setCreds('employee')"
+                    [size]="'46'"
+                    bgColor="white"
+                    fgColor="#045BA1">
+        </ngx-avatar>
+        <img *ngIf="avatarOrPic()"
+             (click)="iconToggle()"
+             src="{{avatar}}"
+             class="img-fluid avatar-img">
+        <div class="office-n-employee">
+          <div>{{setCreds('office')}}</div>
+          <div>{{setCreds('employee')}}</div>
         </div>
       </div>
     </div>
-    <div style="height: 92.5%;" class="row">
-      <router-outlet (activate)="searchingFunc()"></router-outlet>
+    <div class="row panel-contents">
+      <router-outlet></router-outlet>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>

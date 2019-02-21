@@ -17,6 +17,15 @@
   padding-left: 36px;
   padding-top: 15px;
 }
+.filter-icons.disabled-filter{
+  color: #b9b9b9;
+}
+.hr-filter.disabled-filter{
+  border-bottom: 2px solid #b9b9b9;
+}
+.hr-filter.disabled-filter::placeholder{
+  color: #b9b9b9;
+}
 .filter-icons{
   color: #045BA1;
   position: relative;
@@ -80,7 +89,7 @@ mat-datepicker-toggle /deep/button:focus{
   background-color: transparent;
   padding: 4px 2px 4px 34px;
   height: 40px;
-  width: 190px;
+  width: 160px;
   font-family: "Roboto Medium";
   color: #045BA1;
   font-size: 16px;
@@ -159,4 +168,32 @@ td{
 .next{
   color: #045BA1;
   font-size: 35px;
+}
+
+@media only screen and (max-width: 890px) {
+  th{
+    font-size: 13px;
+  }
+  td{
+    font-size: 12px;
+  }
+  .prev, .next{
+    font-size: 25px;
+  }
+}
+@media only screen and (max-width: 760px) {
+  .small-display{
+    display: none;
+  }
+  .header{
+    text-align: center;
+  }
+  .hr-filter{
+    width: 150px;
+  }
+}
+@media only screen and (max-width: 450px){
+  .smaller-display{
+    display: none;
+  }
 }

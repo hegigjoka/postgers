@@ -1,7 +1,7 @@
 <div class="container side-menu">
   <div class="row">
     <div class="col-12 tool-bar">
-      Manage Account
+      {{"header_menu" | translate}}
       <hr>
     </div>
   </div>
@@ -15,32 +15,41 @@
       <div>{{setCreds('employee')}}</div>
     </div>
   </div>
-  <div class="row emp" (click)="openEmp()">
+  <div class="row emp" (click)="openEmp()" *ngIf="allowEmployee">
     <mat-icon class="emp-icon">work</mat-icon>
-    <div class="emp-desc">Employees</div>
+    <div class="emp-desc">{{"employee_menu" | translate}}</div>
   </div>
-  <div class="row req" (click)="openReq()">
+  <div class="row req" (click)="openReq()" *ngIf="allowRequests">
     <mat-icon class="req-icon"
               [matBadge]="requestsType ? '' : badge ? badge : ''"
               matBadgePosition="before">
       folder
     </mat-icon>
-    <div class="req-desc">Requests</div>
+    <div class="req-desc">{{"request_types_menu" | translate}}</div>
     <div class="req-type" *ngIf="requestsType">
-      <div (click)="openReqType('me')">My Requests</div>
-      <div (click)="openReqType('pendingMe')" [matBadge]="badge ? badge : ''">Pending Action</div>
+      <div (click)="openReqType('me')">{{"my_requests_menu" | translate}}</div>
+      <div (click)="openReqType('pendingMe')" [matBadge]="badge ? badge : ''">{{"pending_action_menu" | translate}}</div>
     </div>
   </div>
-  <div class="row pers" (click)="openHr()">
+  <div class="row pers" (click)="openHr()" *ngIf="allowHrOffice">
     <mat-icon class="pers-icon">group</mat-icon>
-    <div class="pers-desc">HR Office</div>
+    <div class="pers-desc">{{"hr_office_menu" | translate}}</div>
   </div>
-  <div class="row calendar">
+  <div class="row calendar" (click)="openCalendar()">
     <mat-icon class="calendar-icon">calendar_today</mat-icon>
     <div class="calendar-desc">Google Calendar</div>
   </div>
+  <div class="row lang" (click)="openLang()">
+    <mat-icon class="lang-icon">language</mat-icon>
+    <div class="lang-desc">{{"lang_select_menu" | translate}}</div>
+    <div class="lang-type" *ngIf="languageType">
+      <div (click)="openLangType('en')">{{"lang_en_menu" | translate}}</div>
+      <div (click)="openLangType('it')">{{"lang_it_menu" | translate}}</div>
+      <div (click)="openLangType('sq')">{{"lang_sq_menu" | translate}}</div>
+    </div>
+  </div>
   <div class="row logout" (click)="logout()">
     <mat-icon class="logout-icon">save_alt</mat-icon>
-    <div class="logout-desc">Logout</div>
+    <div class="logout-desc">{{"logout_menu" | translate}}</div>
   </div>
 </div>
