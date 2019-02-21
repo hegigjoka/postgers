@@ -41,6 +41,8 @@ import {EmployeeService} from './shared-components/providers/employee.service';
 import {RequestsService} from './shared-components/providers/requests.service';
 import {PersonelRequestService} from './shared-components/providers/personel-request.service';
 import {AuthGuardService as AuthGuard} from './shared-components/providers/auth-guard.service';
+import {EmpAuthGuardService as EmpAuthGuard} from './shared-components/providers/emp-auth-guard.service';
+import {HrAuthGuardService as HrAuthGuard} from './shared-components/providers/hr-auth-guard.service';
 
 // Components
 import {AvatarModule} from 'ngx-avatar';
@@ -77,6 +79,7 @@ import {LayoutModule} from '@angular/cdk/layout';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {HrAuthGuardService} from './shared-components/providers/hr-auth-guard.service';
 
 
 // App Routers
@@ -140,7 +143,7 @@ const EmployeeRoutes: Routes = [
       {
         path: 'employees',
         component: EmployeePanelComponent,
-        canActivate: [AuthGuard],
+        canActivate: [EmpAuthGuard],
         children: [
           {
             path: ':emp',
@@ -155,7 +158,7 @@ const EmployeeRoutes: Routes = [
       {
         path: 'request-management',
         component: PersonelRequestsComponent,
-        canActivate: [AuthGuard],
+        canActivate: [HrAuthGuard],
         children: [
           {
             path: 'extra-hours/:reqId',
@@ -266,6 +269,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     RequestsService,
     PersonelRequestService,
     AuthGuard,
+    EmpAuthGuard,
+    HrAuthGuard,
     HrPermission,
     {
       provide: AuthServiceConfig,
